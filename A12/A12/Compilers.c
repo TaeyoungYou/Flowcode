@@ -1,44 +1,29 @@
 /*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
-* Code version: Summer, 2024
-* Author: TO_DO
-* Professors: Paulo Sousa
+* Code version: Winter, 2025
+* Author: Taeyoung You, Juhyeon Oh
+* Professors: Khan, Sarah
 ************************************************************
 #
-# ECHO "=---------------------------------------="
-# ECHO "|  COMPILERS - ALGONQUIN COLLEGE (S24)  |"
-# ECHO "=---------------------------------------="
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@           %&@@@@@@@@@@@     @@    �
-# ECHO "    @@       @%% (@@@@@@@@@  @     @@    �
-# ECHO "    @@      @& @   @ @       @     @@    �
-# ECHO "    @@     @ @ %  / /   @@@@@@     @@    �
-# ECHO "    @@      & @ @  @@              @@    �
-# ECHO "    @@       @/ @*@ @ @   @        @@    �
-# ECHO "    @@           @@@@  @@ @ @      @@    �
-# ECHO "    @@            /@@    @@@ @     @@    �
-# ECHO "    @@     @      / /     @@ @     @@    �
-# ECHO "    @@     @ @@   /@/   @@@ @      @@    �
-# ECHO "    @@     @@@@@@@@@@@@@@@         @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@         S O F I A           @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "                                         "
-# ECHO "[READER SCRIPT .........................]"
-# ECHO "                                         "
+# *  ####### ####      #####   ##   ##    ####    #####   #####    #######  *
+# *   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *
+# *   ##      ##      ##   ##  ##   ##  ##       ##   ##   ##  ##   ##      *
+# *   ####    ##      ##   ##  ## # ##  ##       ##   ##   ##  ##   ####    *
+# *   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *
+# *   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *
+# *  ####    #######   #####   ##   ##    ####    #####   #####    #######  *
+#
 */
 
 /*
 ************************************************************
-* File name: compilers.c
+* File name: Compilers.c
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 � Compilers, Lab Section: [011, 012]
+* Course: CST 8152 Compilers, Lab Section: [303]
 * Assignment: A12, A22, A32.
-* Date: May 01 2024
-* Professor: Paulo Sousa
+* Date: Jan 26, 2025
+* Professor: Khan, Sarah
 * Purpose: This file is the main program of Compilers Project
 * Function list: main().
 ************************************************************
@@ -66,7 +51,7 @@
 ***********************************************************
 * Function name: main
 * Purpose: Main function
-* Author: Paulo Sousa
+* Author: Khan, Sarah
 * History/Versions: Ver F22
 * Called functions: mainReader(), mainScanner(), mainParser()
 * Parameters: Command line arguments - argc, argv
@@ -75,8 +60,8 @@
 *************************************************************
 */
 
-sofia_intg main(int argc, char** argv) {
-	sofia_intg i;
+flowcode_int main(int argc, char** argv) {
+	flowcode_int i;
 	printLogo();
 	if (DEBUG) {
 		for (i = 0; i < argc; ++i)
@@ -89,7 +74,7 @@ sofia_intg main(int argc, char** argv) {
 			PGM_PARSER, "] - Parser\n");
 		return EXIT_FAILURE;
 	}
-	sofia_char option = argv[1][0];
+	flowcode_char option = argv[1][0];
 	switch (option) {
 	case PGM_READER:
 		printf("%s%c%s", "\n[Option '", PGM_READER, "': Starting READER .....]\n\n");
@@ -120,7 +105,7 @@ sofia_intg main(int argc, char** argv) {
 ***********************************************************
 * Function name: printLogo
 * Purpose: Print Logo
-* Author: Paulo Sousa
+* Author: Taeyoung You
 * History/Versions: Ver S23
 * Called functions: -
 * Parameters: -
@@ -131,30 +116,15 @@ sofia_intg main(int argc, char** argv) {
 
 /* TO_DO: Update your logo with your own language message */
 
-sofia_void printLogo() {
+flowcode_void printLogo() {
 	printf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
-		"\t=---------------------------------------=\n",
-		"\t|  COMPILERS - ALGONQUIN COLLEGE (F24)  |\n",
-		"\t=---------------------------------------=\n",
-		"\t    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    \n",
-		"\t    @@                             @@    \n",
-		"\t    @@           %&@@@@@@@@@@@     @@    \n",
-		"\t    @@       @%% (@@@@@@@@@  @     @@    \n",
-		"\t    @@      @& @   @ @       @     @@    \n",
-		"\t    @@     @ @ %  / /   @@@@@@     @@    \n",
-		"\t    @@      & @ @  @@              @@    \n",
-		"\t    @@       @/ @*@ @ @   @        @@    \n",
-		"\t    @@           @@@@  @@ @ @      @@    \n",
-		"\t    @@            /@@    @@@ @     @@    \n",
-		"\t    @@     @      / /     @@ @     @@    \n",
-		"\t    @@     @ @@   /@/   @@@ @      @@    \n",
-		"\t    @@     @@@@@@@@@@@@@@@         @@    \n",
-		"\t    @@                             @@    \n",
-		"\t    @@         S O F I A           @@    \n",
-		"\t    @@                             @@    \n",
-		"\t    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    \n",
-		"\t                                         \n",
-		"\t[COMPILER LOGO .........................]\n",
-		"\t                                         \n"
+		"\t*  ####### ####      #####   ##   ##    ####    #####   #####    #######  *\n",
+		"\t*   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *\n",
+		"\t*   ##      ##      ##   ##  ##   ##  ##       ##   ##   ##  ##   ##      *\n",
+		"\t*   ####    ##      ##   ##  ## # ##  ##       ##   ##   ##  ##   ####    *\n",
+		"\t*   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *\n",
+		"\t*   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *\n",
+		"\t*  ####    #######   #####   ##   ##    ####    #####   #####    #######  *\n"
 	);
 }
+

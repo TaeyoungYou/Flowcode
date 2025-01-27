@@ -1,44 +1,29 @@
 /*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
-* Code version: Fall, 2024
-* Author: TO_DO
-* Professors: Paulo Sousa
+* Code version: Winter, 2025
+* Author: Taeyoung You, Juhyeon Oh
+* Professors: Khan, Sarah
 ************************************************************
 #
-# ECHO "=---------------------------------------="
-# ECHO "|  COMPILERS - ALGONQUIN COLLEGE (F24)  |"
-# ECHO "=---------------------------------------="
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@           %&@@@@@@@@@@@     @@    �
-# ECHO "    @@       @%% (@@@@@@@@@  @     @@    �
-# ECHO "    @@      @& @   @ @       @     @@    �
-# ECHO "    @@     @ @ %  / /   @@@@@@     @@    �
-# ECHO "    @@      & @ @  @@              @@    �
-# ECHO "    @@       @/ @*@ @ @   @        @@    �
-# ECHO "    @@           @@@@  @@ @ @      @@    �
-# ECHO "    @@            /@@    @@@ @     @@    �
-# ECHO "    @@     @      / /     @@ @     @@    �
-# ECHO "    @@     @ @@   /@/   @@@ @      @@    �
-# ECHO "    @@     @@@@@@@@@@@@@@@         @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@         S O F I A           @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "                                         "
-# ECHO "[READER SCRIPT .........................]"
-# ECHO "                                         "
+# *  ####### ####      #####   ##   ##    ####    #####   #####    #######  *
+# *   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *
+# *   ##      ##      ##   ##  ##   ##  ##       ##   ##   ##  ##   ##      *
+# *   ####    ##      ##   ##  ## # ##  ##       ##   ##   ##  ##   ####    *
+# *   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *
+# *   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *
+# *  ####    #######   #####   ##   ##    ####    #####   #####    #######  *
+#
 */
 
 /*
 ************************************************************
 * File name: Reader.h
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 � Compilers, Lab Section: [011, 012]
+* Course: CST 8152 Compilers, Lab Section: [303]
 * Assignment: A12.
-* Date: May 01 2024
-* Professor: Paulo Sousa
+* Date: Jan 27, 2025
+* Professor: Khan, Sarah
 * Purpose: This file is the main header for Reader (.h)
 ************************************************************
 */
@@ -96,58 +81,58 @@ enum READER_MODE {
 
 /* Offset declaration */
 typedef struct flag {
-	sofia_boln isEmpty;			/* indicates if the buffer is empty */
-	sofia_boln isFull;			/* indicates if the buffer is full */
-	sofia_boln isRead;			/* indicates if the buffer was completely read */
-	sofia_boln isMoved;			/* indicates if the buffer memory was changed */
+	flowcode_bool isEmpty;			/* indicates if the buffer is empty */
+	flowcode_bool isFull;			/* indicates if the buffer is full */
+	flowcode_bool isRead;			/* indicates if the buffer was completely read */
+	flowcode_bool isMoved;			/* indicates if the buffer memory was changed */
 } Flag;
 
 /* Offset declaration */
 typedef struct position {
-	sofia_intg wrte;			/* the offset to the add chars (in chars) */
-	sofia_intg read;			/* the offset to the get a char position (in chars) */
-	sofia_intg mark;			/* the offset to the mark position (in chars) */
+	flowcode_int wrte;			/* the offset to the add chars (in chars) */
+	flowcode_int read;			/* the offset to the get a char position (in chars) */
+	flowcode_int mark;			/* the offset to the mark position (in chars) */
 } Position;
 
 /* Buffer structure */
 typedef struct bufferReader {
-	sofia_string	content;			/* pointer to the beginning of character array (character buffer) */
-	sofia_intg		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
-	sofia_intg		increment;			/* character array increment factor */
-	sofia_char		mode;				/* operational mode indicator */
+	flowcode_string	content;			/* pointer to the beginning of character array (character buffer) */
+	flowcode_int	size;				/* current dynamic memory size (in bytes) allocated to character buffer */
+	flowcode_int	increment;			/* character array increment factor */
+	flowcode_char	mode;				/* operational mode indicator */
 	Flag			flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		positions;			/* Offset / position field */
-	sofia_intg		histogram[NCHAR];	/* Statistics of chars */
-	sofia_intg		numReaderErrors;	/* Number of errors from Reader */
-	sofia_byte		checksum;
+	flowcode_int	histogram[NCHAR];	/* Statistics of chars */
+	flowcode_int	numReaderErrors;	/* Number of errors from Reader */
+	flowcode_byte	checksum;
 } Buffer, * BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-BufferPointer	readerCreate		(sofia_intg, sofia_intg, sofia_char);
-BufferPointer	readerAddChar		(BufferPointer const, sofia_char);
-sofia_boln		readerClear		    (BufferPointer const);
-sofia_boln		readerFree		    (BufferPointer const);
-sofia_boln		readerIsFull		(BufferPointer const);
-sofia_boln		readerIsEmpty		(BufferPointer const);
-sofia_boln		readerSetMark		(BufferPointer const, sofia_intg);
-sofia_intg		readerPrint		    (BufferPointer const);
-sofia_intg		readerLoad			(BufferPointer const, FILE* const);
-sofia_boln		readerRecover		(BufferPointer const);
-sofia_boln		readerRetract		(BufferPointer const);
-sofia_boln		readerRestore		(BufferPointer const);
-sofia_void		readerCalcChecksum	(BufferPointer const);
-sofia_boln		readerPrintFlags	(BufferPointer const);
-sofia_void		readerPrintStat     (BufferPointer const);
+BufferPointer	readerCreate		(flowcode_int, flowcode_int, flowcode_char);
+BufferPointer	readerAddChar		(BufferPointer const, flowcode_char);
+flowcode_bool	readerClear		    (BufferPointer const);
+flowcode_bool	readerFree		    (BufferPointer const);
+flowcode_bool	readerIsFull		(BufferPointer const);
+flowcode_bool	readerIsEmpty		(BufferPointer const);
+flowcode_bool	readerSetMark		(BufferPointer const, flowcode_int);
+flowcode_int	readerPrint		    (BufferPointer const);
+flowcode_int	readerLoad			(BufferPointer const, FILE* const);
+flowcode_bool	readerRecover		(BufferPointer const);
+flowcode_bool	readerRetract		(BufferPointer const);
+flowcode_bool	readerRestore		(BufferPointer const);
+flowcode_void	readerCalcChecksum	(BufferPointer const);
+flowcode_bool	readerPrintFlags	(BufferPointer const);
+flowcode_void	readerPrintStat     (BufferPointer const);
 /* Getters */
-sofia_char		readerGetChar		(BufferPointer const);
-sofia_string	readerGetContent	(BufferPointer const, sofia_intg);
-sofia_intg		readerGetPosRead	(BufferPointer const);
-sofia_intg		readerGetPosWrte	(BufferPointer const);
-sofia_intg		readerGetPosMark	(BufferPointer const);
-sofia_intg		readerGetSize		(BufferPointer const);
-sofia_intg		readerGetInc		(BufferPointer const);
-sofia_char		readerGetMode		(BufferPointer const);
-sofia_intg		readerGetNumErrors	(BufferPointer const);
+flowcode_char	readerGetChar		(BufferPointer const);
+flowcode_string	readerGetContent	(BufferPointer const, flowcode_int);
+flowcode_int	readerGetPosRead	(BufferPointer const);
+flowcode_int	readerGetPosWrte	(BufferPointer const);
+flowcode_int	readerGetPosMark	(BufferPointer const);
+flowcode_int	readerGetSize		(BufferPointer const);
+flowcode_int	readerGetInc		(BufferPointer const);
+flowcode_char	readerGetMode		(BufferPointer const);
+flowcode_int	readerGetNumErrors	(BufferPointer const);
 
 #endif
