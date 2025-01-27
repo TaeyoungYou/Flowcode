@@ -1,44 +1,29 @@
 /*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
-* Code version: Fall, 2024
-* Author: TO_DO
-* Professors: Paulo Sousa
+* Code version: Winter, 2025
+* Author: Taeyoung You, Juhyeon Oh
+* Professors: Khan, Sarah
 ************************************************************
 #
-# ECHO "=---------------------------------------="
-# ECHO "|  COMPILERS - ALGONQUIN COLLEGE (F24)  |"
-# ECHO "=---------------------------------------="
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@           %&@@@@@@@@@@@     @@    �
-# ECHO "    @@       @%% (@@@@@@@@@  @     @@    �
-# ECHO "    @@      @& @   @ @       @     @@    �
-# ECHO "    @@     @ @ %  / /   @@@@@@     @@    �
-# ECHO "    @@      & @ @  @@              @@    �
-# ECHO "    @@       @/ @*@ @ @   @        @@    �
-# ECHO "    @@           @@@@  @@ @ @      @@    �
-# ECHO "    @@            /@@    @@@ @     @@    �
-# ECHO "    @@     @      / /     @@ @     @@    �
-# ECHO "    @@     @ @@   /@/   @@@ @      @@    �
-# ECHO "    @@     @@@@@@@@@@@@@@@         @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@         S O F I A           @@    �
-# ECHO "    @@                             @@    �
-# ECHO "    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    �
-# ECHO "                                         "
-# ECHO "[READER SCRIPT .........................]"
-# ECHO "                                         "
+# *  ####### ####      #####   ##   ##    ####    #####   #####    #######  *
+# *   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *
+# *   ##      ##      ##   ##  ##   ##  ##       ##   ##   ##  ##   ##      *
+# *   ####    ##      ##   ##  ## # ##  ##       ##   ##   ##  ##   ####    *
+# *   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *
+# *   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *
+# *  ####    #######   #####   ##   ##    ####    #####   #####    #######  *
+#
 */
 
 /*
 ************************************************************
 * File name: MainReader.c
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 � Compilers, Lab Section: [011, 012]
+* Course: CST 8152 Compilers, Lab Section: [303]
 * Assignment: A12, A22, A32.
-* Date: May 01 2024
-* Professor: Paulo Sousa
+* Date: Jan 27, 2025
+* Professor: Khan, Sarah
 * Purpose: This file is the main code for Buffer/Reader (A12)
 * Function list: (...).
 *************************************************************/
@@ -51,7 +36,7 @@
  * ADVICE 2: Preprocessor directives
  * The #define _CRT_SECURE_NO_WARNINGS should be used in MS Visual Studio projects
  * to suppress the warnings about using "unsafe" functions like fopen()
- * and standard sting library functions defined in string.h.
+ * and standard string library functions defined in string.h.
  * The define directive does not have any effect on other compiler projects
  * (Gcc, VSCode, Codeblocks, etc.).
  *.............................................................................
@@ -91,11 +76,11 @@
   *  Function declarations
   * -------------------------------------------------------------
   */
-sofia_void bErrorPrint(sofia_string fmt, ...);
-sofia_void displayBuffer(BufferPointer ptr_Buffer);
-sofia_long getFileSize(sofia_string fname);
-sofia_intg isNumber(const sofia_string ns);
-sofia_void startReader(sofia_string, sofia_string, sofia_char, sofia_intg, sofia_intg);
+flowcode_void bErrorPrint(flowcode_string fmt, ...);
+flowcode_void displayBuffer(BufferPointer ptr_Buffer);
+flowcode_long getFileSize(flowcode_string fname);
+flowcode_int isNumber(const flowcode_string ns);
+flowcode_void startReader(sofia_string, flowcode_string, sofia_char, sofia_intg, flowcode_int);
 
 /*
 ************************************************************
@@ -107,13 +92,13 @@ sofia_void startReader(sofia_string, sofia_string, sofia_char, sofia_intg, sofia
 ************************************************************
 */
 
-sofia_intg mainReader(sofia_intg argc, sofia_string* argv) {
+flowcode_int mainReader(flowcode_int argc, flowcode_string* argv) {
 
 	/* Create source input buffer */
-	sofia_string program = argv[0];
-	sofia_string input = argv[2];
-	sofia_char mode = MODE_FIXED;
-	sofia_intg size = 0, increment = 0, wrongNumber = 0;
+	flowcode_string program = argv[0];
+	flowcode_string input = argv[2];
+	flowcode_char mode = MODE_FIXED;
+	flowcode_int size = 0, increment = 0, wrongNumber = 0;
 
 	/* Missing file name or/and mode parameter */
 	if (argc <= 2) {
@@ -165,12 +150,12 @@ sofia_intg mainReader(sofia_intg argc, sofia_string* argv) {
 *	- Increment: buffer increment.
 ************************************************************
 */
-sofia_void startReader(sofia_string program, sofia_string input, sofia_char mode, sofia_intg size, sofia_intg increment) {
+flowcode_void startReader(flowcode_string program, flowcode_string input, flowcode_char mode, flowcode_int size, flowcode_int increment) {
 
 	BufferPointer bufferp;		/* pointer to Buffer structure */
 	FILE* fileHandler;			/* input file handle */
-	sofia_intg loadSize = 0;		/* the size of the file loaded in the buffer */
-	sofia_char symbol;			/* symbol read from input file */
+	flowcode_int loadSize = 0;		/* the size of the file loaded in the buffer */
+	flowcode_char symbol;			/* symbol read from input file */
 
 	/* Create buffer */
 	bufferp = readerCreate(size, increment, mode);
@@ -193,7 +178,7 @@ sofia_void startReader(sofia_string program, sofia_string input, sofia_char mode
 	loadSize = readerLoad(bufferp, fileHandler);
 
 	/* If the input file has not been completely loaded, find the file size and print the last symbol loaded */
-	if (loadSize == SOFIA_ERROR) {
+	if (loadSize == FLOWCODE_ERROR) {
 		printf("The input file %s %s\n", input, "has not been completely loaded.");
 		printf("Current size of buffer: %d.\n", readerGetSize(bufferp));
 		symbol = (char)fgetc(fileHandler);
@@ -205,7 +190,7 @@ sofia_void startReader(sofia_string program, sofia_string input, sofia_char mode
 	fclose(fileHandler);
 
 	/* Finishes the buffer: add end of file character (EOF) to the buffer display again */
-	if ((loadSize != SOFIA_ERROR) && (loadSize != 0)) {
+	if ((loadSize != FLOWCODE_ERROR) && (loadSize != 0)) {
 		if (!readerAddChar(bufferp, READER_TERMINATOR)) {
 			bErrorPrint("%s%s%s", program, ": ", "Error in compacting buffer.");
 		}
@@ -228,12 +213,12 @@ sofia_void startReader(sofia_string program, sofia_string input, sofia_char mode
 ************************************************************
 */
 
-sofia_void bErrorPrint(sofia_string fmt, ...) {
+flowcode_void bErrorPrint(flowcode_string fmt, ...) {
 	/* Initialize variable list */
 	va_list ap;
 	va_start(ap, fmt);
 
-	(sofia_void)vfprintf(stderr, fmt, ap);
+	(flowcode_void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 
 	/* Move to new line */
@@ -249,9 +234,9 @@ sofia_void bErrorPrint(sofia_string fmt, ...) {
 ************************************************************
 */
 
-sofia_long getFileSize(sofia_string fname) {
+flowcode_long getFileSize(flowcode_string fname) {
 	FILE* input;
-	sofia_long flength;
+	flowcode_long flength;
 	input = fopen(fname, "r");
 	if (input == NULL) {
 		bErrorPrint("%s%s", "Cannot open file: ", fname);
@@ -273,8 +258,8 @@ sofia_long getFileSize(sofia_string fname) {
 ************************************************************
 */
 
-sofia_intg isNumber(const sofia_string ns) {
-	sofia_char c; sofia_intg i = 0;
+flowcode_int isNumber(const flowcode_string ns) {
+	flowcode_char c; flowcode_int i = 0;
 	if (ns == NULL) return 0;
 	while ((c = ns[i++]) == 0) {
 		if (!isdigit(c)) return 0;
@@ -290,7 +275,7 @@ sofia_intg isNumber(const sofia_string ns) {
 ************************************************************
 */
 
-sofia_void displayBuffer(BufferPointer ptr_Buffer) {
+flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n",
 		readerGetSize(ptr_Buffer));
