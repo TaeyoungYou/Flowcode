@@ -51,7 +51,7 @@
  * Function name: readerCreate
  * Purpose: Creates the buffer reader according to capacity, increment
 	 factor and operational mode ('f', 'a', 'm')
- * Author: -
+ * Author: Taeyoung You
  * History/Versions: S22
  * Called functions: calloc(), malloc()
  * Parameters:
@@ -69,25 +69,44 @@
  */
 
 BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_char mode) {
+	/* 변수 정의 */
 	BufferPointer readerPointer;
 	flowcode_int count = 0;
-	/* TO_DO: Defensive programming */
+
+	/* size, increment, mode가 만약 0일 경우, default값으로 초기화 */
 	if (!size)
 		size = READER_DEFAULT_SIZE;
 	if (!increment)
 		increment = READER_DEFAULT_INCREMENT;
 	if (!mode)
 		mode = MODE_FIXED;
-	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));
-	if (!readerPointer)
-		return FLOWCODE_INVALID;
-	readerPointer->content = (flowcode_string)malloc(size);
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Initialize the histogram */
-	/* TO_DO: Initialize errors */
-	readerPointer->mode = mode;
+
+	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));	/* BufferPointer를 0으로 초기화하면서 동적할당 */
+	if (!readerPointer) return FLOWCODE_INVALID;				/* 동적할당 실패시, NULL반환 */
+
+	/* readerPointer의 요소들 초기화 */
+	/* content 초기화 */
+	readerPointer->content = (flowcode_string)malloc(size);		/* 구문(flowcode_string)을 동적할당하고, content에 초기화 */
+	if (!readerPointer->content) return FLOWCODE_INVALID;		/* content의 동적할당 실패시, NULL 반환 */
+	/* size 초기화 */
 	readerPointer->size = size;
+	/* increment 초기화 */
 	readerPointer->increment = increment;
+	/* mode 초기화 */
+	readerPointer->mode = mode;
+	/* flags 초기화 */
+	readerPointer->flags.isEmpty = READER_DEFAULT_FLAG;
+	readerPointer->flags.isFull = READER_DEFAULT_FLAG;
+	readerPointer->flags.isRead = READER_DEFAULT_FLAG;
+	readerPointer->flags.isMoved = READER_DEFAULT_FLAG;
+	/* Position 초기화 */
+	// readerPointer->positions									/* 일단 초기화 안함 - 잘모르겠음 */
+	/* histogram 초기화 */
+	for (int count; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* NCHAR만큼의 요소들을 0으로 초기화 */
+	/* numReaderErrors 초기화 */
+	readerPointer->numReaderErrors = FLOWCODE_ERROR;
+	/* checksum 초기화 */
+	readerPointer->checksum = 1;								/* 읻단 1로 초기화 - 잘모르겠음 */
 	/* TO_DO: Initialize flags */
 	/* TO_DO: Default checksum */
 	return readerPointer;

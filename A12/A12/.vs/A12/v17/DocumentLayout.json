@@ -48,17 +48,11 @@
               "RelativeDocumentMoniker": "Reader.c",
               "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\A12\\A12\\Reader.c",
               "RelativeToolTip": "Reader.c",
-              "ViewState": "AgIAAP0AAAAAAAAAAAAAAGcCAAABAAAAAAAAAA==",
+              "ViewState": "AgIAANMAAAAAAAAAAAAAAGcCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-01-27T04:05:29.105Z",
               "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,

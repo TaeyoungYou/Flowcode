@@ -46,7 +46,7 @@
 /* TO_DO: Adjust your language (cannot be "Sofia") */
 
 /* TO_DO: Language name */
-#define STR_LANGNAME	"Flowcode"
+#define STR_LANGNAME	"FlowCode"
 
 /* TO_DO: Logical constants - adapt for your language */
 #define FLOWCODE_TRUE		1
