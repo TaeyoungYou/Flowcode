@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "A12\\Reader.c",
               "ToolTip": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.c",
               "RelativeToolTip": "A12\\Reader.c",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAAAIUAAABMAAAAAAAAAA==",
+              "ViewState": "AgIAANECAAAAAAAAAAAAAIUAAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-01-27T02:30:30.679Z",
               "IsPinned": true,
@@ -57,8 +57,7 @@
               "ViewState": "AgIAAEwAAAAAAAAAAAAAAFkAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-01-27T02:30:32.402Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -74,8 +73,7 @@
               "RelativeToolTip": "A12\\MainReader.c",
               "ViewState": "AgIAAHIAAAAAAAAAAAAAAGMAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-01-27T02:30:28.242Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-27T02:30:28.242Z"
             },
             {
               "$type": "Document",
@@ -87,8 +85,7 @@
               "RelativeToolTip": "A12\\Compilers.h",
               "ViewState": "AgIAACcAAAAAAAAAAAAmwDUAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-01-27T02:30:27.442Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-27T02:30:27.442Z"
             },
             {
               "$type": "Document",
@@ -100,8 +97,7 @@
               "RelativeToolTip": "A12\\Compilers.c",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-01-27T02:30:26.239Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-27T02:30:26.239Z"
             }
           ]
         }
