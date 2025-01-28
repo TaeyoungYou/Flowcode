@@ -417,6 +417,10 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 */
 flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int pos) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_INVALID;
+	if (pos < 0 || pos > readerPointer->positions.wrte)
+		retru FLOWCODE_INVALID;
 	return readerPointer->content + pos;
 }
 
