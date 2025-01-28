@@ -345,7 +345,12 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 */
 flowcode_bool readerRetract(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) /* bufferPointer cannot be NULL(check valiation) */
+		return FLOWCODE_FALSE;
+	if (readerGetPosRead(readerPointer) < 0) /* Read pointer must be greater than starting point(0) */
+		return FLOWCODE_FALSE;
 	/* TO_DO: Retract (return 1 pos read) */
+	readerPointer->positions.read--; /* Decrease the read pointer by 1 */
 	return FLOWCODE_TRUE;
 }
 
