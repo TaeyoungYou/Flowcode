@@ -527,8 +527,10 @@ flowcode_int readerGetSize(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetInc(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR;
 	/* TO_DO: Return increment */
-	return 0;
+	return readerPointer->increment;
 }
 
 /*
