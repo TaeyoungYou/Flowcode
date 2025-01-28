@@ -393,7 +393,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 
 	/* TO_DO: Check condition to read/wrte */
 	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags.isRead = FLOWCODE_TRUE;
+		readerPointer->flags.isRead = FLOWCODE_TRUE; /* created code without bitwise offset */
 		return '\0';
 	}
 	return readerPointer->content[readerPointer->positions.read++];
