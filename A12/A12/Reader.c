@@ -298,10 +298,18 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 	flowcode_int size = 0;
 	flowcode_char c;
 	/* TO_DO: Defensive programming */
-	while (!feof(fileDescriptor)) {
-		c = (flowcode_char)fgetc(fileDescriptor);
-		readerPointer = readerAddChar(readerPointer, c);
-		size++;
+	if (!readerPointer || !fileDescriptor) /* Check if readerPointer exists and file is valid */
+		return FLOWCODE_ERROR;
+
+	while (!feof(fileDescriptor)) { /* read each character until the end of file */
+		c = (flowcode_char)fgetc(fileDescriptor); /* store each character from the file into the variable c */
+
+		if (!readerAddChar(readerPointer, c)){
+			ungetc(c, fileDescriptor); /* delete the invalid character and reset the read pointer to the previous one */
+			break;
+		}
+		readerPointer = readerAddChar(readerPointer, c); /* apprend the value of variable c into the reader buffer */
+		size++; /* increase the size of buffer */
 	}
 	/* TO_DO: Defensive programming */
 	return size;
