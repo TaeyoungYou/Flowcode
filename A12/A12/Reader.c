@@ -388,7 +388,14 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 */
 flowcode_char readerGetChar(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return CHARSEOF; /* BufferPointer must exist but cannot return NULL bc the return type is flowcode_char */
+
 	/* TO_DO: Check condition to read/wrte */
+	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
+		readerPointer->flags.isRead = FLOWCODE_TRUE;
+		return '\0';
+	}
 	return readerPointer->content[readerPointer->positions.read++];
 }
 
