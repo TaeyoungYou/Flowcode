@@ -366,7 +366,12 @@ flowcode_bool readerRetract(BufferPointer const readerPointer) {
 */
 flowcode_bool readerRestore(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) /* validate invalid value in readerPointer */
+		return FLOWCODE_FALSE;
+	if (readerGetPosMark(readerPointer) < 0 || readerGetPosMark(readerPointer) > readerGetPosWrte(readerPointer)) /* check if the mark offset is between 0 and current wrte */
+		return FLOWCODE_FALSE;
 	/* TO_DO: Restore positions (read to mark) */
+	readerPointer->positions.read = readerGetPosMark(readerPointer);
 	return FLOWCODE_TRUE;
 }
 
