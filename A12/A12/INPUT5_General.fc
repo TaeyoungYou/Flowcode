@@ -8,7 +8,11 @@ begin:
 	string text
 	end;
 
+<<<<<<< HEAD
 	int main():
+=======
+	int main():s
+>>>>>>> 3ee01364a8599d8b0ceff7d34babe781b5b0dbea
 		a=1.2
 		sum008% = 7.87050
 		i=0
@@ -19,6 +23,7 @@ begin:
 			sum = sum + a - 1
 		end;
 
+<<<<<<< HEAD
 		if (text@ == '')then {
 			text@ = 'prog' ++ 'ram';
 		}
@@ -33,4 +38,20 @@ begin:
 		}
 		else{};
 	}
+=======
+		if text == '' then:
+			text = "'prog' 'ram'"
+		else:
+			text = "$text 'ram'"
+		endif;
+
+		Output: '\* This is a program -:)-<-<-- \*';
+		Output: text;
+
+		if text not 'program' and sum==8.0 or i>10 then:
+			Output: sum;
+			Output: ' ';
+		endif;
+	end;
+>>>>>>> 3ee01364a8599d8b0ceff7d34babe781b5b0dbea
 end;
