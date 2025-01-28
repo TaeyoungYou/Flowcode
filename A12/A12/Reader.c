@@ -393,10 +393,10 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 
 	/* TO_DO: Check condition to read/wrte */
 	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags.isRead = FLOWCODE_TRUE; /* created code without bitwise offset */
+		readerPointer->flags |= END; /* created code with bitwise offset flags END or bitwise operator */
 		return '\0';
 	}
-	return readerPointer->content[readerPointer->positions.read++];
+	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */
 }
 
 
@@ -417,11 +417,11 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 */
 flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int pos) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if readerPointer is invalid, it returns NULL */
 		return FLOWCODE_INVALID;
-	if (pos < 0 || pos > readerPointer->positions.wrte)
-		retru FLOWCODE_INVALID;
-	return readerPointer->content + pos;
+	if (pos < 0 || pos > readerPointer->positions.wrte) /* Check position is within valid range(positive integer & smaller than current wrte position) */
+		return FLOWCODE_INVALID; 
+	return readerPointer->content + pos; /* return position of content pointing to */
 }
 
 
@@ -442,7 +442,7 @@ flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int
 */
 flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return read */
 	return readerPointer->positions.read;
@@ -511,7 +511,7 @@ flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetSize(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return size */
 	return readerPointer->size;
@@ -533,7 +533,7 @@ flowcode_int readerGetSize(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetInc(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return increment */
 	return readerPointer->increment;
@@ -555,7 +555,7 @@ flowcode_int readerGetInc(BufferPointer const readerPointer) {
 */
 flowcode_char readerGetMode(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if readerPointer is invalid, it returns CHARSEOF (-1) */
 		return CHARSEOF;
 	/* TO_DO: Return mode */
 	return readerPointer->mode;
@@ -593,7 +593,7 @@ flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetNumErrors(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) /* if the pointer is invalid return error */
 		return FLOWCODE_ERROR; 
 	/* TO_DO: Returns the number of errors */
 	return readerPointer->numReaderErrors; 

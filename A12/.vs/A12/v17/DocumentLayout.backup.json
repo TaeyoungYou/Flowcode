@@ -30,11 +30,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Reader.c",
+              "DocumentMoniker": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.c",
+              "RelativeDocumentMoniker": "A12\\Reader.c",
+              "ToolTip": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.c",
+              "RelativeToolTip": "A12\\Reader.c",
+              "ViewState": "AgIAAJgBAAAAAAAAAAAEwKYBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-01-27T02:30:30.679Z",
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -44,23 +54,15 @@
               "RelativeDocumentMoniker": "A12\\Reader.h",
               "ToolTip": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.h",
               "RelativeToolTip": "A12\\Reader.h",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAmwIYAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAAAIgAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-01-27T02:30:32.402Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Reader.c",
-              "DocumentMoniker": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.c",
-              "RelativeDocumentMoniker": "A12\\Reader.c",
-              "ToolTip": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Reader.c",
-              "RelativeToolTip": "A12\\Reader.c",
-              "ViewState": "AgIAABUCAAAAAAAAAAAmwCcCAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-01-27T02:30:30.679Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -83,7 +85,7 @@
               "RelativeDocumentMoniker": "A12\\Compilers.h",
               "ToolTip": "C:\\Users\\User\\25W\\CST8152 Complier\\git clone\\Flowcode\\A12\\A12\\Compilers.h",
               "RelativeToolTip": "A12\\Compilers.h",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFQAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAmwDUAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-01-27T02:30:27.442Z",
               "EditorCaption": ""
