@@ -323,7 +323,11 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 */
 flowcode_bool readerRecover(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) /* check if readerPointer doesn't exist */
+		return FLOWCODE_FALSE;
 	/* TO_DO: Recover positions: read and mark must be zero */
+	readerPointer->positions.read == 0; /* if readerPointer exist, it reset read and mark offset to 0 */
+	readerPointer->positions.mark == 0;
 	/* TO_DO: Update flags */
 	return FLOWCODE_TRUE;
 }
