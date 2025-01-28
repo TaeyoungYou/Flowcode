@@ -336,7 +336,7 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 		printf("%c", c); /* print character that was jsut read */
 		
 		if (readerPointer->positions.read == readerPointer->positions.wrte) { /* if there isn't any character left to read ( means reach the end of buffer to read) */
-			readerPointer->flags |= FUL; /* set the flag is full */
+			readerPointer->flags.isFull; /* set the flag is full */
 			break;
 		}
 		c = readerGetChar(readerPointer); /* read and store the next character */
@@ -481,7 +481,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 
 	/* TO_DO: Check condition to read/wrte */
 	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags |= END; /* created code with bitwise offset flags END or bitwise operator */
+		readerPointer->flags.isFull;
 		return '\0';
 	}
 	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */

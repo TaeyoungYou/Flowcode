@@ -110,7 +110,7 @@ typedef struct bufferReader {
 	flowcode_int	size;				/* current dynamic memory size (in bytes) allocated to character buffer */
 	flowcode_int	increment;			/* character array increment factor */
 	flowcode_char	mode;				/* operational mode indicator */
-	flowcode_byte	flags;				/* contains flag bits */
+	Flag			flags;				/* contains flag bits */
 	Position		positions;			/* Offset / position field */
 	flowcode_int	histogram[NCHAR];	/* Statistics of chars */
 	flowcode_int	numReaderErrors;	/* Number of errors from Reader */
