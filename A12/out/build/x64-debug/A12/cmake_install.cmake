@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/A12
+# Install script for directory: C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/A12
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

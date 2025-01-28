@@ -452,8 +452,10 @@ flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR; /* if the return pointer doesn't exist, it will return error(-1) */
 	/* TO_DO: Return wrte */
-	return 0;
+	return readerPointer->positions.wrte;
 }
 
 
@@ -473,8 +475,10 @@ flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR; /* if the return pointer doesn't exist, it will return error(-1) */
 	/* TO_DO: Return mark */
-	return 0;
+	return readerPointer->positions.mark; 
 }
 
 
@@ -494,8 +498,10 @@ flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetSize(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR;
 	/* TO_DO: Return size */
-	return 0;
+	return readerPointer->size;
 }
 
 /*

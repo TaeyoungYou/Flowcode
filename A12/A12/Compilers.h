@@ -46,7 +46,7 @@
 /* TO_DO: Adjust your language (cannot be "Sofia") */
 
 /* TO_DO: Language name */
-#define STR_LANGNAME	"Flowcode"
+#define STR_LANGNAME	"FlowCode"
 
 /* TO_DO: Logical constants - adapt for your language */
 #define FLOWCODE_TRUE		1
@@ -71,7 +71,7 @@ typedef int				flowcode_int;
 typedef float			flowcode_float;
 typedef void			flowcode_void;
 
-typedef char			flowcode_bool;
+typedef char			flowcode_bool; /* boolean? ? char??? int ? bool ????*/
 typedef unsigned char	flowcode_byte;
 
 typedef long			flowcode_long;
