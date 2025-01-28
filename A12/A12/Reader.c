@@ -327,13 +327,21 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 	flowcode_int cont = 0;
 	flowcode_char c;
 	/* TO_DO: Defensive programming (including invalid chars) */
-	c = readerGetChar(readerPointer);
-	while (cont < readerPointer->positions.wrte) {
-		cont++;
-		printf("%c", c);
-		c = readerGetChar(readerPointer);
+	if (!readerPointer) /* check if the pointer is invalid */
+		return FLOWCODE_ERROR;
+
+	c = readerGetChar(readerPointer); 
+	while (cont < readerPointer->positions.wrte) { /* */
+		cont++; /* increase the number of char printed (using as a tracker) */
+		printf("%c", c); /* print character that was jsut read */
+		
+		if (readerPointer->positions.read == readerPointer->positions.wrte) { /* if there isn't any character left to read ( means reach the end of buffer to read) */
+			readerPointer->flags |= FUL; /* set the flag is full */
+			break;
+		}
+		c = readerGetChar(readerPointer); /* read and store the next character */
 	}
-	return cont;
+	return cont; /* return the number of char */
 }
 
 /*
