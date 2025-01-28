@@ -81,7 +81,7 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 	if (!mode)
 		mode = MODE_FIXED;
 
-	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));	/* BufferPointer를 0으로 초기화하면서 동적할당 */
+	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));	/* BufferPointer를 동적할당 */
 	if (!readerPointer) return FLOWCODE_INVALID;				/* 동적할당 실패시, NULL반환 */
 
 	/* readerPointer의 요소들 초기화 */
@@ -99,16 +99,17 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 	readerPointer->flags.isFull = READER_DEFAULT_FLAG;
 	readerPointer->flags.isRead = READER_DEFAULT_FLAG;
 	readerPointer->flags.isMoved = READER_DEFAULT_FLAG;
-	/* Position 초기화 */
-	// readerPointer->positions									/* 일단 초기화 안함 - 잘모르겠음 */
+	/* Position 초기화 - 일단 각 요소 0으로 초기화 */
+	readerPointer->positions.wrte = 0;
+	readerPointer->positions.read = 0;
+	readerPointer->positions.mark = 0;
 	/* histogram 초기화 */
-	for (int count; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* NCHAR만큼의 요소들을 0으로 초기화 */
+	for (count = 0; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* NCHAR만큼의 요소들을 0으로 초기화 */
 	/* numReaderErrors 초기화 */
 	readerPointer->numReaderErrors = FLOWCODE_ERROR;
-	/* checksum 초기화 */
-	readerPointer->checksum = 1;								/* 읻단 1로 초기화 - 잘모르겠음 */
-	/* TO_DO: Initialize flags */
-	/* TO_DO: Default checksum */
+	/* checksum 초기화 - 일단 0로 초기화 (잘 모르겠음) */
+	readerPointer->checksum = 0;
+
 	return readerPointer;
 }
 
@@ -117,6 +118,7 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 ***********************************************************
 * Function name: readerAddChar
 * Purpose: Adds a char to buffer reader
+* Author: -
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   ch = char to be added
@@ -170,6 +172,7 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 ***********************************************************
 * Function name: readerClear
 * Purpose: Clears the buffer reader
+* Author: Taeyoung You
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -181,9 +184,28 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 *************************************************************
 */
 flowcode_bool readerClear(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Adjust the write, mark and read to zero */
-	/* TO_DO: Adjust flags */
+	/* 변수 할당 */
+	int i;
+
+	/* 포인터 상수이지만 그래도 NULL을 가리키는 포인터인지 확인 및 안에 내용 중 동적 할당이 되어 있는지 확인 */
+	if (!readerPointer && !readerPointer->content) return FLOWCODE_FALSE;
+
+	/* 구조체 요소들 초기화 */
+	memset(readerPointer->content, 0, readerPointer->size);
+	readerPointer->size = READER_DEFAULT_SIZE;
+	readerPointer->increment = READER_DEFAULT_INCREMENT;
+	readerPointer->mode = MODE_FIXED;
+	readerPointer->flags.isEmpty = READER_DEFAULT_FLAG;
+	readerPointer->flags.isFull = READER_DEFAULT_FLAG;
+	readerPointer->flags.isRead = READER_DEFAULT_FLAG;
+	readerPointer->flags.isMoved = READER_DEFAULT_FLAG;
+	readerPointer->positions.wrte = 0;
+	readerPointer->positions.read = 0;
+	readerPointer->positions.mark = 0;
+	for (i = 0; i < NCHAR; ++i) readerPointer->histogram[i] = 0;
+	readerPointer->numReaderErrors = FLOWCODE_ERROR;
+	readerPointer->checksum = 0;
+
 	return FLOWCODE_TRUE;
 }
 
@@ -191,6 +213,7 @@ flowcode_bool readerClear(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerFree
 * Purpose: Releases the buffer address
+* Author: Taeyoung You
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -202,8 +225,12 @@ flowcode_bool readerClear(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerFree(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Free pointers */
+	/* 포인터 상수이지만 그래도 NULL을 가리키는 포인터인지 확인 및 안에 내용 중 동적 할당이 되어 있는지 확인 */
+	if (!readerPointer && !readerPointer->content) return FLOWCODE_FALSE;
+
+	/* 동적 할당 해제 */
+	free(readerPointer->content);
+	free(readerPointer);
 	return FLOWCODE_TRUE;
 }
 
@@ -211,6 +238,7 @@ flowcode_bool readerFree(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerIsFull
 * Purpose: Checks if buffer reader is full
+* Author: Taeyoung You
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -222,9 +250,10 @@ flowcode_bool readerFree(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerIsFull(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Check flag if buffer is FUL */
-	return 0;
+	/* readerPointer가 유효하지 않는 값을 가리킬때 (NULL) */
+	if (!readerPointer) return FLOWCODE_FALSE;
+	/* flag의 isFull의 boolean값을 보고 판단 */
+	return readerPointer->flags.isFull;
 }
 
 
@@ -232,6 +261,7 @@ flowcode_bool readerIsFull(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerIsEmpty
 * Purpose: Checks if buffer reader is empty.
+* Author: Taeyoung You
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -243,15 +273,17 @@ flowcode_bool readerIsFull(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerIsEmpty(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Check flag if buffer is EMP */
-	return 0;
+	/* readerPointer가 유효하지 않는 값을 가리킬때 (NULL) */
+	if (!readerPointer) return FLOWCODE_FALSE;
+	/* flag의 isEmpty의 boolean값을 보고 판단 */
+	return readerPointer->flags.isEmpty;
 }
 
 /*
 ***********************************************************
 * Function name: readerSetMark
 * Purpose: Adjust the position of mark in the buffer
+* Author: Taeyoung You
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   mark = mark position for char
@@ -264,8 +296,15 @@ flowcode_bool readerIsEmpty(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerSetMark(BufferPointer const readerPointer, flowcode_int mark) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Adjust mark */
+	/* 변수 할당 */
+	flowcode_int currentWrte;
+	/* 유효한 BufferPointer인지 확인 */
+	if (!readerPointer)	return FLOWCODE_FALSE;
+
+	/* 현재 Position의 Wrte값 가져오기 */
+	currentWrte = readerGetPosWrte(readerPointer);
+	/* 0 ~ Wrte인지 확인 (Valid한 값인지) 후, set */
+	if (0 <= mark && mark <= currentWrte) readerPointer->positions.mark = mark;
 	return FLOWCODE_TRUE;
 }
 
