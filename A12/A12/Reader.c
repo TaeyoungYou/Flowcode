@@ -583,8 +583,10 @@ flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetNumErrors(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR;
 	/* TO_DO: Returns the number of errors */
-	return 0;
+	return readerPointer->numReaderErrors; 
 }
 
 /*
