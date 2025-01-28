@@ -160,6 +160,7 @@ flowcode_void startReader(flowcode_string program, flowcode_string input, flowco
 	/* Create buffer */
 	bufferp = readerCreate(size, increment, mode);
 
+	/* BufferPointer의 생성 및 초기화를 실패 했을 때 */
 	if (bufferp == NULL) {
 		bErrorPrint("%s%s", program,
 			": Cannot allocate buffer - Use: buffer <input> <mode> <size> <increment>.");

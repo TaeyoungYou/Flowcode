@@ -70,6 +70,7 @@ enum READER_MODE {
 
 #define READER_DEFAULT_SIZE			250		/* default initial buffer reader capacity */
 #define READER_DEFAULT_INCREMENT	10		/* default increment factor */
+#define READER_DEFAULT_FLAG			0x00	/* default flag value */
 
 #define NCHAR				128			/* Chars from 0 to 127 */
 

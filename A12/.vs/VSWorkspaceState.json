@@ -1,4 +1,10 @@
 {
+  "ExpandedNodes": [
+    "",
+    "\\A12"
+  ],
+  "SelectedNode": "\\CMakePresets.json",
+  "PreviewInSolutionExplorer": false,
   "OutputFoldersPerTargetSystem": {
     "Local Machine": [
       "out\\build\\x64-debug",
@@ -10,11 +16,5 @@
       "out\\build\\x86-release",
       "out\\install\\x86-release"
     ]
-  },
-  "ExpandedNodes": [
-    "",
-    "\\A12"
-  ],
-  "SelectedNode": "\\A12\\Reader.c",
-  "PreviewInSolutionExplorer": false
+  }
 }

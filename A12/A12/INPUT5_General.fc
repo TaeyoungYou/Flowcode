@@ -1,21 +1,24 @@
-# Sofia Example 5
-The program is "lexically" correct and should not generate any error (based on Platypus from Svillen Ranev) #
-main&() {
-	data {
-		int i$;
-		real a%, sum008%;
-		string text@;
-	}
-	code {
-		a%=+1.2;
-		sum008% = 7.87050 ;
-		input&(a%,sum008%);
-		i$=0;
-		while (i$ < 32767 .or. i$ == 32767)do{
-			i$ = i$ + 2;
-			a% = a% * i$/0.5 ;
-			sum008% = sum008% + a% - 1 ;
-		};
+** FlowCode Example 5
+The program is "lexically" correct and should not generate any error (based on Platypus from Svillen Ranev) **
+begin:
+
+	declaration:
+	int i;
+	double a, sum
+	string text
+	end;
+
+	int main():
+		a=1.2
+		sum008% = 7.87050
+		i=0
+		check i < 32767 or i == 32767
+		repeat
+			i = i + 2
+			a = a * i/0.5
+			sum = sum + a - 1
+		end;
+
 		if (text@ == '')then {
 			text@ = 'prog' ++ 'ram';
 		}
@@ -30,4 +33,4 @@ main&() {
 		}
 		else{};
 	}
-}
+end;
