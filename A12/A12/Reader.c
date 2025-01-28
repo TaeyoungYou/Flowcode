@@ -438,8 +438,10 @@ flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int
 */
 flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer)
+		return FLOWCODE_ERROR;
 	/* TO_DO: Return read */
-	return 0;
+	return readerPointer->positions.read;
 }
 
 
