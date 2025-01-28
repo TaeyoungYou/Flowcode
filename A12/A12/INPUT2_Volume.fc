@@ -1,14 +1,14 @@
 ** FlowCode Example 2:
   Volume of a sphere **
-beign:
+begin:
 	declaration:
 	double PI, VOL
 	end;
 	
-int main(double r) {
+bool main(double r) {
 	PI = 3.14;
 	Vol = 4.0 / 3.0 * PI * (r * r * r);
 	Output: Vol;
-	return 0;
+	return true;
 	end;
 end;

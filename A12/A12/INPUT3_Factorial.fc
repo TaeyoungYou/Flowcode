@@ -1,9 +1,9 @@
 ** FLowCode Example 3:
   Testing numbers (ex: factorial) **
-beign:
+begin:
 	declaration:
 	int i, n, f
-int main():
+bool main():
         f=1
         i=1
         
@@ -19,7 +19,7 @@ int main():
         Output:'Factorial:';
         Output: f;
 	
-	return 0;
+	return true;
     end;
 end;
 

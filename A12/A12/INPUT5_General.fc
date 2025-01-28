@@ -7,10 +7,12 @@ begin:
 	double a, sum
 	string text
 	end;
-	int main():
+  
+	bool main():
 		a=1.2
-		sum008% = 7.87050
+		sum = 7.87050
 		i=0
+		
 		check i < 32767 or i == 32767
 		repeat
 			i = i + 2
@@ -32,4 +34,20 @@ begin:
 		endif;
 	end;
 
+		if text == '' then:
+			text = "'prog' 'ram'"
+		else:
+			text = "$text 'ram'"
+		endif;
+
+		Output: '\* This is a program -:)-<-<-- \*';
+		Output: text;
+
+		if text not 'program' and sum==8.0 or i>10 then:
+			Output: sum;
+			Output: ' ';
+		endif;
+	
+	return true;
+	end;
 end;
