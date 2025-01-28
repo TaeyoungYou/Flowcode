@@ -2,8 +2,8 @@
   The program is "lexically" correct
   and should not generate any error **
 begin:
-	int main():
+	bool main():
 		Output: 'Hello world!';
-		return 0;
+		return true;
 	end;
 end;
