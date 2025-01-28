@@ -58,7 +58,7 @@
 #include "Reader.h"
 #endif
 
- /* Check for ANSI C compliancy */
+/* Check for ANSI C compliancy */
 #define ANSI_C 0
 #if defined(__STDC__)
 #undef ANSI_C
@@ -80,7 +80,7 @@ flowcode_void bErrorPrint(flowcode_string fmt, ...);
 flowcode_void displayBuffer(BufferPointer ptr_Buffer);
 flowcode_long getFileSize(flowcode_string fname);
 flowcode_int isNumber(const flowcode_string ns);
-flowcode_void startReader(sofia_string, flowcode_string, sofia_char, sofia_intg, flowcode_int);
+flowcode_void startReader(flowcode_string, flowcode_string, flowcode_char, flowcode_int, flowcode_int);
 
 /*
 ************************************************************

@@ -1,0 +1,19 @@
+** FlowCode Example 4
+The program is lexically correct about the SOFIA city **
+beign:
+	** 매개변수로 받은 값도 사용하기 전 정의 되어야 하는가? **
+	declaration:
+		int foundationYear
+		double area, HDI
+		string countryName
+	end;
+
+	int main(int foundationYear, double area, double HDI, string countryName) {
+		foundationYear = -7000;
+		area = 492.0
+		HDI=0.871
+		countryName = 'Bulgary'
+		Output: CountryName;
+		return 0;
+	end;
+end;

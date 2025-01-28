@@ -71,7 +71,7 @@ typedef int				flowcode_int;
 typedef float			flowcode_float;
 typedef void			flowcode_void;
 
-typedef char			flowcode_bool;
+typedef char			flowcode_bool; /* boolean? ? char??? int ? bool ????*/
 typedef unsigned char	flowcode_byte;
 
 typedef long			flowcode_long;

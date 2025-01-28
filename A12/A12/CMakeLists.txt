@@ -3,7 +3,8 @@
 #
 
 # Add source to this project's executable.
-add_executable (A12 "Compilers.c" "MainReader.c" "Reader.c")
+add_executable (A12 "Compilers.h"	"Compilers.c"
+	"Reader.h"		"Reader.c"		"MainReader.c")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET A12 PROPERTY CXX_STANDARD 20)
