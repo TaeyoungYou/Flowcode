@@ -7,7 +7,7 @@ begin:
 	double a, sum
 	string text
 	end;
-
+  
 	bool main():
 		a=1.2
 		sum = 7.87050
@@ -19,6 +19,20 @@ begin:
 			a = a * i/0.5
 			sum = sum + a - 1
 		end;
+		if text == '' then:
+			text = "'prog' 'ram'"
+		else:
+			text = "$text 'ram'"
+		endif;
+
+		Output: '\* This is a program -:)-<-<-- \*';
+		Output: text;
+
+		if text not 'program' and sum==8.0 or i>10 then:
+			Output: sum;
+			Output: ' ';
+		endif;
+	end;
 
 		if text == '' then:
 			text = "'prog' 'ram'"
