@@ -313,6 +313,7 @@ flowcode_bool readerSetMark(BufferPointer const readerPointer, flowcode_int mark
 ***********************************************************
 * Function name: readerPrint
 * Purpose: Prints the string in the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -327,13 +328,18 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 	flowcode_int cont = 0;
 	flowcode_char c;
 	/* TO_DO: Defensive programming (including invalid chars) */
-	c = readerGetChar(readerPointer);
-	while (cont < readerPointer->positions.wrte) {
-		cont++;
-		printf("%c", c);
+	if (!readerPointer) /* check if the pointer is invalid */
+		return FLOWCODE_ERROR;
+
+	while (!(readerPointer->checksum & END)) {/* check if the buffer reaches the end of the file */
 		c = readerGetChar(readerPointer);
+		if (c == CHARSEOF) {
+			break;
+		}
+		printf("%c", c); /* print character that was jsut read */
+		cont++; /* increase the number of char printed (using as a tracker) */
 	}
-	return cont;
+	return cont; /* return the number of char */
 }
 
 /*
@@ -341,6 +347,7 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 * Function name: readerLoad
 * Purpose: Loads the string in the buffer with the content of
 	an specific file.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   fileDescriptor = pointer to file descriptor
@@ -377,6 +384,7 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 ***********************************************************
 * Function name: readerRecover
 * Purpose: Rewinds the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value
@@ -403,6 +411,7 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerRetract
 * Purpose: Retracts the buffer to put back the char in buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -429,6 +438,7 @@ flowcode_bool readerRetract(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerRestore
 * Purpose: Resets the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -456,6 +466,7 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetChar
 * Purpose: Returns the char in the getC position.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -473,7 +484,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 
 	/* TO_DO: Check condition to read/wrte */
 	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags |= END; /* created code with bitwise offset flags END or bitwise operator */
+		readerPointer->checksum |= END;
 		return '\0';
 	}
 	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */
@@ -484,6 +495,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetContent
 * Purpose: Returns the pointer to String.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   pos = position to get the pointer
@@ -510,6 +522,7 @@ flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int
 ***********************************************************
 * Function name: readerGetPosRead
 * Purpose: Returns the value of getCPosition.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -533,6 +546,7 @@ flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetPosWrte
 * Purpose: Returns the position of char to be added
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -556,6 +570,7 @@ flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetPosMark
 * Purpose: Returns the position of mark in the buffer
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -579,6 +594,7 @@ flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetSize
 * Purpose: Returns the current buffer capacity
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -601,6 +617,7 @@ flowcode_int readerGetSize(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetInc
 * Purpose: Returns the buffer increment.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -623,6 +640,7 @@ flowcode_int readerGetInc(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetMode
 * Purpose: Returns the operational mode
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -645,6 +663,7 @@ flowcode_char readerGetMode(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerShowStat
 * Purpose: Shows the char statistic.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value: (Void)
@@ -655,13 +674,36 @@ flowcode_char readerGetMode(BufferPointer const readerPointer) {
 */
 flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) return; /* check if the buffer points to NULL */
 	/* TO_DO: Updates the histogram */
+	printf("Reader statistics:\n");
+
+	flowcode_int count = 0; /* Counter to track the number of printed items (Max 10) */
+
+	/* Loop through all ASCII characters (0 to NCHAR-1) */
+	for (flowcode_int i = 0; i < NCHAR; i++) {
+		if (readerPointer->histogram[i] > 0) { /*  Only print characters that appeared at least once */
+			if (0 <= i || i <= 127) {
+				printf("B[%c]=%d", i, readerPointer->histogram[i]); /* Print the character using a required format (i.e.B[a]=7)*/
+			}
+
+			count++;
+
+			if (count % 10 == 0) { /* Print a newline after every 10 elements */
+				printf("\n");
+			}
+			else {
+				printf(","); /* Separate elements with a comma */
+			}
+		}
+	}
 }
 
 /*
 ***********************************************************
 * Function name: readerNumErrors
 * Purpose: Returns the number of errors found.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -703,6 +745,7 @@ flowcode_void readerCalcChecksum(BufferPointer readerPointer) {
 ***********************************************************
 * Function name: readerPrintFlags
 * Purpose: Sets the checksum of the reader (4 bits).
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -716,6 +759,14 @@ flowcode_void readerCalcChecksum(BufferPointer readerPointer) {
 
 flowcode_bool readerPrintFlags(BufferPointer readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) /* check if the buffer points to NULL */
+		return FLOWCODE_FALSE;
 	/* TO_DO: Shows flags */
+	/* Print the status of each flag using bitwise operations */
+	printf("FUL offset: %d", (readerPointer->checksum & FUL)? FLOWCODE_TRUE: FLOWCODE_FALSE); /* Check if the 'FUL' (Buffer Full) flag is set */
+	printf("EMP offset: %d", (readerPointer->checksum & EMP)? FLOWCODE_TRUE: FLOWCODE_FALSE); /* Check if the 'EMP' (Buffer Empty) flag is set */
+	printf("REL offset: %d", (readerPointer->checksum & REL)? FLOWCODE_TRUE: FLOWCODE_FALSE); /* Check if the 'REL' (Buffer Relocate) flag is set */
+	printf("END offset: %d", (readerPointer->checksum & END)? FLOWCODE_TRUE: FLOWCODE_FALSE); /* Check if the 'END' (Buffer End) flag is set */
+
 	return FLOWCODE_TRUE;
 }
