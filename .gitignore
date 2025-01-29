@@ -1,9 +1,7 @@
 # The Directory related with Visual Studio
 A12/.vs/
-A12/A12/.vs/
 
 # The Directory builds CMake Files (Build Artifact)
 A12/out/
-A12/A12/out/
 
 # Add Additional Directory and Files Below...
