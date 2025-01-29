@@ -83,11 +83,11 @@ enum READER_MODE {
 /* Offset declaration */
 
 /* BITS(7654.3210)*/
-#define READER_DEFAULT_FLAG 0x00 /* (0000.0000)_2 = (000)_10 */
-#define FUL 0x01 /* TO_DO: BIT 0: FUL = Buffer full flag  (0000.0001) */
-#define EMP 0x02 /* TO_DO: BIT 1: EMP = Buffer empty flag (0000.0010) */
-#define REL 0x04 /* TO_DO: BIT 2: REL = Rellocation memory flag (0000.0100) */
-#define END 0x08 /* TO_DO: BIT 3: END = End of buffer flag (0000.1000) */
+	#define READER_DEFAULT_FLAG 0x00 /* (0000.0000)_2 = (000)_10 */
+	#define FUL 0x01 /* TO_DO: BIT 0: FUL = Buffer full flag  (0000.0001) */
+	#define EMP 0x02 /* TO_DO: BIT 1: EMP = Buffer empty flag (0000.0010) */
+	#define REL 0x04 /* TO_DO: BIT 2: REL = Rellocation memory flag (0000.0100) */
+	#define END 0x08 /* TO_DO: BIT 3: END = End of buffer flag (0000.1000) */
 
 /* need to be deleted */
 typedef struct flag {
@@ -114,7 +114,7 @@ typedef struct bufferReader {
 	Position		positions;			/* Offset / position field */
 	flowcode_int	histogram[NCHAR];	/* Statistics of chars */
 	flowcode_int	numReaderErrors;	/* Number of errors from Reader */
-	flowcode_byte	checksum;
+	flowcode_byte	checksum;			/* offset bits for flags */
 } Buffer, * BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */

@@ -330,16 +330,13 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 	if (!readerPointer) /* check if the pointer is invalid */
 		return FLOWCODE_ERROR;
 
-	c = readerGetChar(readerPointer); 
-	while (cont < readerPointer->positions.wrte) { /* */
-		cont++; /* increase the number of char printed (using as a tracker) */
-		printf("%c", c); /* print character that was jsut read */
-		
-		if (readerPointer->positions.read == readerPointer->positions.wrte) { /* if there isn't any character left to read ( means reach the end of buffer to read) */
-			readerPointer->flags.isFull; /* set the flag is full */
+	while (!(readerPointer->checksum & END)) {/* check if the buffer reaches the end of the file */
+		c = readerGetChar(readerPointer);
+		if (c == CHARSEOF) {
 			break;
 		}
-		c = readerGetChar(readerPointer); /* read and store the next character */
+		printf("%c", c); /* print character that was jsut read */
+		cont++; /* increase the number of char printed (using as a tracker) */
 	}
 	return cont; /* return the number of char */
 }
@@ -481,7 +478,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 
 	/* TO_DO: Check condition to read/wrte */
 	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags.isFull;
+		readerPointer->flags.isFull = FLOWCODE_TRUE;
 		return '\0';
 	}
 	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */
