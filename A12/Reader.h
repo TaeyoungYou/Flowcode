@@ -113,7 +113,7 @@ typedef struct bufferReader {
 	Position		positions;			/* Offset / position field */
 	flowcode_int	histogram[NCHAR];	/* Statistics of chars */
 	flowcode_int	numReaderErrors;	/* Number of errors from Reader */
-	flowcode_byte	checksum;
+	flowcode_byte	checksum;			/* offset bits for flags */
 } Buffer, * BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */

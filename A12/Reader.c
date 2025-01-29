@@ -347,6 +347,7 @@ flowcode_bool readerSetMark(BufferPointer const readerPointer, flowcode_int mark
 ***********************************************************
 * Function name: readerPrint
 * Purpose: Prints the string in the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -377,6 +378,7 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 * Function name: readerLoad
 * Purpose: Loads the string in the buffer with the content of
 	an specific file.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   fileDescriptor = pointer to file descriptor
@@ -416,6 +418,7 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 ***********************************************************
 * Function name: readerRecover
 * Purpose: Rewinds the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value
@@ -442,6 +445,7 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerRetract
 * Purpose: Retracts the buffer to put back the char in buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -468,6 +472,7 @@ flowcode_bool readerRetract(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerRestore
 * Purpose: Resets the buffer.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -495,6 +500,7 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetChar
 * Purpose: Returns the char in the getC position.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -523,6 +529,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetContent
 * Purpose: Returns the pointer to String.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   pos = position to get the pointer
@@ -549,6 +556,7 @@ flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int
 ***********************************************************
 * Function name: readerGetPosRead
 * Purpose: Returns the value of getCPosition.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -572,6 +580,7 @@ flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetPosWrte
 * Purpose: Returns the position of char to be added
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -595,6 +604,7 @@ flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetPosMark
 * Purpose: Returns the position of mark in the buffer
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -618,6 +628,7 @@ flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetSize
 * Purpose: Returns the current buffer capacity
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -640,6 +651,7 @@ flowcode_int readerGetSize(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetInc
 * Purpose: Returns the buffer increment.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -662,6 +674,7 @@ flowcode_int readerGetInc(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerGetMode
 * Purpose: Returns the operational mode
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -684,6 +697,7 @@ flowcode_char readerGetMode(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerShowStat
 * Purpose: Shows the char statistic.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value: (Void)
@@ -708,6 +722,7 @@ flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 ***********************************************************
 * Function name: readerNumErrors
 * Purpose: Returns the number of errors found.
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
@@ -749,6 +764,7 @@ flowcode_void readerCalcChecksum(BufferPointer readerPointer) {
 ***********************************************************
 * Function name: readerPrintFlags
 * Purpose: Sets the checksum of the reader (4 bits).
+* Author: Juhyeon Oh
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 * Return value:
