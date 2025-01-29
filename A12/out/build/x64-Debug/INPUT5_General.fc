@@ -1,0 +1,53 @@
+** FlowCode Example 5
+The program is "lexically" correct and should not generate any error (based on Platypus from Svillen Ranev) **
+begin:
+
+	declaration:
+	int i;
+	double a, sum
+	string text
+	end;
+  
+	bool main():
+		a=1.2
+		sum = 7.87050
+		i=0
+		
+		check i < 32767 or i == 32767
+		repeat
+			i = i + 2
+			a = a * i/0.5
+			sum = sum + a - 1
+		end;
+		if text == '' then:
+			text = "'prog' 'ram'"
+		else:
+			text = "$text 'ram'"
+		endif;
+
+		Output: '\* This is a program -:)-<-<-- \*';
+		Output: text;
+
+		if text not 'program' and sum==8.0 or i>10 then:
+			Output: sum;
+			Output: ' ';
+		endif;
+	end;
+
+		if text == '' then:
+			text = "'prog' 'ram'"
+		else:
+			text = "$text 'ram'"
+		endif;
+
+		Output: '\* This is a program -:)-<-<-- \*';
+		Output: text;
+
+		if text not 'program' and sum==8.0 or i>10 then:
+			Output: sum;
+			Output: ' ';
+		endif;
+	
+	return true;
+	end;
+end;
