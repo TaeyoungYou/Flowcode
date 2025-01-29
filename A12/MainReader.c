@@ -292,7 +292,7 @@ flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 	readerPrintFlags(ptr_Buffer);
 	printf("%s", "Reader statistics : \n");
 	readerPrintStat(ptr_Buffer);
-	printf("Number of errors: %d\n",
+	printf("\033[31mNumber of errors: %d\033[0m\n",
 		readerGetNumErrors(ptr_Buffer));
 	readerCalcChecksum(ptr_Buffer);
 	printf("Checksum: %02hX\n", ptr_Buffer->checksum);
@@ -300,4 +300,5 @@ flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 	readerRecover(ptr_Buffer);
 	if (!readerPrint(ptr_Buffer))
 		printf("Empty buffer\n");
+	printf("\n");
 }
