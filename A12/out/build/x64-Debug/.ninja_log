@@ -1,0 +1,6 @@
+# ninja log v6
+17	137	7598394826744564	CMakeFiles/FlowCode_Compiler.dir/Compilers.c.obj	c57c90b6355ffd74
+30	120	7598408509359116	CMakeFiles/FlowCode_Compiler.dir/Reader.c.obj	9d8e7f550e99fc77
+36	132	7598402103981033	CMakeFiles/FlowCode_Compiler.dir/MainReader.c.obj	1c05fc723113a8c8
+121	299	7598408510260596	FlowCode_Compiler.exe	eed385dc5a769d7d
+18	32	7598394804046755	clean	8c45b54705a541e8
