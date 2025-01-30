@@ -235,7 +235,7 @@ flowcode_bool readerClear(BufferPointer const readerPointer) {
 	readerPointer->positions.read = 0;
 	readerPointer->positions.mark = 0;
 	for (i = 0; i < NCHAR; ++i) readerPointer->histogram[i] = 0;
-	readerPointer->numReaderErrors = FLOWCODE_ERROR;
+	readerPointer->numReaderErrors = 0;
 	readerPointer->checksum = 0;
 
 	return FLOWCODE_TRUE;
@@ -521,7 +521,7 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 		readerPointer->flags.isEnd=FLOWCODE_TRUE; /* created code with bitwise offset flags END or bitwise operator */
 		return READER_TERMINATOR;
 	}
-	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */
+	return readerPointer->content[++readerPointer->positions.read]; /* return the char that poninter currently points to then increase the postion of read */
 }
 
 

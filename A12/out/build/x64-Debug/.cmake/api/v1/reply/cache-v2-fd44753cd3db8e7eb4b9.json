@@ -2,42 +2,6 @@
 	"entries" : 
 	[
 		{
-			"name" : "A12_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/build/x64-Debug"
-		},
-		{
-			"name" : "A12_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "A12_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12"
-		},
-		{
 			"name" : "CMAKE_AR",
 			"properties" : 
 			[
@@ -51,7 +15,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/lib.exe"
+			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/lib.exe"
 		},
 		{
 			"name" : "CMAKE_BUILD_TYPE",
@@ -75,7 +39,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/build/x64-Debug"
+			"value" : "c:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/out/build/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -163,7 +127,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/cl.exe"
+			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/cl.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -275,7 +239,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/cl.exe"
+			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/cl.exe"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -503,7 +467,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/build/x64-Debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/out/build/x64-Debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -563,7 +527,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12"
+			"value" : "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -575,7 +539,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/install/x64-Debug"
+			"value" : "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/out/install/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -591,7 +555,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostx64/x64/link.exe"
+			"value" : "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.41.34120/bin/Hostx64/x64/link.exe"
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
@@ -1111,7 +1075,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12/out/build/x64-Debug"
+			"value" : "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12/out/build/x64-Debug"
 		},
 		{
 			"name" : "FlowCode_Compiler_IS_TOP_LEVEL",
@@ -1135,7 +1099,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Flowcode/A12"
+			"value" : "C:/Users/User/25W/CST8152 Complier/git clone/Flowcode/A12"
 		}
 	],
 	"kind" : "cache",
