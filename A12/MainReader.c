@@ -301,4 +301,5 @@ flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 	if (!readerPrint(ptr_Buffer))
 		printf("Empty buffer\n");
 	printf("\n");
+	readerPrintFlags(ptr_Buffer);
 }

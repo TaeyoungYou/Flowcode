@@ -106,7 +106,7 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 
 	/* readerPointer의 요소들 초기화 */
 	/* content 초기화 */
-	readerPointer->content = (flowcode_string)malloc(size);		/* 구문(flowcode_string)을 동적할당하고, content에 초기화 */
+	readerPointer->content = (flowcode_string)malloc(size * sizeof(flowcode_char));		/* 구문(flowcode_string)을 동적할당하고, content에 초기화 */
 	if (!readerPointer->content) return FLOWCODE_INVALID;		/* content의 동적할당 실패시, NULL 반환 */
 	/* size 초기화 */
 	readerPointer->size = size;
@@ -121,7 +121,7 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 	readerPointer->flags.isEnd = FLOWCODE_FALSE;
 	/* Position 초기화 - 일단 각 요소 0으로 초기화 */
 	readerPointer->positions.wrte = 0;
-	readerPointer->positions.read = 0;
+	readerPointer->positions.read = -1;
 	readerPointer->positions.mark = 0;
 	/* histogram 초기화 */
 	for (count = 0; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* NCHAR만큼의 요소들을 0으로 초기화 */
@@ -160,7 +160,7 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 	if (ch < 0 || NCHAR <= ch) return FLOWCODE_INVALID;
 	/* TO_DO: Reset Realocation */
 	/* TO_DO: Test the inclusion of chars */
-	if (readerPointer->positions.wrte * (flowcode_int)sizeof(flowcode_char) < readerGetSize(readerPointer)) {
+	if ((readerPointer->positions.wrte * (flowcode_int)sizeof(flowcode_char)) + 1 < readerGetSize(readerPointer)) {
 		readerPointer->flags.isFull = FLOWCODE_FALSE;
 	}
 	else {
@@ -191,9 +191,14 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 		readerPointer->content = tempReader;
 		readerPointer->size = newSize;
 		readerPointer->flags.isFull = FLOWCODE_FALSE;
+		readerPointer->flags.isRel = FLOWCODE_TRUE;
+
+		return readerPointer;
 	}
 	/* 그러다면, 여기선 memory가 여유가 있을 때 ch를 handle한다는 건데 */
 	
+
+
 	readerPointer->content[readerPointer->positions.wrte++] = ch;
 	readerPointer->histogram[ch]++;
 	readerPointer->flags.isEmpty = FLOWCODE_FALSE;
@@ -232,10 +237,10 @@ flowcode_bool readerClear(BufferPointer const readerPointer) {
 	readerPointer->flags.isRel = FLOWCODE_FALSE;
 	readerPointer->flags.isEnd = FLOWCODE_FALSE;
 	readerPointer->positions.wrte = 0;
-	readerPointer->positions.read = 0;
+	readerPointer->positions.read = -1;
 	readerPointer->positions.mark = 0;
 	for (i = 0; i < NCHAR; ++i) readerPointer->histogram[i] = 0;
-	readerPointer->numReaderErrors = FLOWCODE_ERROR;
+	readerPointer->numReaderErrors = 0;
 	readerPointer->checksum = 0;
 
 	return FLOWCODE_TRUE;
@@ -365,9 +370,9 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 	if (!readerPointer) return FLOWCODE_ERROR;
 
 	/* TO_DO: Defensive programming (including invalid chars) */
-	while (count < readerPointer->positions.wrte) {
+	while (count <= readerPointer->positions.wrte) {
 		c = readerGetChar(readerPointer);
-		printf("%c", c);
+  		printf("%c", c);
 		count++;
 	}
 	return readerPointer->positions.read;
@@ -408,6 +413,11 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 			ungetc(c, fileDescriptor); /* delete the invalid character and reset the read pointer to the previous one */
 			break;
 		}
+		if (tempPointer->flags.isRel) {
+			tempPointer = readerAddChar(readerPointer, c);
+			tempPointer->flags.isRel = FLOWCODE_FALSE;
+		}
+
 		readerPointer = tempPointer;
 	}
 	/* TO_DO: Defensive programming */
@@ -434,7 +444,7 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 	if (!readerPointer) /* check if readerPointer doesn't exist */
 		return FLOWCODE_FALSE;
 	/* TO_DO: Recover positions: read and mark must be zero */
-	readerPointer->positions.read = 0; /* if readerPointer exist, it reset read and mark offset to 0 */
+	readerPointer->positions.read = -1; /* if readerPointer exist, it reset read and mark offset to 0 */
 	readerPointer->positions.mark = 0;
 	/* TO_DO: Update flags */
 	return FLOWCODE_TRUE;
@@ -512,16 +522,20 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_char readerGetChar(BufferPointer const readerPointer) {
+	flowcode_char ch;
 	/* TO_DO: Defensive programming */
 	if (!readerPointer)
 		return CHARSEOF; /* BufferPointer must exist but cannot return NULL bc the return type is flowcode_char */
 
+	ch = readerPointer->content[++readerPointer->positions.read];
+
 	/* TO_DO: Check condition to read/wrte */
-	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags.isEnd=FLOWCODE_TRUE; /* created code with bitwise offset flags END or bitwise operator */
+	if (readerPointer->positions.read + 1 == readerPointer->positions.wrte) { /* means END OF FILE */
+		readerPointer->flags.isEnd = FLOWCODE_TRUE; /* created code with bitwise offset flags END or bitwise operator */
+
 		return READER_TERMINATOR;
 	}
-	return readerPointer->content[readerPointer->positions.read++]; /* return the char that poninter currently points to then increase the postion of read */
+	return ch; /* return the char that poninter currently points to then increase the postion of read */
 }
 
 
