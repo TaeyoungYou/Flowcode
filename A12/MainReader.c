@@ -160,7 +160,7 @@ flowcode_void startReader(flowcode_string program, flowcode_string input, flowco
 	/* Create buffer */
 	bufferp = readerCreate(size, increment, mode);
 
-	/* BufferPointer의 생성 및 초기화를 실패 했을 때 */
+	/* When BufferPointer creation and initialization fail */
 	if (bufferp == NULL) {
 		bErrorPrint("%s%s", program,
 			": Cannot allocate buffer - Use: buffer <input> <mode> <size> <increment>.");
@@ -288,8 +288,7 @@ flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 		readerGetInc(ptr_Buffer));
 	printf("The first symbol in the buffer is:  %c\n",
 		readerGetPosWrte(ptr_Buffer) ? *readerGetContent(ptr_Buffer, 0) : ' ');
-	printf("The value of the flags field are:\n");
-	readerPrintFlags(ptr_Buffer);
+	printf("\n");
 	printf("%s", "Reader statistics : \n");
 	readerPrintStat(ptr_Buffer);
 	printf("\033[31mNumber of errors: %d\033[0m\n",
@@ -301,5 +300,6 @@ flowcode_void displayBuffer(BufferPointer ptr_Buffer) {
 	if (!readerPrint(ptr_Buffer))
 		printf("Empty buffer\n");
 	printf("\n");
+	printf("The value of the flags field are:\n");
 	readerPrintFlags(ptr_Buffer);
 }
