@@ -10,8 +10,8 @@
       "args": [
         "1",              // COMPILER MODE : 1:Reader, 2:Scanner, 3:Parser
         "INPUT2_Volume.fc",  // FILE NAME
-        "f",              // MODE : f,a,m
-        "203",            // SIZE
+        "a",              // MODE : f,a,m
+        "250",            // SIZE
         "10"              // INCREMENT
       ]
     }

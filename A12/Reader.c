@@ -89,11 +89,11 @@ const flowcode_string ascii_table[NCHAR] = {
  */
 
 BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_char mode) {
-	/* 변수 정의 */
+	/* Variable definitions */
 	BufferPointer readerPointer;
 	flowcode_int count;
 
-	/* size, increment, mode가 만약 0일 경우, default값으로 초기화 */
+	/* If size, increment, or mode is 0, initialize them with default values */
 	if (size <= 0)
 		size = READER_DEFAULT_SIZE;
 	if (increment <= 0)
@@ -101,33 +101,33 @@ BufferPointer readerCreate(flowcode_int size, flowcode_int increment, flowcode_c
 	if (!mode)
 		mode = MODE_FIXED;
 
-	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));	/* BufferPointer를 동적할당 */
-	if (!readerPointer) return FLOWCODE_INVALID;				/* 동적할당 실패시, NULL반환 */
+	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));	/* Dynamically allocate memory for readerPointer */
+	if (!readerPointer) return FLOWCODE_INVALID;				/* Returns NULL, if memory allocation fails */
 
-	/* readerPointer의 요소들 초기화 */
-	/* content 초기화 */
-	readerPointer->content = (flowcode_string)malloc(size);		/* 구문(flowcode_string)을 동적할당하고, content에 초기화 */
-	if (!readerPointer->content) return FLOWCODE_INVALID;		/* content의 동적할당 실패시, NULL 반환 */
-	/* size 초기화 */
+	/* Initialize the elements of readerPointer */
+	/* Initialize content */
+	readerPointer->content = (flowcode_string)malloc(size * sizeof(flowcode_char));		/* Dynamically allocate memory for the statement (flowcode_string) and initialize content */
+	if (!readerPointer->content) return FLOWCODE_INVALID;		/* Return NULL if memory allocation for content fails  */
+	/* Initialize size */
 	readerPointer->size = size;
-	/* increment 초기화 */
+	/* Initialize increment */
 	readerPointer->increment = increment;
-	/* mode 초기화 */
+	/* initialize mode */
 	readerPointer->mode = mode;
-	/* flags 초기화 */
+	/* Initalize flags */
 	readerPointer->flags.isEmpty = FLOWCODE_TRUE;
 	readerPointer->flags.isFull = FLOWCODE_FALSE;
 	readerPointer->flags.isRel = FLOWCODE_FALSE;
 	readerPointer->flags.isEnd = FLOWCODE_FALSE;
-	/* Position 초기화 - 일단 각 요소 0으로 초기화 */
+	/* Initialize position */
 	readerPointer->positions.wrte = 0;
-	readerPointer->positions.read = 0;
+	readerPointer->positions.read = -1;
 	readerPointer->positions.mark = 0;
-	/* histogram 초기화 */
-	for (count = 0; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* NCHAR만큼의 요소들을 0으로 초기화 */
-	/* numReaderErrors 초기화 */
+	/* Initialize histogram */
+	for (count = 0; count < NCHAR; ++count) readerPointer->histogram[count] = 0;	/* Initialize NCHAR elements to 0 */
+	/* Initialize numReaderErrors */
 	readerPointer->numReaderErrors = 0;
-	/* checksum 초기화 */
+	/* Initialize checksum */
 	readerPointer->checksum = READER_DEFAULT_FLAG;
 
 	return readerPointer;
@@ -155,48 +155,58 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 	flowcode_string tempReader = FLOWCODE_INVALID;
 	flowcode_int newSize = 0;
 	flowcode_char tempChar = ' ';
-	/* arguments의 값 확인 */
-	if (!readerPointer) return FLOWCODE_INVALID;
-	if (ch < 0 || NCHAR <= ch) return FLOWCODE_INVALID;
+
+	/* Validate the arguments */ 
+	if (!readerPointer) return FLOWCODE_INVALID; /* Return FLOWCODE_INVALID if readerPointer is NULL */
+	if (ch < 0 || NCHAR <= ch) return FLOWCODE_INVALID; /* Return FLOWCODE_INVALID if ch is out of valid range */
+	
 	/* TO_DO: Reset Realocation */
 	/* TO_DO: Test the inclusion of chars */
-	if (readerPointer->positions.wrte * (flowcode_int)sizeof(flowcode_char) < readerGetSize(readerPointer)) {
-		readerPointer->flags.isFull = FLOWCODE_FALSE;
+	
+	/* Check if there is enough space to add a new character */
+	if ((readerPointer->positions.wrte * (flowcode_int)sizeof(flowcode_char)) + 1 < readerGetSize(readerPointer)) {
+		readerPointer->flags.isFull = FLOWCODE_FALSE; /* Mark buffer as not full */
 	}
 	else {
-		/* 현재 상태는 FULL 또는 그 이상이기 때문에 Flag 설정 */
+		/* Buffer is full or exceeds its current size, so update the flag */
 		readerPointer->flags.isFull = FLOWCODE_TRUE;
-		/* MODE에 따라 재할당 방식이 바뀜 */
+
+		/* Reallocation strategy depends on the mode */
 		switch (readerPointer->mode) {
-		case MODE_FIXED:				/* 재할당 불가: constant size */
+		case MODE_FIXED:				 /* No reallocation allowed: constant size */
 			return FLOWCODE_INVALID;
-		case MODE_ADDIT:				/* 재할당 가능: 선형적으로 증가 */
+		case MODE_ADDIT:				/* Reallocation allowed: increase size linearly */
 			newSize = readerGetSize(readerPointer) + readerGetInc(readerPointer);
-			if (newSize < readerGetSize(readerPointer)) return FLOWCODE_INVALID;
+			if (newSize < readerGetSize(readerPointer)) return FLOWCODE_INVALID; /* Prevent overflow */
 			break;
-		case MODE_MULTI:				/* 재할당 가능: 곱으로 증가*/
+		case MODE_MULTI:				/* Reallocation allowed: increase size exponentially */
 			newSize = readerGetSize(readerPointer) * readerGetInc(readerPointer);
-			if (newSize < readerGetSize(readerPointer)) return FLOWCODE_INVALID;
+			if (newSize < readerGetSize(readerPointer)) return FLOWCODE_INVALID; /* Prevent overflow */
 			break;
 		default:
-			return FLOWCODE_INVALID;
+			return FLOWCODE_INVALID; /* Invalid mode */
 		}
 		tempReader = realloc(readerPointer->content, newSize);
-		/* 혹시 Scanner나 Parser할때, 중요할 부분 같애서 comment 남김 */
-		/* 새로운 사이즈로 재할당을 할때, 힙 메모리에서 공간부족으로 NULL이 반환이 된다면 readerPointer->flags.isRel을 TRUE로 바꿔야 함 */
-		/* 이런 상황이 생긴다면 새로운 메모리에 할당 후, 이 isRel플래그를 인지하여 안에 있는 값들을 새로운 메모리에 옮겨야 함 */
+		
+		/* Important note for Scanner or Parser handling If memory reallocation fails due to insufficient heap space,
+		readerPointer->flags.isRel should be set to TRUE. If this situation occurs, a new memory allocation should be performed,
+		and the data from the previous memory should be transferred accordingly */
 		if (!tempReader) return FLOWCODE_INVALID;
 
-		/* 새로 할당한 메모리 및 사이즈를 정의 */
+		/* Update readerPointer with the newly allocated memory and size */
 		readerPointer->content = tempReader;
 		readerPointer->size = newSize;
-		readerPointer->flags.isFull = FLOWCODE_FALSE;
+		readerPointer->flags.isFull = FLOWCODE_FALSE;  /* Buffer is no longer full */
+		readerPointer->flags.isRel = FLOWCODE_TRUE; /* Indicates reallocation occurred */
+
+		return readerPointer;
 	}
-	/* 그러다면, 여기선 memory가 여유가 있을 때 ch를 handle한다는 건데 */
+	/* If there is enough memory, handle character insertion */
 	
+	/* Store the character in the buffer at the write position */
 	readerPointer->content[readerPointer->positions.wrte++] = ch;
-	readerPointer->histogram[ch]++;
-	readerPointer->flags.isEmpty = FLOWCODE_FALSE;
+	readerPointer->histogram[ch]++; /* Update histogram count for the inserted character */
+	readerPointer->flags.isEmpty = FLOWCODE_FALSE; /* Mark the buffer as not empty */
 
 	return readerPointer;
 }
@@ -217,24 +227,30 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 *************************************************************
 */
 flowcode_bool readerClear(BufferPointer const readerPointer) {
-	/* 변수 할당 */
+	/* Variable definition */
 	int i;
 
-	/* 포인터 상수이지만 그래도 NULL을 가리키는 포인터인지 확인 및 안에 내용 중 동적 할당이 되어 있는지 확인 */
+	/* Check if the pointer is NULL and ensure dynamic memory is allocated */
 	if (!readerPointer) return FLOWCODE_FALSE;
-	/* 구조체 요소들 초기화 */
-	memset(readerPointer->content, 0, readerPointer->size);
-	readerPointer->size = READER_DEFAULT_SIZE;
-	readerPointer->increment = READER_DEFAULT_INCREMENT;
-	readerPointer->mode = MODE_FIXED;
-	readerPointer->flags.isEmpty = FLOWCODE_TRUE;
-	readerPointer->flags.isFull = FLOWCODE_FALSE;
-	readerPointer->flags.isRel = FLOWCODE_FALSE;
-	readerPointer->flags.isEnd = FLOWCODE_FALSE;
-	readerPointer->positions.wrte = 0;
-	readerPointer->positions.read = 0;
-	readerPointer->positions.mark = 0;
-	for (i = 0; i < NCHAR; ++i) readerPointer->histogram[i] = 0;
+	
+	/* Initialize struct elements */
+	memset(readerPointer->content, 0, readerPointer->size); /* Clear content buffer */
+	readerPointer->size = READER_DEFAULT_SIZE;				/* Reset size to default */
+	readerPointer->increment = READER_DEFAULT_INCREMENT;	/* Reset increment value */
+	readerPointer->mode = MODE_FIXED;						/* Set mode to fixed */
+	
+	/* Reset flag values */
+	readerPointer->flags.isEmpty = FLOWCODE_TRUE;			/* Mark buffer as empty */
+	readerPointer->flags.isFull = FLOWCODE_FALSE;			/* Mark buffer as not full */
+	readerPointer->flags.isRel = FLOWCODE_FALSE;			/* Reset reallocation flag */
+	readerPointer->flags.isEnd = FLOWCODE_FALSE;			/* Reset end-of-buffer flag */
+
+	/* Reset position indicators */
+	readerPointer->positions.wrte = 0;						/* Reset write position */
+	readerPointer->positions.read = -1;						/* Reset read position */
+	readerPointer->positions.mark = 0;						/* Reset mark position */
+
+	for (i = 0; i < NCHAR; ++i) readerPointer->histogram[i] = 0; /* Clear character histogram */
 	readerPointer->numReaderErrors = 0;
 	readerPointer->checksum = 0;
 
@@ -257,10 +273,10 @@ flowcode_bool readerClear(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerFree(BufferPointer const readerPointer) {
-	/* 포인터 상수이지만 그래도 NULL을 가리키는 포인터인지 확인 및 안에 내용 중 동적 할당이 되어 있는지 확인 */
+	/* Check if the pointer is NULL to ensure that dynamic memory has been allocated */
 	if (!readerPointer) return FLOWCODE_FALSE;
 
-	/* 동적 할당 해제 */
+	/* Free dynamically allocated memory for content */
 	free(readerPointer->content);
 	free(readerPointer);
 	return FLOWCODE_TRUE;
@@ -282,9 +298,9 @@ flowcode_bool readerFree(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerIsFull(BufferPointer const readerPointer) {
-	/* readerPointer가 유효하지 않는 값을 가리킬때 (NULL) */
+	/* Check if readerPointer is NULL (invalid pointer) */
 	if (!readerPointer) return FLOWCODE_FALSE;
-	/* flag의 isFull의 boolean값을 보고 판단 */
+	/* Return the boolean value of the isFull flag */
 	return readerPointer->flags.isFull;
 }
 
@@ -305,9 +321,9 @@ flowcode_bool readerIsFull(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerIsEmpty(BufferPointer const readerPointer) {
-	/* readerPointer가 유효하지 않는 값을 가리킬때 (NULL) */
+	/* Check if readerPointer is NULL (invalid pointer) */
 	if (!readerPointer) return FLOWCODE_FALSE;
-	/* flag의 isEmpty의 boolean값을 보고 판단 */
+	/* Return the boolean value of the isEmpty flag */
 	return readerPointer->flags.isEmpty;
 }
 
@@ -328,17 +344,19 @@ flowcode_bool readerIsEmpty(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_bool readerSetMark(BufferPointer const readerPointer, flowcode_int mark) {
-	/* 변수 할당 */
+	/* Variable declaration */
 	flowcode_int currentWrte;
-	/* 유효한 BufferPointer인지 확인 */
+	
+	/* Check if the BufferPointer is valid */
 	if (!readerPointer)	return FLOWCODE_FALSE;
 
-	/* 현재 Position의 Wrte값 가져오기 */
+	/* Get the current write position */
 	currentWrte = readerGetPosWrte(readerPointer);
-	/* 범위 밖의 mark 포지션이면 false */
+
+	/* Return false if the mark position is out of range */
 	if (mark < 0 || currentWrte < mark) return FLOWCODE_FALSE;
 
-	readerPointer->positions.mark = mark;
+	readerPointer->positions.mark = mark; /* Set the mark position */
 	return FLOWCODE_TRUE;
 }
 
@@ -359,18 +377,21 @@ flowcode_bool readerSetMark(BufferPointer const readerPointer, flowcode_int mark
 *************************************************************
 */
 flowcode_int readerPrint(BufferPointer const readerPointer) {
+	/* Variable declaration */
 	flowcode_int count = 0;
 	flowcode_char c;
 
+	/* Check if readerPointer is NULL (invalid pointer) */
 	if (!readerPointer) return FLOWCODE_ERROR;
 
 	/* TO_DO: Defensive programming (including invalid chars) */
-	while (count < readerPointer->positions.wrte) {
+	while (count <= readerPointer->positions.wrte) {
+		/* Retrieve the next character from the reader */
 		c = readerGetChar(readerPointer);
-		printf("%c", c);
-		count++;
+  		printf("%c", c);	/* Print the character */
+		count++;			/* Increment the counter */
 	}
-	return readerPointer->positions.read;
+	return readerPointer->positions.read; /* Return the current read position */
 }
 
 /*
@@ -391,26 +412,33 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor) {
+	/* Variable declaration */
 	BufferPointer tempPointer;
 	flowcode_char c;
 	/* TO_DO: Defensive programming */
 	if (!readerPointer || !fileDescriptor) /* Check if readerPointer exists and file is valid */
 		return FLOWCODE_ERROR;
 
-	/* back up */
+	/* Backup the original readerPointer */
 	tempPointer = readerPointer;
 
-	while (!feof(fileDescriptor)) { /* read each character until the end of file */
-		c = (flowcode_char)fgetc(fileDescriptor); /* store each character from the file into the variable c */
+	while (!feof(fileDescriptor)) { /* Eead each character until the end of file */
+		c = (flowcode_char)fgetc(fileDescriptor); /* Read a character from the file and store it in variable c */
 
-		/* apprend the value of variable c into the reader buffer */
+		/* Apprend the value of variable c into the reader buffer */
 		if (!(tempPointer = readerAddChar(readerPointer, c))){
-			ungetc(c, fileDescriptor); /* delete the invalid character and reset the read pointer to the previous one */
+			ungetc(c, fileDescriptor); /* Remove the invalid character and reset the read pointer to the previous one */
 			break;
 		}
+		/* If memory reallocation has occurred, reassign the buffer pointer */
+		if (tempPointer->flags.isRel) {
+			tempPointer = readerAddChar(readerPointer, c);
+			tempPointer->flags.isRel = FLOWCODE_FALSE;
+		}
+
+		/* Update readerPointer */
 		readerPointer = tempPointer;
 	}
-	/* TO_DO: Defensive programming */
 	return readerPointer->positions.wrte;
 }
 
@@ -431,10 +459,10 @@ flowcode_int readerLoad(BufferPointer readerPointer, FILE* const fileDescriptor)
 */
 flowcode_bool readerRecover(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* check if readerPointer doesn't exist */
+	if (!readerPointer) /* Check if readerPointer doesn't exist */
 		return FLOWCODE_FALSE;
 	/* TO_DO: Recover positions: read and mark must be zero */
-	readerPointer->positions.read = 0; /* if readerPointer exist, it reset read and mark offset to 0 */
+	readerPointer->positions.read = -1; /* If readerPointer exist, it reset read and mark offset to 0 */
 	readerPointer->positions.mark = 0;
 	/* TO_DO: Update flags */
 	return FLOWCODE_TRUE;
@@ -458,7 +486,7 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 */
 flowcode_bool readerRetract(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* bufferPointer cannot be NULL(check valiation) */
+	if (!readerPointer) /* BufferPointer cannot be NULL(check valiation) */
 		return FLOWCODE_FALSE;
 	if (readerGetPosRead(readerPointer) <= 0) /* Read pointer must be greater than starting point(0) */
 		return FLOWCODE_FALSE;
@@ -485,9 +513,11 @@ flowcode_bool readerRetract(BufferPointer const readerPointer) {
 */
 flowcode_bool readerRestore(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* validate invalid value in readerPointer */
+	if (!readerPointer) /*  Validate if readerPointer is NULL (invalid pointer) */
 		return FLOWCODE_FALSE;
-	if (readerGetPosMark(readerPointer) < 0 || readerGetPosMark(readerPointer) > readerGetPosWrte(readerPointer)) /* check if the mark offset is between 0 and current wrte */
+
+	/* Check if the mark position is within the valid range (between 0 and the current write position) */
+	if (readerGetPosMark(readerPointer) < 0 || readerGetPosMark(readerPointer) > readerGetPosWrte(readerPointer))
 		return FLOWCODE_FALSE;
 	/* TO_DO: Restore positions (read to mark) */
 	readerPointer->positions.read = readerGetPosMark(readerPointer);
@@ -512,16 +542,22 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 *************************************************************
 */
 flowcode_char readerGetChar(BufferPointer const readerPointer) {
+	flowcode_char ch;
 	/* TO_DO: Defensive programming */
 	if (!readerPointer)
-		return CHARSEOF; /* BufferPointer must exist but cannot return NULL bc the return type is flowcode_char */
+		return CHARSEOF; /* BufferPointer must exist but cannot return NULL bc the return type is flowcode_char BufferPointer must exist, 
+							but cannot return NULL since the return type is flowcode_char */
+
+	/* Retrieve the next character from the buffer */
+	ch = readerPointer->content[++readerPointer->positions.read];
 
 	/* TO_DO: Check condition to read/wrte */
-	if (readerPointer->positions.read == readerPointer->positions.wrte) { /* means END OF FILE */
-		readerPointer->flags.isEnd=FLOWCODE_TRUE; /* created code with bitwise offset flags END or bitwise operator */
-		return READER_TERMINATOR;
+	/* If the read position reaches the write position, it indicates the end of the buffer (EOF) */
+	if (readerPointer->positions.read + 1 == readerPointer->positions.wrte) { /* means END OF FILE */
+		readerPointer->flags.isEnd = FLOWCODE_TRUE; /* Flag indicating EOF using bitwise offset or operator */
+		return READER_TERMINATOR;/* Return the termination character */
 	}
-	return readerPointer->content[++readerPointer->positions.read]; /* return the char that poninter currently points to then increase the postion of read */
+	return ch; /* return the char that poninter currently points to then increase the postion of read */
 }
 
 
@@ -543,11 +579,11 @@ flowcode_char readerGetChar(BufferPointer const readerPointer) {
 */
 flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int pos) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if readerPointer is invalid, it returns NULL */
+	if (!readerPointer) /* If readerPointer is invalid, it returns NULL */
 		return FLOWCODE_INVALID;
 	if (pos < 0 || pos > readerPointer->positions.wrte) /* Check position is within valid range(positive integer & smaller than current wrte position) */
 		return FLOWCODE_INVALID; 
-	return readerPointer->content + pos; /* return position of content pointing to */
+	return readerPointer->content + pos; /* Return position of content pointing to */
 }
 
 
@@ -569,7 +605,7 @@ flowcode_string readerGetContent(BufferPointer const readerPointer, flowcode_int
 */
 flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
+	if (!readerPointer) /* If readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return read */
 	return readerPointer->positions.read;
@@ -594,7 +630,7 @@ flowcode_int readerGetPosRead(BufferPointer const readerPointer) {
 flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
 	if (!readerPointer)
-		return FLOWCODE_ERROR; /* if the return pointer doesn't exist, it will return error(-1) */
+		return FLOWCODE_ERROR; /* If the return pointer doesn't exist, it will return error(-1) */
 	/* TO_DO: Return wrte */
 	return readerPointer->positions.wrte;
 }
@@ -618,7 +654,7 @@ flowcode_int readerGetPosWrte(BufferPointer const readerPointer) {
 flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
 	if (!readerPointer)
-		return FLOWCODE_ERROR; /* if the return pointer doesn't exist, it will return error(-1) */
+		return FLOWCODE_ERROR; /* If the return pointer doesn't exist, it will return error(-1) */
 	/* TO_DO: Return mark */
 	return readerPointer->positions.mark; 
 }
@@ -641,7 +677,7 @@ flowcode_int readerGetPosMark(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetSize(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
+	if (!readerPointer) /* If readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return size */
 	return readerPointer->size;
@@ -664,7 +700,7 @@ flowcode_int readerGetSize(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetInc(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if readerPointer is invalid, it returns error(-1) */
+	if (!readerPointer) /* If readerPointer is invalid, it returns error(-1) */
 		return FLOWCODE_ERROR;
 	/* TO_DO: Return increment */
 	return readerPointer->increment;
@@ -687,7 +723,7 @@ flowcode_int readerGetInc(BufferPointer const readerPointer) {
 */
 flowcode_char readerGetMode(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if readerPointer is invalid, it returns CHARSEOF (-1) */
+	if (!readerPointer) /* If readerPointer is invalid, it returns CHARSEOF (-1) */
 		return CHARSEOF;
 	/* TO_DO: Return mode */
 	return readerPointer->mode;
@@ -709,12 +745,16 @@ flowcode_char readerGetMode(BufferPointer const readerPointer) {
 flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 	flowcode_int i;
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) return;
+	if (!readerPointer) return;  /* Check if readerPointer is NULL; if so, return without processing */
 	/* TO_DO: Updates the histogram */
 	for (i = 0; i < NCHAR; ++i) {
+		/* Print the character's histogram count using the ASCII table reference */
 		printf("B[%-3s]=%-2d\t", ascii_table[i], readerPointer->histogram[i]);
+
+		/* Print a newline after every 8 entries for better readability */
 		if ((i+1) % 8 == 0) printf("\n");
 	}
+	/* Print a final newline for output formatting */
 	printf("\n");
 }
 
@@ -734,7 +774,7 @@ flowcode_void readerPrintStat(BufferPointer const readerPointer) {
 */
 flowcode_int readerGetNumErrors(BufferPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* if the pointer is invalid return error */
+	if (!readerPointer) /* If the pointer is invalid return error */
 		return FLOWCODE_ERROR; 
 	/* TO_DO: Returns the number of errors */
 	return readerPointer->numReaderErrors; 
@@ -778,7 +818,7 @@ flowcode_void readerCalcChecksum(BufferPointer readerPointer) {
 
 flowcode_bool readerPrintFlags(BufferPointer readerPointer) {
 	/* TO_DO: Defensive programming */
-	if (!readerPointer) /* check if the buffer points to NULL */
+	if (!readerPointer) /* Check if the buffer points to NULL */
 		return FLOWCODE_FALSE;
 	/* TO_DO: Shows flags */
 	/* Print the status of each flag using bitwise operations */
