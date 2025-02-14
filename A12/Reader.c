@@ -462,7 +462,7 @@ flowcode_bool readerRecover(BufferPointer const readerPointer) {
 	if (!readerPointer) /* Check if readerPointer doesn't exist */
 		return FLOWCODE_FALSE;
 	/* TO_DO: Recover positions: read and mark must be zero */
-	readerPointer->positions.read = -1; /* If readerPointer exist, it reset read and mark offset to 0 */
+	readerPointer->positions.read = -1; /* If readerPointer exist, it reset read and mark offset */
 	readerPointer->positions.mark = 0;
 	/* TO_DO: Update flags */
 	return FLOWCODE_TRUE;
