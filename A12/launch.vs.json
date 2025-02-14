@@ -9,7 +9,7 @@
       "name": "FlowCode_Compiler.exe",
       "args": [
         "1",              // COMPILER MODE : 1:Reader, 2:Scanner, 3:Parser
-        "INPUT2_Volume.fc",  // FILE NAME
+        "INPUT3_Factorial.fc",  // FILE NAME
         "a",              // MODE : f,a,m
         "250",            // SIZE
         "10"              // INCREMENT
