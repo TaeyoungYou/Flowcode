@@ -8,8 +8,8 @@
       "projectTarget": "FlowCode_Compiler.exe",
       "name": "FlowCode_Compiler.exe",
       "args": [
-        "1",              // COMPILER MODE : 1:Reader, 2:Scanner, 3:Parser
-        "INPUT3_Factorial.fc",  // FILE NAME
+        "2",              // COMPILER MODE : 1:Reader, 2:Scanner, 3:Parser
+        "INPUT1_Hello.fc",  // FILE NAME
         "a",              // MODE : f,a,m
         "250",            // SIZE
         "10"              // INCREMENT

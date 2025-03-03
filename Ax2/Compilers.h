@@ -31,7 +31,7 @@
 #ifndef COMPILERS_H_
 #define COMPILERS_H_
 
-#define DEBUG 0
+#define DEBUG 1
 
 /*
  * ............................................................................
@@ -98,9 +98,10 @@ Main functions signatures
 ------------------------------------------------------------
 */
 flowcode_int mainReader(flowcode_int argc, flowcode_string* argv);
+flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv);
+
 /* TO_DO: Remove comment in next assignments */
 /*
-sofia_intg mainScanner(sofia_intg argc, sofia_string* argv);
 sofia_intg mainParser(sofia_intg argc, sofia_string* argv);
 */
 
