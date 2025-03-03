@@ -1,0 +1,215 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\launch.vs.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:launch.vs.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Compilers.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Compilers.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainScanner.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MainScanner.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainReader.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MainReader.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Scanner.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Scanner.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Reader.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Reader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 230,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Reader.h",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.h",
+              "RelativeDocumentMoniker": "Reader.h",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.h",
+              "RelativeToolTip": "Reader.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-03T02:39:12.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Reader.c",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.c",
+              "RelativeDocumentMoniker": "Reader.c",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Reader.c",
+              "RelativeToolTip": "Reader.c",
+              "ViewState": "AgIAADUBAAAAAAAAAADwv5wAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-03T02:39:12.02Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainReader.c",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainReader.c",
+              "RelativeDocumentMoniker": "MainReader.c",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainReader.c",
+              "RelativeToolTip": "MainReader.c",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAAABoAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-03T02:39:10.99Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "launch.vs.json",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\launch.vs.json",
+              "RelativeDocumentMoniker": "launch.vs.json",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\launch.vs.json",
+              "RelativeToolTip": "launch.vs.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-03T02:39:09.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Compilers.h",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.h",
+              "RelativeDocumentMoniker": "Compilers.h",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.h",
+              "RelativeToolTip": "Compilers.h",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAACMAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-03T02:39:08.77Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Compilers.c",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.c",
+              "RelativeDocumentMoniker": "Compilers.c",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Compilers.c",
+              "RelativeToolTip": "Compilers.c",
+              "ViewState": "AgIAAEIAAAAAAAAAAADwv1YAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-03T02:39:07.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CMakeLists.txt",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\CMakeLists.txt",
+              "RelativeDocumentMoniker": "CMakeLists.txt",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\CMakeLists.txt",
+              "RelativeToolTip": "CMakeLists.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-03-03T02:39:04.365Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "8e8d1b75-6e6d-444f-9745-8d24d391f566",
+        "Display": 1,
+        "X": -5,
+        "Y": 0,
+        "Width": 1700,
+        "Height": 1037,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainScanner.c",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainScanner.c",
+              "RelativeDocumentMoniker": "MainScanner.c",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\MainScanner.c",
+              "RelativeToolTip": "MainScanner.c",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAAAB4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-03T03:01:23.989Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Scanner.c",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.c",
+              "RelativeDocumentMoniker": "Scanner.c",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.c",
+              "RelativeToolTip": "Scanner.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJUBAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-03T03:01:10.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Scanner.h",
+              "DocumentMoniker": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.h",
+              "RelativeDocumentMoniker": "Scanner.h",
+              "ToolTip": "C:\\Users\\Taeyoung\\OneDrive\\Documents\\GitHub\\Flowcode\\Ax2\\Scanner.h",
+              "RelativeToolTip": "Scanner.h",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAAANQAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-03T03:01:18.837Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
