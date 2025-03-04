@@ -385,7 +385,7 @@ flowcode_int readerPrint(BufferPointer const readerPointer) {
 	if (!readerPointer) return FLOWCODE_ERROR;
 
 	/* TO_DO: Defensive programming (including invalid chars) */
-	while (count <= readerPointer->positions.wrte) {
+	while (count < readerPointer->positions.wrte) {
 		/* Retrieve the next character from the reader */
 		c = readerGetChar(readerPointer);
   		printf("%c", c);	/* Print the character */

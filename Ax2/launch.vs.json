@@ -8,19 +8,13 @@
       "projectTarget": "FlowCode_Compiler.exe",
       "name": "FlowCode_Compiler.exe",
       "args": [
-        "2",              // COMPILER MODE : 1:Reader, 2:Scanner, 3:Parser
-        "INPUT1_Hello.fc",  // FILE NAME
-        "a",              // MODE : f,a,m
-        "250",            // SIZE
-        "10"              // INCREMENT
+        "2",
+        "INPUT1_Hello.fc",
+        "a",
+        "250",
+        "10"
       ]
     }
   ]
 }
-// INPUT0_Empty.fc - Pass
-// INPUT1_Hello.fc - Pass
-// INPUT2_Volume.fc - Pass
-// INPUT3_Factorial.fc -Pass
-// INPUT4_Datatypes.fc - Pass
-// INPUT5_General.fc - Pass
-// INPUT6_Big.fc - Pass
+

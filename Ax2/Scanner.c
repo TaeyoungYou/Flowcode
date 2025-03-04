@@ -134,7 +134,7 @@ Token tokenizer(flowcode_void) {
 	lexeme = (flowcode_string)malloc(VID_LEN * sizeof(flowcode_char));
 	if (!lexeme)
 		return currentToken;
-	lexeme[0] = EOS_CHR;
+	lexeme[0] = EOS;
 
 	while (1) { /* endless loop broken by token returns it will generate a warning */
 		c = readerGetChar(sourceBuffer);
@@ -153,6 +153,7 @@ Token tokenizer(flowcode_void) {
 		switch (c) {
 
 		/* Cases for spaces */
+		// 아 망했네..
 		case SPC_CHR:
 		case TAB_CHR:
 			break;

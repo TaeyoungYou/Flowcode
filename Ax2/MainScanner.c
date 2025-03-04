@@ -108,7 +108,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 	Token currentToken;				/* Token produced by the scanner */
 	flowcode_int loadSize = 0;			/* The size of the file loaded in the buffer */
 
-	/* Check for correct arrguments - source file name */
+	/* Check for correct arguments - source file name */
 	if (argc <= 2) {
 		/* __DATE__, __TIME__, __LINE__, __FILE__ are predefined preprocessor macros*/
 		printScannerError("Date: %s  Time: %s", __DATE__, __TIME__);
@@ -122,7 +122,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 	printf("%s%d%s", "[Debug mode: ", DEBUG, "]\n");
 
 	/* Create a source code input buffer - multiplicative mode */
-	sourceBuffer = readerCreate(READER_DEFAULT_SIZE, READER_DEFAULT_INCREMENT, MODE_MULTI);
+	sourceBuffer = readerCreate(READER_DEFAULT_SIZE, READER_DEFAULT_INCREMENT, MODE_MULTI);	// 이걸 json형식대로 바꿔야 하나?
 	if (sourceBuffer == NULL) {
 		printScannerError("%s%s", argv[1], ": Could not create source buffer");
 		exit(EXIT_FAILURE);
@@ -175,7 +175,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 	do {
 		currentToken = tokenizer();
 		printToken(currentToken);
-	} while (currentToken.code != SEOF_T);
+	} while (currentToken.code != EndOfToken);
 
 	/* Print String Literal Table if not empty */
 	printf("\nPrinting string table...\n");
