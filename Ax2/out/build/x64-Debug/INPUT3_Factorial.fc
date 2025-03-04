@@ -1,0 +1,25 @@
+** FLowCode Example 3:
+  Testing numbers (ex: factorial) **
+begin:
+	declaration:
+	int i, n, f
+bool main():
+        f=1
+        i=1
+        
+	Output: 'Write a number:';
+        Input: n;
+	
+	** looping until it's satisfied with condition **      	
+	check i<n
+            f = f * i
+            i = i + 1
+	repeat;
+
+        Output:'Factorial:';
+        Output: f;
+	
+	return true;
+    end;
+end;
+

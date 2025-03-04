@@ -1,0 +1,13 @@
+** FlowCode Example 4
+The program is lexically correct about the SOFIA city **
+begin:
+
+	bool main(int foundationYear, double area, double HDI, string countryName) {
+		foundationYear = -7000;
+		area = 492.0
+		HDI=0.871
+		countryName = 'Bulgary'
+		Output: CountryName;
+		return true;
+	end;
+end;

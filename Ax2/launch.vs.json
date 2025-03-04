@@ -1,0 +1,20 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "FlowCode_Compiler.exe",
+      "name": "FlowCode_Compiler.exe",
+      "args": [
+        "2",
+        "INPUT1_Hello.fc",
+        "a",
+        "250",
+        "10"
+      ]
+    }
+  ]
+}
+
