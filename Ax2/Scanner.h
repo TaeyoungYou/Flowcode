@@ -54,51 +54,172 @@
 #define RTE_CODE 1  /* Value for run-time error */
 
 /* TO_DO: Define the number of tokens */
-#define NUM_TOKENS 13
+#define NUM_TOKENS 51
 
-/* TO_DO: Define Token codes - Create your token classes */
 enum TOKENS {
-	ERR_T,		/*  0: Error token */
-	MNID_T,		/*  1: Method name identifier token (start: &) */
-	INL_T,		/*  2: Integer literal token */
-	STR_T,		/*  3: String literal token */
-	LPR_T,		/*  4: Left parenthesis token */
-	RPR_T,		/*  5: Right parenthesis token */
-	LBR_T,		/*  6: Left brace token */
-	RBR_T,		/*  7: Right brace token */
-	KW_T,		/*  8: Keyword token */
-	EOS_T,		/*  9: End of statement (semicolon) */
-	RTE_T,		/* 10: Run-time error token */
-	SEOF_T,		/* 11: Source end-of-file token */
-	CMT_T		/* 12: Comment token */
+	/* basic token */
+	Error,				/* 0: Error token */
+	EndOfToken,			/* 1: End of token */
+
+	/* literal */
+	IntLiteral,			/* 2: Integer literal */
+	DoubleLiteral,		/* 3: Double literal */
+	StringLiteral,		/* 4: String literal */
+	BooleanLiteral,		/* 5: Boolean literal */
+
+	/* identifier */
+	VariableIdentifier, /* 6: Variable identifier */
+	ConstantIdentifier,	/* 7: Constant identifier */
+	MethodIdentifier,	/* 8: Method identifier */
+
+	/* operators */
+	/* basic operator */
+	Add,				/* 9:  '+' */
+	Subtract,			/* 10: '-' */
+	Multiply,			/* 11: '*' */
+	Divide,				/* 12: '/' */
+	Modulo,				/* 13: '%' */
+	Power,				/* 14: '^' */
+	/* logical operator */
+	LogicalAnd,			/* 15: 'and' */
+	LogicalOr,			/* 16: 'or' */
+	LogicalNot,			/* 17: 'not' */
+	/* assign operator */
+	Assignment,			/* 18: '=' */
+	/* compare operator */
+	Equal,				/* 19: '==' */
+	NotEqual,			/* 20: '!=' */
+	LessThan,			/* 21: '<' */
+	GreaterThan,		/* 22: '>' */
+	LessOrEqual,		/* 23: '<=' */
+	GreaterOrEqual,		/* 24: '>=' */
+
+	/* delimeter */
+	LeftParen,			/* 25: '(' */
+	RightParen,			/* 26: ')' */
+	Colon,				/* 27: ':' */
+	SemiColon,			/* 28: ';' */
+	Comma,				/* 29: ',' */
+
+	/* keyword */
+	/* control keyword */
+	If,					/* 30: if keyword */
+	Elif,				/* 31: elif keyword */
+	Else,				/* 32: else keyword */
+	Then,				/* 33: then keyword */
+	EndIf,				/* 34: endif keyword */
+	/* iteration keyword */
+	Repeat,				/* 35: repeat keyword */
+	Check,				/* 36: check keyword */
+	Break,				/* 37: break keyword */
+	Continue,			/* 38: continue keyword */
+	/* I/O keyword */
+	Input,				/* 39: Input keyword */
+	Output,				/* 40: Output keyword */
+	/* function keyword */
+	Return,				/* 41: return keyword */
+	End,				/* 42: end keyword in function, declaration, begin */
+	/* data type keyword*/
+	Int,				/* 43: int keyword */
+	Double,				/* 44: double keyword */
+	String,				/* 45: string keyword */
+	Boolean,			/* 46: bool keyword */
+	Void,				/* 47: void keyword */
+	/* other keyword */
+	Begin,				/* 48: begin keyword */
+	Declaration,		/* 49: declaration keyword */
+	/* comment */
+	Comment,			/* 50: '**' */
 };
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string tokenStrTable[NUM_TOKENS] = {
-	"ERR_T",
-	"MNID_T",
-	"INL_T",
-	"STR_T",
-	"LPR_T",
-	"RPR_T",
-	"LBR_T",
-	"RBR_T",
-	"KW_T",
-	"EOS_T",
-	"RTE_T",
-	"SEOF_T",
-	"CMT_T"
+	"Error",
+	"EndOfToken",
+	"IntLiteral",
+	"DoubleLiteral",
+	"StringLiteral",
+	"BooleanLiteral",
+	"VariableIdentifier",
+	"ConstantIdentifier",
+	"MethodIdentifier",
+	"Assignment",
+	"LeftParen",
+	"RightParen",
+	"Colon",
+	"SemiColon",
+	"Comma",
+	"If",
+	"Elif",
+	"Else",
+	"Then",
+	"EndIf",
+	"Repeat",
+	"Check",
+	"Break",
+	"Continue",
+	"Input",
+	"Output",
+	"Return",
+	"End",
+	"Int",
+	"Double",
+	"String",
+	"Boolean",
+	"Void",
+	"Begin",
+	"Declaration",
+	"Add",
+	"Subtract",
+	"Multiply",
+	"Divide",
+	"Modulo",
+	"Power",
+	"Equal",
+	"NotEqual",
+	"LessThan",
+	"GreaterThan",
+	"LessOrEqual",
+	"GreaterOrEqual",
+	"LogicalAnd",
+	"LogicalOr",
+	"LogicalNot",
+	"Comment",
 };
 
-/* TO_DO: Operators token attributes */
-typedef enum ArithmeticOperators { OP_ADD, OP_SUB, OP_MUL, OP_DIV } AriOperator;
-typedef enum RelationalOperators { OP_EQ, OP_NE, OP_GT, OP_LT } RelOperator;
-typedef enum LogicalOperators { OP_AND, OP_OR, OP_NOT } LogOperator;
-typedef enum SourceEndOfFile { SEOF_0, SEOF_255 } EofOperator;
+/* basic arithmetic operator */
+typedef enum ArithmeticOperators { 
+	Add,				/* 0: '+' */
+	Subtract,			/* 1: '-' */
+	Multiply,			/* 2: '*' */
+	Divide,				/* 3: '/' */
+	Modulo,				/* 4: '%' */
+	Power,				/* 5: '^' */
+} AriOperator;
+/* comparsion operator */
+typedef enum RelationalOperators { 
+	Equal,				/* 0: '==' */
+	NotEqual,			/* 1: '!=' */
+	LessThan,			/* 2: '<' */
+	GreaterThan,		/* 3: '>' */
+	LessOrEqual,		/* 4: '<=' */
+	GreaterOrEqual,		/* 5: '>=' */
+} RelOperator;
+/* logical operator */
+typedef enum LogicalOperators { 
+	LogicalAnd,			/* 0: 'and' */
+	LogicalOr,			/* 1: 'or' */
+	LogicalNot,			/* 2: 'not' */
+} LogOperator;
+
+typedef enum SourceEndOfFile { 
+	SEOF_0, 
+	SEOF_255 
+} EofOperator;
 
 /* TO_DO: Data structures for declaring the token and its attributes */
 typedef union TokenAttribute {
-	flowcode_int codeType;      /* integer attributes accessor */
+	flowcode_int codeType;				/* integer attributes accessor */
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
 	RelOperator relationalOperator;		/* relational operator attribute code */
 	LogOperator logicalOperator;		/* logical operator attribute code */
@@ -118,6 +239,7 @@ typedef struct idAttibutes {
 		flowcode_int intValue;				/* Integer value */
 		flowcode_float floatValue;			/* Float value */
 		flowcode_string stringContent;		/* String value */
+		flowcode_bool boolValue;			/* Boolean value */
 	} values;
 } IdAttibutes;
 
@@ -135,69 +257,71 @@ typedef struct scannerData {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* TO_DO: Define lexeme FIXED classes */
-/* EOF definitions */
-#define EOS_CHR '\0'	// CH00
-#define EOF_CHR 0xFF	// CH01
-#define UND_CHR '_'		// CH02
-#define AMP_CHR '&'		// CH03
-#define QUT_CHR '\''	// CH04
-#define HST_CHR '#'		// CH05
-#define TAB_CHR '\t'	// CH06
-#define SPC_CHR ' '		// CH07
-#define NWL_CHR '\n'	// CH08
-#define SCL_CHR ';'		// CH09
-#define LPR_CHR '('		// CH10
-#define RPR_CHR ')'		// CH11
-#define LBR_CHR '{'		// CH12
-#define RBR_CHR '}'		// CH13
+/* lexeme classes */
+// 이부분이 메인! 필수로 고쳐야함 - int > char
+#define LETTER 			0		// a-z,A-Z
+#define DIGIT			1		// 0-9
+#define UNDERSCORE		2		// _
+#define METHOD_START	3		// :
+#define METHOD_END		4		// ;
+#define MUL_DECAL		5		// ,
+#define ARITH_OP		6		// +,-,/,%,^
+#define COMP_OP			7		// ==,!=,<,>,<=,>=
+#define LOGIC_OP		8		// and,not,or
+#define ASSIGN			9		// =
+#define END_LINE		10		// \n
+#define BRAKET			11		// (), {}
+#define STR_LI			12		// '
+#define STR_CON			13		// "
+#define ASTER			14		// *
+#define DEC_P			15		// .
+#define CAL_VAR			16		// $
+
+#define EOS				'\0'	// End of source
+#define EOF				0xFF	// End of File
 
 /*  Special case tokens processed separately one by one in the token-driven part of the scanner:
  *  LPR_T, RPR_T, LBR_T, RBR_T, EOS_T, SEOF_T and special chars used for tokenis include _, & and ' */
 
 
 /* TO_DO: Error states and illegal state */
-#define ESNR	8		/* Error state with no retract */
-#define ESWR	9		/* Error state with retract */
-#define FS		10		/* Illegal state */
+#define ESNR	20		/* Error state with no retract */
+#define ESWR	21		/* Error state with retract */
+#define FS		22		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		10
-#define CHAR_CLASSES	8
+#define NUM_STATES		12
+#define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */
+// 테이블 작성 필요!
 static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
-/*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
-	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
-	{     1, ESNR, ESNR, ESNR,    4, ESWR,	  6, ESNR},	// S0: NOAS
-	{     1,    1,    1,    2,	  3,    3,   3,    3},	// S1: NOAS
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS},	// S2: ASNR (MVID)
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS},	// S3: ASWR (KEY)
-	{     4,    4,    4,    4,    5, ESWR,	  4,    4},	// S4: NOAS
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS},	// S5: ASNR (SL)
-	{     6,    6,    6,    6,    6, ESWR,	  7,    6},	// S6: NOAS
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS},	// S7: ASNR (COM)
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS},	// S8: ASNR (ES)
-	{    FS,   FS,   FS,   FS,   FS,   FS,	 FS,   FS}  // S9: ASWR (ER)
+/*		LETTER, DIGIT,	UNDERSCORE, METHOD_START,	METHOD_END, MUL_DECAL,	ARITH_OP,	COMP_OP,	LOGIC_OP,	ASSIGN, END_LINE,	BRAKET, STR_LI, STR_CON,	ASTER,	DEC_P,	OTHER	*/
+	{	1,		2,		1,			FS,				FS,			FS,			FS,			FS,			FS,			FS,		0,			FS,		FS,		FS,			10,		FS,		FS },   /* S0  - Initial state */
+	{  },   /* S1  - Identifier & Keyword */
+	{  },   /* S2  - Integer Literal */
+	{  },   /* S3  - Period (Real number or not) */
+	{  },   /* S4  - Real Number Literal */
+	{  },   /* S5  - String Start (`'`) */
+	{  },   /* S6  - String Start (`"`) */
+	{  },   /* S7  - Inside String */
+	{  },   /* S8  - End String (`'`) */
+	{  },   /* S9  - End String (`"`) */
+	{  },   /* S10 - Operator */
+	{  },   /* S11 - Bracket */
+	{  },   /* S12 - Comment */
 };
 
+
+
 /* Define accepting states types */
-#define NOFS	0		/* not accepting state */
-#define FSNR	1		/* accepting state with no retract */
+#define NOFS	0		/* Not Final State */
+#define FSNR	1		/* Final State No Retract */
 #define FSWR	2		/* accepting state with retract */
 
 /* TO_DO: Define list of acceptable states */
 static flowcode_int stateType[NUM_STATES] = {
-	NOFS, /* 00 */
-	NOFS, /* 01 */
-	FSNR, /* 02 (MID) - Methods */
-	FSWR, /* 03 (KEY) */
-	NOFS, /* 04 */
-	FSNR, /* 05 (SL) */
-	NOFS, /* 06 */
-	FSNR, /* 07 (COM) */
-	FSNR, /* 08 (Err1 - no retract) */
-	FSWR  /* 09 (Err2 - retract) */
+	/* TODO::*/
 };
 
 /*
@@ -208,10 +332,10 @@ TO_DO: Adjust your functions'definitions
 
 /* Static (local) function  prototypes */
 flowcode_int			startScanner(BufferPointer psc_buf);
-static flowcode_int	nextClass(flowcode_char c);					/* character class function */
-static flowcode_int	nextState(flowcode_int, flowcode_char);		/* state machine function */
-flowcode_void		printScannerData(ScannerData scData);
-Token				tokenizer(flowcode_void);
+static flowcode_int		nextClass(flowcode_char c);					/* character class function */
+static flowcode_int		nextState(flowcode_int, flowcode_char);		/* state machine function */
+flowcode_void			printScannerData(ScannerData scData);
+Token					tokenizer(flowcode_void);
 
 /*
 -------------------------------------------------
