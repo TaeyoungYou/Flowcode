@@ -271,16 +271,19 @@ typedef struct scannerData {
 #define POWER			9		// ^
 #define COMMA			10		// ,
 #define ASSIGN			11		// =
-#define END_LINE		12		// \n
-#define BRACKET_OP		13		// (
-#define BRACKET_CL		14		// )
-#define CURLYBRA_OP		15		// {
-#define CURLYBRA_CL		16		// }
-#define STR_LI			17		// '
-#define STR_CON			18		// "
-#define ASTER			19		// *
-#define DEC_P			20		// .
-#define CAL_VAR			21		// $
+#define NOT				12		// !
+#define	LESS			13		// >
+#define GREATER			14		// <
+#define END_LINE		15		// \n
+#define BRACKET_OP		16		// (
+#define BRACKET_CL		17		// )
+#define CURLYBRA_OP		18		// {
+#define CURLYBRA_CL		19		// }
+#define STR_LI			20		// '
+#define STR_CON			21		// "
+#define ASTER			22		// *
+#define DEC_P			23		// .
+#define CAL_VAR			24		// $
 
 #define EOS				'\0'	// End of source
 #define EOF				0xFF	// End of File
@@ -302,7 +305,7 @@ typedef struct scannerData {
 // 테이블 작성 필요!
 static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
 	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.) | ADD(+) | SUB(-) | MUL(*) | DIV(/) | MOD(%) | POW(^) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | COLON(:) | SEMI(;) | COMMA(,) | POPEN(() | PCLOSE()) | COPEN({) | CCLOSE(}) | OTHER | */
-	/* S0  */  { 1, 6, 1, ES, ES, ES, COMMENT, ES, ES, ES, ES, ES, ES, ES, SQUOTE, DQUOUT, ES, ES, ES, ES, 4, ES, OPERATOR_ORDER, ES, ES }, /* NOFS (INITIAL STATE) */
+	/* S0  */  { 1, 6, 1, ES, ES, ES, 20, ES, ES, ES, ES, ES, ES, ES, 15, 17, ES, ES, ES, ES, 4, ES, OPERATOR_ORDER, ES, ES }, /* NOFS (INITIAL STATE) */
 	/* S1  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 2, 5, ES, ES, ES, ES, ES, ES, ES, ES, 4, ES, ES, ES, ES }, /* FSNR (VARIABLE_ID) */
 	/* S2  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 3, ES, ES, ES, FS, FS, ES, ES, ES, ES, OPERATOR_ORDER, ES, OPERATOR_ORDER, ES, ES }, /* FSNR (ASSIGNMENT) */
 	/* S3  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (EQUAL) */
