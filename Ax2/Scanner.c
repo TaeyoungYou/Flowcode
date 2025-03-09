@@ -120,7 +120,7 @@ Token tokenizer(flowcode_void) {
 	/* TO_DO: Follow the standard and adjust datatypes */
 
 	Token currentToken = { 0 }; /* token to return after pattern recognition. Set all structure members to 0 */
-	flowcode_char c;			/* input symbol */
+	flowcode_int c;			/* input symbol */
 	flowcode_int state = 0;	/* initial state of the FSM */
 	flowcode_int lexStart;	/* start offset of a lexeme in the input char buffer (array) */
 	flowcode_int lexEnd;		/* end offset of a lexeme in the input char buffer (array)*/
@@ -296,34 +296,32 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
 /*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 
-flowcode_int nextClass(flowcode_char c) {
+flowcode_int nextClass(flowcode_int c) {
 	flowcode_int val = -1;
-	switch (c) {
-	case UND_CHR:
-		val = 2;
-		break;
-	case AMP_CHR:
-		val = 3;
-		break;
-	case QUT_CHR:
-		val = 4;
-		break;
-	case HST_CHR:
-		val = 6;
-		break;
-	case EOS_CHR:
-	case EOF_CHR:
-		val = 5;
-		break;
-	default:
-		if (isalpha(c))
-			val = 0;
-		else if (isdigit(c))
-			val = 1;
-		else
-			val = 7;
-	}
-	return val;
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) return LETTER;  // a-z, A-Z
+	if (c >= 48 && c <= 57) return NUMBER;  // 0-9
+	if (c == 95) return UNDERSCORE;  // _
+	if (c == 58) return METHOD_START;  // :
+	if (c == 32 || c == 9) return SPACE;  // ' ' OR \t
+	if (c == 43) return POSITIVE;  // +
+	if (c == 45) return NEGATIVE;  // -
+	if (c == 47) return DIVIDE;  // /
+	if (c == 37) return MODULUS;  // %
+	if (c == 94) return POWER;  // ^
+	if (c == 44) return COMMA;  // ,
+	if (c == 61) return ASSIGN;  // =
+	if (c == 10) return END_LINE;  // \n
+	if (c == 40) return BRACKET_OP;  // (
+	if (c == 41) return BRACKET_CL;  // )
+	if (c == 123) return CURLYBRA_OP;  // {
+	if (c == 125) return CURLYBRA_CL;  // }
+	if (c == 39) return STR_LI;  // '
+	if (c == 34) return STR_CON;  // " 
+	if (c == 42) return ASTER;  // * 
+	if (c == 46) return DEC_P;  // .
+	if (c == 36) return CAL_VAR;  // $
+
+	return ERROR_UNKNOWN_CHAR;  // return unknown character
 }
 
 /*

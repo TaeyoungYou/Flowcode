@@ -260,22 +260,27 @@ typedef struct scannerData {
 /* lexeme classes */
 // 이부분이 메인! 필수로 고쳐야함 - int > char
 #define LETTER 			0		// a-z,A-Z
-#define DIGIT			1		// 0-9
+#define NUMBER			1		// 0-9
 #define UNDERSCORE		2		// _
-#define METHOD_START	3		// :
-#define METHOD_END		4		// ;
-#define MUL_DECAL		5		// ,
-#define ARITH_OP		6		// +,-,/,%,^
-#define COMP_OP			7		// ==,!=,<,>,<=,>=
-#define LOGIC_OP		8		// and,not,or
-#define ASSIGN			9		// =
-#define END_LINE		10		// \n
-#define BRAKET			11		// (), {}
-#define STR_LI			12		// '
-#define STR_CON			13		// "
-#define ASTER			14		// *
-#define DEC_P			15		// .
-#define CAL_VAR			16		// $
+#define METHOD_START	3		// : /* (optional)근데 우리 method에 ()도 들어가는데 그걸로는 판단 못하나여? */
+#define SPACE			4		// ' ' OR \t 
+#define POSITIVE		5		// +
+#define NEGATIVE		6		// -
+#define DIVIDE			7		// /
+#define MODULUS			8		// %
+#define POWER			9		// ^
+#define COMMA			10		// ,
+#define ASSIGN			11		// =
+#define END_LINE		12		// \n
+#define BRACKET_OP		13		// (
+#define BRACKET_CL		14		// )
+#define CURLYBRA_OP		15		// {
+#define CURLYBRA_CL		16		// }
+#define STR_LI			17		// '
+#define STR_CON			18		// "
+#define ASTER			19		// *
+#define DEC_P			20		// .
+#define CAL_VAR			21		// $
 
 #define EOS				'\0'	// End of source
 #define EOF				0xFF	// End of File
@@ -285,9 +290,9 @@ typedef struct scannerData {
 
 
 /* TO_DO: Error states and illegal state */
-#define ESNR	20		/* Error state with no retract */
-#define ESWR	21		/* Error state with retract */
-#define FS		22		/* Illegal state */
+#define ESNR	31		/* Error state with no retract */
+#define ESWR	32		/* Error state with retract */
+#define FS		33		/* Illegal state */
 
  /* TO_DO: State transition table definition */
 #define NUM_STATES		12
@@ -296,22 +301,32 @@ typedef struct scannerData {
 /* TO_DO: Transition table - type of states defined in separate table */
 // 테이블 작성 필요!
 static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
-/*		LETTER, DIGIT,	UNDERSCORE, METHOD_START,	METHOD_END, MUL_DECAL,	ARITH_OP,	COMP_OP,	LOGIC_OP,	ASSIGN, END_LINE,	BRAKET, STR_LI, STR_CON,	ASTER,	DEC_P,	OTHER	*/
-	{	1,		2,		1,			FS,				FS,			FS,			FS,			FS,			FS,			FS,		0,			FS,		FS,		FS,			10,		FS,		FS },   /* S0  - Initial state */
-	{  },   /* S1  - Identifier & Keyword */
-	{  },   /* S2  - Integer Literal */
-	{  },   /* S3  - Period (Real number or not) */
-	{  },   /* S4  - Real Number Literal */
-	{  },   /* S5  - String Start (`'`) */
-	{  },   /* S6  - String Start (`"`) */
-	{  },   /* S7  - Inside String */
-	{  },   /* S8  - End String (`'`) */
-	{  },   /* S9  - End String (`"`) */
-	{  },   /* S10 - Operator */
-	{  },   /* S11 - Bracket */
-	{  },   /* S12 - Comment */
+	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.) | ADD(+) | SUB(-) | MUL(*) | DIV(/) | MOD(%) | POW(^) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | COLON(:) | SEMI(;) | COMMA(,) | POPEN(() | PCLOSE()) | COPEN({) | CCLOSE(}) | OTHER | */
+	/* S0  */  { 1, 6, 1, ES, ES, ES, COMMENT, ES, ES, ES, ES, ES, ES, ES, SQUOTE, DQUOUT, ES, ES, ES, ES, 4, ES, OPERATOR_ORDER, ES, ES }, /* NOFS (INITIAL STATE) */
+	/* S1  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 2, 5, ES, ES, ES, ES, ES, ES, ES, ES, 4, ES, ES, ES, ES }, /* FSNR (VARIABLE_ID) */
+	/* S2  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 3, ES, ES, ES, FS, FS, ES, ES, ES, ES, OPERATOR_ORDER, ES, OPERATOR_ORDER, ES, ES }, /* FSNR (ASSIGNMENT) */
+	/* S3  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (EQUAL) */
+	/* S4  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (METHOD_ID) */
+	/* S5  */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 6, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
+	/* S6  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (NOT OPERATOR) */
+	/* S7  */  { ES, 8, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, OPERATOR_ORDER, ES, OPERATOR_ORDER, ES, ES }, /* NOFS */
+	/* S8  */  { ES, FS, ES, 9, ES, ES, ES, ES, ES, ES, 2, 5, 11, 13, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (INTEGER) */
+	/* S9  */  { ES, 10, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
+	/* S10 */  { ES, FS, ES, ES, ES, ES, ES, ES, ES, ES, 2, 5, 11, 13, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (FLOAT NUMBER) */
+	/* S11 */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 12, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (LESS THAN) */
+	/* S12 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (LESS THAN OR EQUAL) */
+	/* S13 */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 14, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (GREATER THAN) */
+	/* S14 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (GREATER THAN OR EQUAL) */
+	/* S15 */  { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, /* NOFS */
+	/* S16 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (STRING LITERAL) */
+	/* S17 */  { 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 19, 17, 17, 17, 17, 17, 17, 17 }, /* NOFS */
+	/* S18 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (STRING CONCAT) */
+	/* S19 */  { 1, ES, 1, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 18, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
+	/* S20 */  { ES, 8, ES, ES, 7, 7, 21, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, FS, ES, FS, ES, ES }, /* NOFS (COMMENT START) */
+	/* S21 */  { 21, 21, 21, 21, 21, 21, 22, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 }, /* NOFS */
+	/* S22 */  { ES, ES, ES, ES, ES, ES, 23, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
+	/* S23 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }  /* FSNR (COMMENT END) */
 };
-
 
 
 /* Define accepting states types */
