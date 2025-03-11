@@ -114,7 +114,7 @@ flowcode_int startScanner(BufferPointer psc_buf) {
  *		in the Transition Diagram).
  ***********************************************************
  */
-
+// Source Code에서 Token을 찾아내는 함수
 Token tokenizer(flowcode_void) {
 
 	/* TO_DO: Follow the standard and adjust datatypes */
@@ -152,44 +152,73 @@ Token tokenizer(flowcode_void) {
 		/* TO_DO: All patterns that do not require accepting functions */
 		switch (c) {
 
-		/* Cases for spaces */
-		// 아 망했네..
-		case SPC_CHR:
-		case TAB_CHR:
-			break;
-		case NWL_CHR:
-			line++;
+		// 공백 문자 제거
+		case SPACE:
+		case TAB:
 			break;
 
-		/* Cases for symbols */
-		case SCL_CHR:
-			currentToken.code = EOS_T;
+		// 특수문자 처리 - 특수문자: 한 글자로도 의미가 파악이 가능한 character
+		case END_OF_LINE:
+			currentToken.code = EndOfLine;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
-		case LPR_CHR:
-			currentToken.code = LPR_T;
+		case METHOD_START:
+			currentToken.code = Colon;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
-		case RPR_CHR:
-			currentToken.code = RPR_T;
+		case METHOD_END:
+			currentToken.code = SemiColon;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
-		case LBR_CHR:
-			currentToken.code = LBR_T;
+		case PAREN_OP:
+			currentToken.code = LeftParen;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
-		case RBR_CHR:
-			currentToken.code = RBR_T;
+		case PAREN_CL:
+			currentToken.code = RightParen;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
+		case BRACE_OP:
+			currentToken.code = LeftBrace;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case BRACE_CL:
+			currentToken.code = RightBrace;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case COMMA:
+			currentToken.code = Comma;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case ADD:
+			currentToken.code = Add;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case SUBTRACT:
+			currentToken.code = Subtract;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case DIVIDE:
+			currentToken.code = Divide;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case MODULUS:
+			currentToken.code = Modulo;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case POWER:
+			currentToken.code = Power;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+
 		/* Cases for END OF FILE */
-		case EOS_CHR:
-			currentToken.code = SEOF_T;
+		case EOS:
+			currentToken.code = EndOfToken;
 			scData.scanHistogram[currentToken.code]++;
 			currentToken.attribute.seofType = SEOF_0;
 			return currentToken;
-		case EOF_CHR:
-			currentToken.code = SEOF_T;
+		case EOF:
+			currentToken.code = EndOfToken;
 			scData.scanHistogram[currentToken.code]++;
 			currentToken.attribute.seofType = SEOF_255;
 			return currentToken;
@@ -204,33 +233,33 @@ Token tokenizer(flowcode_void) {
 
 		default: // general case
 			state = nextState(state, c);
-			lexStart = readerGetPosRead(sourceBuffer) - 1;
+			lexStart = readerGetPosRead(sourceBuffer);	// -1을 삭제! 이미 이 코드에는 처음이 -1임
 			readerSetMark(sourceBuffer, lexStart);
 			int pos = 0;
-			while (stateType[state] == NOFS) {
+			while (stateType[state] == NOFS) {	// Final State까지 반복
 				c = readerGetChar(sourceBuffer);
 				state = nextState(state, c);
 				pos++;
 			}
-			if (stateType[state] == FSWR)
+			if (stateType[state] == FSWR)	// 한번 되돌려야하는 상황
 				readerRetract(sourceBuffer);
-			lexEnd = readerGetPosRead(sourceBuffer);
-			lexLength = lexEnd - lexStart;
-			lexemeBuffer = readerCreate((flowcode_int)lexLength + 2, 0, MODE_FIXED);
+			lexEnd = readerGetPosRead(sourceBuffer);	// 현재까지 읽은 read 포지션
+			lexLength = lexEnd - lexStart - 1;			// read의 초기를 -1로 했기 때문에 추가로 -1
+			lexemeBuffer = readerCreate((flowcode_int)lexLength + 2, 0, MODE_FIXED);	// 현재 읽은 unKnown-Token을 Buffer로 생성
 			if (!lexemeBuffer) {
 				fprintf(stderr, "Scanner error: Can not create buffer\n");
 				exit(1);
 			}
 			readerRestore(sourceBuffer);
 			for (i = 0; i < lexLength; i++)
-				readerAddChar(lexemeBuffer, readerGetChar(sourceBuffer));
-			readerAddChar(lexemeBuffer, READER_TERMINATOR);
-			lexeme = readerGetContent(lexemeBuffer, 0);
+				readerAddChar(lexemeBuffer, readerGetChar(sourceBuffer));	// unknown-token를 write를 작성을 함
+			readerAddChar(lexemeBuffer, READER_TERMINATOR);					// 마지막에 널 포인터
+			lexeme = readerGetContent(lexemeBuffer, 0);						// unknown-token
 			// TO_DO: Defensive programming
 			if (!lexeme)
 				return currentToken;
-			currentToken = (*finalStateTable[state])(lexeme);
-			readerRestore(lexemeBuffer);
+			currentToken = (*finalStateTable[state])(lexeme);		// 갈 함수 정하고 Token반환
+			readerRestore(lexemeBuffer);						// Marker로 재배치한다고?? - 함수 확인 필요!
 			return currentToken;
 		} // switch
 
@@ -272,9 +301,9 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
 	next = transitionTable[state][col];
 	if (DEBUG)
 		printf("Input symbol: %c Row: %d Column: %d Next: %d \n", c, state, col, next);
-	assert(next != FS);
+	assert(next != FS);		// 허용되지않는 state라면 assert!
 	if (DEBUG)
-		if (next == FS) {
+		if (next == FS) {	// assert가 울지 않는 한 들어가지 않음
 			printf("Scanner Error: Illegal state:\n");
 			printf("Input symbol: %c Row: %d Column: %d\n", c, state, col);
 			exit(1);
@@ -297,31 +326,19 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 
 flowcode_int nextClass(flowcode_int c) {
-	flowcode_int val = -1;
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) return LETTER;  // a-z, A-Z
-	if (c >= 48 && c <= 57) return NUMBER;  // 0-9
-	if (c == 95) return UNDERSCORE;  // _
-	if (c == 58) return METHOD_START;  // :
-	if (c == 32 || c == 9) return SPACE;  // ' ' OR \t
-	if (c == 43) return POSITIVE;  // +
-	if (c == 45) return NEGATIVE;  // -
-	if (c == 47) return DIVIDE;  // /
-	if (c == 37) return MODULUS;  // %
-	if (c == 94) return POWER;  // ^
-	if (c == 44) return COMMA;  // ,
-	if (c == 61) return ASSIGN;  // =
-	if (c == 10) return END_LINE;  // \n
-	if (c == 40) return BRACKET_OP;  // (
-	if (c == 41) return BRACKET_CL;  // )
-	if (c == 123) return CURLYBRA_OP;  // {
-	if (c == 125) return CURLYBRA_CL;  // }
-	if (c == 39) return STR_LI;  // '
-	if (c == 34) return STR_CON;  // " 
-	if (c == 42) return ASTER;  // * 
-	if (c == 46) return DEC_P;  // .
-	if (c == 36) return CAL_VAR;  // $
-
-	return ERROR_UNKNOWN_CHAR;  // return unknown character
+	if(isalpha(c))		return 0;
+	if(isdigit(c))		return 1;
+	if(c == UNDERSCORE) return 2;
+	if(c == DOT)		return 3;
+	if(c == ASTER)		return 4;
+	if(c == ASSIGN)		return 5;
+	if(c == NOT)		return 6;
+	if(c == LESS)		return 7;
+	if(c == GREATER)	return 8;
+	if(c == STR_LI)		return 9;
+	if(c == STR_CON)	return 10;
+	if(c == CAL_VAR)	return 11;
+	return 12;	// other
 }
 
 /*
@@ -332,15 +349,16 @@ flowcode_int nextClass(flowcode_int c) {
  */
  /* TO_DO: Adjust the function for IL */
 
-Token funcCMT(flowcode_string lexeme) {
+Token funcComment(flowcode_string lexeme) {
 	Token currentToken = { 0 };
 	flowcode_int i = 0, len = (flowcode_int)strlen(lexeme);
 	currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
-	for (i = 1; i < len - 1; i++) {
-		if (lexeme[i] == NWL_CHR)
+	// ** ... ** 이므로, 2번째 문자부터 검사
+	for (i = 2; i < len - 2; i++) {
+		if (lexeme[i] == END_OF_LINE)
 			line++;
 	}
-	currentToken.code = CMT_T;
+	currentToken.code = Comment;
 	scData.scanHistogram[currentToken.code]++;
 	return currentToken;
 }
@@ -357,17 +375,18 @@ Token funcCMT(flowcode_string lexeme) {
   ***********************************************************
   */
   /* TO_DO: Adjust the function for IL */
-
-Token funcIL(flowcode_string lexeme) {
+// Literal: Integer, Double, String, Boolean
+Token funcIntegerLiteral(flowcode_string lexeme) {
 	Token currentToken = { 0 };
 	flowcode_long tlong;
-	if (lexeme[0] != EOS_CHR && strlen(lexeme) > NUM_LEN) {
+
+	if (lexeme[0] != EOS && strlen(lexeme) > NUM_LEN) {
 		currentToken = (*finalStateTable[ESNR])(lexeme);
 	}
 	else {
 		tlong = atol(lexeme);
 		if (tlong >= 0 && tlong <= SHRT_MAX) {
-			currentToken.code = INL_T;
+			currentToken.code = IntLiteral;
 			scData.scanHistogram[currentToken.code]++;
 			currentToken.attribute.intValue = (flowcode_int)tlong;
 		}
@@ -378,58 +397,18 @@ Token funcIL(flowcode_string lexeme) {
 	return currentToken;
 }
 
-
-/*
- ************************************************************
- * Acceptance State Function ID
- *		In this function, the pattern for IDs must be recognized.
- *		Since keywords obey the same pattern, is required to test if
- *		the current lexeme matches with KW from language.
- *	- Remember to respect the limit defined for lexemes (VID_LEN) and
- *	  set the lexeme to the corresponding attribute (vidLexeme).
- *    Remember to end each token with the \0.
- *  - Suggestion: Use "strncpy" function.
- ***********************************************************
- */
- /* TO_DO: Adjust the function for ID */
-
-Token funcID(flowcode_string lexeme) {
-	Token currentToken = { 0 };
-	size_t length = strlen(lexeme);
-	flowcode_char lastch = lexeme[length - 1];
-	flowcode_int isID = FLOWCODE_FALSE;
-	switch (lastch) {
-		case AMP_CHR:
-			currentToken.code = MNID_T;
-			scData.scanHistogram[currentToken.code]++;
-			isID = FLOWCODE_TRUE;
-			break;
-		default:
-			// Test Keyword
-			///lexeme[length - 1] = EOS_CHR;
-			currentToken = funcKEY(lexeme);
-			break;
-	}
-	if (isID == FLOWCODE_TRUE) {
-		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
-		currentToken.attribute.idLexeme[VID_LEN] = EOS_CHR;
-	}
-	return currentToken;
-}
-
-
 /*
 ************************************************************
  * Acceptance State Function SL
  *		Function responsible to identify SL (string literals).
- * - The lexeme must be stored in the String Literal Table 
- *   (stringLiteralTable). You need to include the literals in 
+ * - The lexeme must be stored in the String Literal Table
+ *   (stringLiteralTable). You need to include the literals in
  *   this structure, using offsets. Remember to include \0 to
  *   separate the lexemes. Remember also to incremente the line.
  ***********************************************************
  */
 /* TO_DO: Adjust the function for SL */
-
+//
 Token funcSL(flowcode_string lexeme) {
 	Token currentToken = { 0 };
 	flowcode_int i = 0, len = (flowcode_int)strlen(lexeme);
@@ -457,6 +436,43 @@ Token funcSL(flowcode_string lexeme) {
 	return currentToken;
 }
 
+/*
+ ************************************************************
+ * Acceptance State Function ID
+ *		In this function, the pattern for IDs must be recognized.
+ *		Since keywords obey the same pattern, is required to test if
+ *		the current lexeme matches with KW from language.
+ *	- Remember to respect the limit defined for lexemes (VID_LEN) and
+ *	  set the lexeme to the corresponding attribute (vidLexeme).
+ *    Remember to end each token with the \0.
+ *  - Suggestion: Use "strncpy" function.
+ ***********************************************************
+ */
+ /* TO_DO: Adjust the function for ID */
+// Keyword가 아니면 Identifier - 아직까진 Variable, Constant, Method 중 어느 Identifier인지 모름
+Token funcIdentifier(flowcode_string lexeme) {
+	Token currentToken = { 0 };
+	size_t length = strlen(lexeme);
+	flowcode_int isID = FLOWCODE_FALSE;
+	switch (lastch) {
+		case AMP_CHR:
+			currentToken.code = MNID_T;
+			scData.scanHistogram[currentToken.code]++;
+			isID = FLOWCODE_TRUE;
+			break;
+		default:
+			// Test Keyword
+			///lexeme[length - 1] = EOS_CHR;
+			currentToken = funcKEY(lexeme);
+			break;
+	}
+	if (isID == FLOWCODE_TRUE) {
+		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
+		currentToken.attribute.idLexeme[VID_LEN] = EOS_CHR;
+	}
+	return currentToken;
+}
+
 
 /*
 ************************************************************
@@ -465,7 +481,14 @@ Token funcSL(flowcode_string lexeme) {
  ***********************************************************
  */
  /* TO_DO: Adjust the function for Keywords */
-
+// Keyword
+//	- Logical: and, or, not
+//	- Control: if, elif, else, then, endif
+//	- Iteration: repeat, check, break, continue
+//	- I/O: Input, Output
+//	- Funtional: return, end
+//	- Data type: int, double, string, boolean, void
+//	- others: begin, declaration
 Token funcKEY(flowcode_string lexeme) {
 	Token currentToken = { 0 };
 	flowcode_int kwindex = -1, j = 0;
@@ -497,22 +520,22 @@ Token funcKEY(flowcode_string lexeme) {
  ***********************************************************
  */
  /* TO_DO: Adjust the function for Errors */
-
+// all the error
 Token funcErr(flowcode_string lexeme) {
 	Token currentToken = { 0 };
 	flowcode_int i = 0, len = (flowcode_int)strlen(lexeme);
 	if (len > ERR_LEN) {
 		strncpy(currentToken.attribute.errLexeme, lexeme, ERR_LEN - 3);
-		currentToken.attribute.errLexeme[ERR_LEN - 3] = EOS_CHR;
+		currentToken.attribute.errLexeme[ERR_LEN - 3] = EOS;
 		strcat(currentToken.attribute.errLexeme, "...");
 	}
 	else {
 		strcpy(currentToken.attribute.errLexeme, lexeme);
 	}
 	for (i = 0; i < len; i++)
-		if (lexeme[i] == NWL_CHR)
+		if (lexeme[i] == END_OF_LINE)
 			line++;
-	currentToken.code = ERR_T;
+	currentToken.code = Error;
 	scData.scanHistogram[currentToken.code]++;
 	return currentToken;
 }
@@ -527,8 +550,8 @@ Token funcErr(flowcode_string lexeme) {
 flowcode_void printToken(Token t) {
 	extern flowcode_string keywordTable[]; /* link to keyword table in */
 	switch (t.code) {
-	case RTE_T:
-		printf("RTE_T\t\t%s", t.attribute.errLexeme);
+	case RunTimeError:
+		printf("RunTimeError\t\t%s", t.attribute.errLexeme);
 		/* Call here run-time error handling component */
 		if (errorNumber) {
 			printf("%d", errorNumber);
@@ -536,24 +559,24 @@ flowcode_void printToken(Token t) {
 		}
 		printf("\n");
 		break;
-	case ERR_T:
-		printf("ERR_T\t\t%s\n", t.attribute.errLexeme);
+	case Error:
+		printf("Error\t\t%s\n", t.attribute.errLexeme);
 		break;
-	case SEOF_T:
-		printf("SEOF_T\t\t%d\t\n", t.attribute.seofType);
+	case EndOfToken:
+		printf("EndOfToken\t\t%d\t\n", t.attribute.seofType);
 		break;
-	case MNID_T:
-		printf("MNID_T\t\t%s\n", t.attribute.idLexeme);
+	case MethodIdentifier:
+		printf("MethodIdentifier\t\t%s\n", t.attribute.idLexeme);
 		break;
-	case STR_T:
-		printf("STR_T\t\t%d\t ", (flowcode_int)t.attribute.codeType);
+	case StringLiteral:
+		printf("StringLiteral\t\t%d\t ", (flowcode_int)t.attribute.codeType);
 		printf("%s\n", readerGetContent(stringLiteralTable, (flowcode_int)t.attribute.codeType));
 		break;
-	case LPR_T:
-		printf("LPR_T\n");
+	case LeftParen:
+		printf("LeftParen\n");
 		break;
-	case RPR_T:
-		printf("RPR_T\n");
+	case RightParen:
+		printf("RightParen\n");
 		break;
 	case LBR_T:
 		printf("LBR_T\n");

@@ -59,6 +59,7 @@
 enum TOKENS {
 	/* basic token */
 	Error,				/* 0: Error token */
+	RunTimeError,
 	EndOfToken,			/* 1: End of token */
 
 	/* literal */
@@ -73,30 +74,14 @@ enum TOKENS {
 	MethodIdentifier,	/* 8: Method identifier */
 
 	/* operators */
-	/* basic operator */
-	Add,				/* 9:  '+' */
-	Subtract,			/* 10: '-' */
-	Multiply,			/* 11: '*' */
-	Divide,				/* 12: '/' */
-	Modulo,				/* 13: '%' */
-	Power,				/* 14: '^' */
-	/* logical operator */
-	LogicalAnd,			/* 15: 'and' */
-	LogicalOr,			/* 16: 'or' */
-	LogicalNot,			/* 17: 'not' */
 	/* assign operator */
 	Assignment,			/* 18: '=' */
-	/* compare operator */
-	Equal,				/* 19: '==' */
-	NotEqual,			/* 20: '!=' */
-	LessThan,			/* 21: '<' */
-	GreaterThan,		/* 22: '>' */
-	LessOrEqual,		/* 23: '<=' */
-	GreaterOrEqual,		/* 24: '>=' */
 
 	/* delimeter */
 	LeftParen,			/* 25: '(' */
 	RightParen,			/* 26: ')' */
+	LeftBrace,
+	RightBrace,
 	Colon,				/* 27: ':' */
 	SemiColon,			/* 28: ';' */
 	Comma,				/* 29: ',' */
@@ -130,61 +115,83 @@ enum TOKENS {
 	Declaration,		/* 49: declaration keyword */
 	/* comment */
 	Comment,			/* 50: '**' */
+	/* End Of Line */
+	EndOfLine,			/* 51: '\n */
 };
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string tokenStrTable[NUM_TOKENS] = {
+	/* basic token */
 	"Error",
+	"RunTimeError",
 	"EndOfToken",
+
+	/* literal */
 	"IntLiteral",
 	"DoubleLiteral",
 	"StringLiteral",
 	"BooleanLiteral",
+
+	/* identifier */
 	"VariableIdentifier",
 	"ConstantIdentifier",
 	"MethodIdentifier",
+
+	/* operators */
+	/* assign operator */
 	"Assignment",
-	"LeftParen",
-	"RightParen",
-	"Colon",
-	"SemiColon",
-	"Comma",
-	"If",
-	"Elif",
-	"Else",
-	"Then",
-	"EndIf",
-	"Repeat",
-	"Check",
-	"Break",
-	"Continue",
-	"Input",
-	"Output",
-	"Return",
-	"End",
-	"Int",
-	"Double",
-	"String",
-	"Boolean",
-	"Void",
-	"Begin",
-	"Declaration",
-	"Add",
-	"Subtract",
-	"Multiply",
-	"Divide",
-	"Modulo",
-	"Power",
+	/* compare operator */
 	"Equal",
 	"NotEqual",
 	"LessThan",
 	"GreaterThan",
 	"LessOrEqual",
 	"GreaterOrEqual",
+
+	/* delimeter */
+	"LeftParen",
+	"RightParen",
+	"LeftBrace",
+	"RightBrace",
+	"Colon",
+	"SemiColon",
+	"Comma",
+
+	/* keyword */
+	/* logical operator */
 	"LogicalAnd",
 	"LogicalOr",
 	"LogicalNot",
+	/* control keyword */
+	"If",
+	"Elif",
+	"Else",
+	"Then",
+	"EndIf",
+	/* iteration keyword */
+	"Repeat",
+	"Check",
+	"Break",
+	"Continue",
+	/* I/O keyword */
+	"Input",
+	"Output",
+	/* function keyword */
+	"Return",
+	"End",
+	/* data type keyword*/
+	"Int",
+	"Double",
+	"String",
+	"Boolean",
+	"Void",
+	/* other keyword */
+	"Begin",
+	"Declaration",
+	/* comment */
 	"Comment",
+	/* End Of Line */
+	"EndOfLine",
 };
 
 /* basic arithmetic operator */
@@ -206,7 +213,7 @@ typedef enum RelationalOperators {
 	GreaterOrEqual,		/* 5: '>=' */
 } RelOperator;
 /* logical operator */
-typedef enum LogicalOperators { 
+typedef enum LogicalOperators {
 	LogicalAnd,			/* 0: 'and' */
 	LogicalOr,			/* 1: 'or' */
 	LogicalNot,			/* 2: 'not' */
@@ -258,35 +265,39 @@ typedef struct scannerData {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* lexeme classes */
-// 이부분이 메인! 필수로 고쳐야함 - int > char
-#define LETTER 			0		// a-z,A-Z
-#define NUMBER			1		// 0-9
-#define UNDERSCORE		2		// _
-#define METHOD_START	3		// : /* (optional)근데 우리 method에 ()도 들어가는데 그걸로는 판단 못하나여? */
-#define SPACE			4		// ' ' OR \t 
-#define POSITIVE		5		// +
-#define NEGATIVE		6		// -
-#define DIVIDE			7		// /
-#define MODULUS			8		// %
-#define POWER			9		// ^
-#define COMMA			10		// ,
-#define ASSIGN			11		// =
-#define NOT				12		// !
-#define	LESS			13		// >
-#define GREATER			14		// <
-#define END_LINE		15		// \n
-#define BRACKET_OP		16		// (
-#define BRACKET_CL		17		// )
-#define CURLYBRA_OP		18		// {
-#define CURLYBRA_CL		19		// }
-#define STR_LI			20		// '
-#define STR_CON			21		// "
-#define ASTER			22		// *
-#define DEC_P			23		// .
-#define CAL_VAR			24		// $
-
+// 무시할 공백 정의
+#define SPACE			' '		// ' '
+#define TAB				'\t'	// \t
+// 특수 문자 정의
+#define METHOD_START	':'		// : /* (optional)근데 우리 method에 ()도 들어가는데 그걸로는 판단 못하나여? */
+#define METHOD_END		';'		// ;
+#define END_OF_LINE		'\n'	// \n
+#define ADD				'+'		// +
+#define SUBTRACT		'-'		// -
+#define DIVIDE			'/'		// /
+#define MODULUS			'%'		// %
+#define POWER			'^'		// ^
+#define COMMA			','		// ,
+#define PAREN_OP		'('		// (
+#define PAREN_CL		')'		// )
+#define BRACE_OP		'{'		// {
+#define BRACE_CL		'}'		// }
 #define EOS				'\0'	// End of source
 #define EOF				0xFF	// End of File
+// TT 정의
+#define UNDERSCORE		'_'		// _
+#define DOT				'.'		// .
+#define ASTER			'*'		// *
+#define ASSIGN			'='		// =
+#define NOT				'!'		// !
+#define	LESS			'<'		// >
+#define GREATER			'>'		// <
+#define STR_LI			'\''	// '
+#define STR_CON			'\"'	// "
+#define CAL_VAR			'$'		// $
+
+#define LETTER 			0		// a-z,A-Z
+#define NUMBER			1		// 0-9
 
 /*  Special case tokens processed separately one by one in the token-driven part of the scanner:
  *  LPR_T, RPR_T, LBR_T, RBR_T, EOS_T, SEOF_T and special chars used for tokenis include _, & and ' */
@@ -295,10 +306,10 @@ typedef struct scannerData {
 /* TO_DO: Error states and illegal state */
 #define ESNR	31		/* Error state with no retract */
 #define ESWR	32		/* Error state with retract */
-#define FS		33		/* Illegal state */
+#define FS		24		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		12
+#define NUM_STATES		24
 #define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */
@@ -367,8 +378,8 @@ typedef Token(*PTR_ACCFUN)(flowcode_string lexeme);
 /* Declare accepting states functions */
 Token funcSL	(flowcode_string lexeme);
 Token funcIL	(flowcode_string lexeme);
-Token funcID	(flowcode_string lexeme);
-Token funcCMT   (flowcode_string lexeme);
+Token funcIdentifier	(flowcode_string lexeme);
+Token funcComment   (flowcode_string lexeme);
 Token funcKEY	(flowcode_string lexeme);
 Token funcErr	(flowcode_string lexeme);
 
@@ -381,12 +392,12 @@ Token funcErr	(flowcode_string lexeme);
 static PTR_ACCFUN finalStateTable[NUM_STATES] = {
 	NULL,		/* -    [00] */
 	NULL,		/* -    [01] */
-	funcID,		/* MNID	[02] */
+	funcIdentifier,		/* MNID	[02] */
 	funcKEY,	/* KEY  [03] */
 	NULL,		/* -    [04] */
 	funcSL,		/* SL   [05] */
 	NULL,		/* -    [06] */
-	funcCMT,	/* COM  [07] */
+	funcComment,	/* COM  [07] */
 	funcErr,	/* ERR1 [06] */
 	funcErr		/* ERR2 [07] */
 };
