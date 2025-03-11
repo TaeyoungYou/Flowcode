@@ -309,39 +309,42 @@ typedef struct scannerData {
 #define FS		24		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		24
+#define NUM_STATES		28
 #define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */
 // 테이블 작성 필요!
 static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
-	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.) | ADD(+) | SUB(-) | MUL(*) | DIV(/) | MOD(%) | POW(^) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | COLON(:) | SEMI(;) | COMMA(,) | POPEN(() | PCLOSE()) | COPEN({) | CCLOSE(}) | OTHER | */
-	/* S0  */  { 1, 6, 1, ES, ES, ES, 20, ES, ES, ES, ES, ES, ES, ES, 15, 17, ES, ES, ES, ES, 4, ES, OPERATOR_ORDER, ES, ES }, /* NOFS (INITIAL STATE) */
-	/* S1  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 2, 5, ES, ES, ES, ES, ES, ES, ES, ES, 4, ES, ES, ES, ES }, /* FSNR (VARIABLE_ID) */
-	/* S2  */  { FS, FS, FS, ES, ES, ES, ES, ES, ES, ES, 3, ES, ES, ES, FS, FS, ES, ES, ES, ES, OPERATOR_ORDER, ES, OPERATOR_ORDER, ES, ES }, /* FSNR (ASSIGNMENT) */
-	/* S3  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (EQUAL) */
-	/* S4  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (METHOD_ID) */
-	/* S5  */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 6, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
-	/* S6  */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (NOT OPERATOR) */
-	/* S7  */  { ES, 8, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, OPERATOR_ORDER, ES, OPERATOR_ORDER, ES, ES }, /* NOFS */
-	/* S8  */  { ES, FS, ES, 9, ES, ES, ES, ES, ES, ES, 2, 5, 11, 13, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (INTEGER) */
-	/* S9  */  { ES, 10, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
-	/* S10 */  { ES, FS, ES, ES, ES, ES, ES, ES, ES, ES, 2, 5, 11, 13, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (FLOAT NUMBER) */
-	/* S11 */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 12, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (LESS THAN) */
-	/* S12 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (LESS THAN OR EQUAL) */
-	/* S13 */  { ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 14, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* FSNR (GREATER THAN) */
-	/* S14 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSWR (GREATER THAN OR EQUAL) */
-	/* S15 */  { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, /* NOFS */
-	/* S16 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (STRING LITERAL) */
-	/* S17 */  { 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 19, 17, 17, 17, 17, 17, 17, 17 }, /* NOFS */
-	/* S18 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }, /* FSNR (STRING CONCAT) */
-	/* S19 */  { 1, ES, 1, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, 18, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
-	/* S20 */  { ES, 8, ES, ES, 7, 7, 21, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, FS, ES, FS, ES, ES }, /* NOFS (COMMENT START) */
-	/* S21 */  { 21, 21, 21, 21, 21, 21, 22, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21 }, /* NOFS */
-	/* S22 */  { ES, ES, ES, ES, ES, ES, 23, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES }, /* NOFS */
-	/* S23 */  { FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS, FS }  /* FSNR (COMMENT END) */
+	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.)| MUL(*) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | OTHER | */
+	/* S0  */ {    1,        1,     1,    ESNR,     ESNR,      ESNR,   ESNR,     ESNR,   ESNR,     10,         12,        ESNR,   ESNR }, /* NOFS(Initial State) */
+	/* S1  */ {    1,        3,     3,       2,        2,         2,      2,       2,       2,      2,          2,           2,     2  }, /* NOFS */
+	/* S2  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(KEY) */
+	/* S3  */ {    3,        3,     3,       4,        4,         4,      4,       4,       4,      4,          4,           4,     4  }, /* NOFS */
+	/* S4  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(ID) */
+	/* S5  */ {    6,        5,     6,       7,        6,         6,      6,       6,       6,      6,          6,           6,     6  }, /* NOFS */
+	/* S6  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(INTEGER) */
+	/* S7  */ { ESNR,        8,  ESNR,    ESNR,     ESNR,      ESNR,   ESNR,     ESNR,   ESNR,   ESNR,       ESNR,        ESNR,   ESNR }, /* NOFS */
+	/* S8  */ {    9,        8,     9,       9,        9,         9,      9,       9,       9,      9,          9,           9,     9  }, /* NOFS */
+	/* S9  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(DOUBLE) */
+	/* S10 */ {   10,       10,    10,      10,       10,        10,     10,      10,      10,     11,         10,          10,    10  }, /* NOFS */
+	/* S11 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(STRING LITERAL) */
+	/* S12 */ {   12,       12,    12,      12,       12,        12,     12,      12,      12,     12,         13,          12,    12  }, /* NOFS */
+	/* S13 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(STRING CONCAN) */
+	/* S14 */ {   15,       15,    15,      15,       16,        15,     15,      15,      15,     15,         15,          15,    15  }, /* NOFS */
+	/* S15 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(MULTIPLY) */
+	/* S16 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(COMMENT) */
+	/* S17 */ {   19,       19,    19,      19,       19,        18,     19,      19,      19,     19,         19,          19,    19  }, /* NOFS */
+	/* S18 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(GE) */
+	/* S19 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(GREATER) */
+	/* S20 */ {   22,       22,    22,      22,       22,        21,     22,      22,      22,     22,         22,          22,    22  }, /* NOFS */
+	/* S21 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(LE) */
+	/* S22 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(LESS) */
+	/* S23 */ {   25,       25,    25,      25,       25,        24,     25,      25,      25,     25,         25,          25,    25  }, /* NOFS */
+	/* S24 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(EQUAL) */
+	/* S25 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(ASSIGNMENT) */
+	/* S26 */ { ESNR,     ESNR,  ESNR,    ESNR,     ESNR,        27,   ESNR,     ESNR,   ESNR,   ESNR,       ESNR,        ESNR,   ESNR }, /* NOFS */
+	/* S27 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(NOT) */
 };
-
 
 /* Define accepting states types */
 #define NOFS	0		/* Not Final State */
@@ -350,7 +353,35 @@ static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
 
 /* TO_DO: Define list of acceptable states */
 static flowcode_int stateType[NUM_STATES] = {
-	/* TODO::*/
+	NOFS, /* 00 */
+	NOFS, /* 01 */
+	FSWR, /* 02 (KEY) */
+	NOFS, /* 03 */
+	FSWR, /* 04 (IDENTIFIER) */
+	NOFS, /* 05 */
+	FSWR, /* 06 (INTEGER) */
+	NOFS, /* 07 */
+	NOFS, /* 08 */
+	FSWR, /* 09 (DOUBLE) */
+	NOFS, /* 10 */
+	FSNR, /* 11 (STRING LITERAL) */
+	NOFS, /* 12 */
+	FSNR, /* 13 (STRING CONCANTENATE */
+	NOFS, /* 14 */
+	FSWR, /* 15 (MULTIPLY) */
+	FSNR, /* 16 (COMMENT) */
+	NOFS, /* 17 */
+	FSNR, /* 18 (GREATER THAN EQUAL) */
+	FSWR, /* 19 (GREATER) */
+	NOFS, /* 20 */
+	FSNR, /* 21 (LESS THAN EQUAL) */
+	FSWR, /* 22 (LESS) */
+	NOFS, /* 23 */
+	FSNR, /* 24 (EUQAL) */
+	FSWR, /* 25 (ASSIGNMENT) */
+	NOFS, /* 26 */
+	FSNR /* 27 (NOT) */
+
 };
 
 /*
