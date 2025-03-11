@@ -54,7 +54,7 @@
 #define RTE_CODE 1  /* Value for run-time error */
 
 /* TO_DO: Define the number of tokens */
-#define NUM_TOKENS 51
+#define BASE_TOKEN_LEN 17
 
 enum TOKENS {
 	/* basic token */
@@ -66,12 +66,9 @@ enum TOKENS {
 	IntLiteral,			/* 2: Integer literal */
 	DoubleLiteral,		/* 3: Double literal */
 	StringLiteral,		/* 4: String literal */
-	BooleanLiteral,		/* 5: Boolean literal */
 
 	/* identifier */
-	VariableIdentifier, /* 6: Variable identifier */
-	ConstantIdentifier,	/* 7: Constant identifier */
-	MethodIdentifier,	/* 8: Method identifier */
+	Identifier,
 
 	/* operators */
 	/* assign operator */
@@ -85,8 +82,86 @@ enum TOKENS {
 	Colon,				/* 27: ':' */
 	SemiColon,			/* 28: ';' */
 	Comma,				/* 29: ',' */
+	/* comment */
+	Comment,			/* 50: '**' */
+	/* End Of Line */
+	EndOfLine,			/* 51: '\n */
+};
+static flowcode_string basicTokenStrTable[BASE_TOKEN_LEN] = {
+	/* basic token */
+	"Error",
+	"RunTimeError",
+	"EndOfToken",
 
+	/* literal */
+	"IntLiteral",
+	"DoubleLiteral",
+	"StringLiteral",
+
+	/* identifier */
+	"Identifier",
+
+	/* operators */
+	/* assign operator */
+	"Assignment",
+	/* delimeter */
+	"LeftParen",
+	"RightParen",
+	"LeftBrace",
+	"RightBrace",
+	"Colon",
+	"SemiColon",
+	"Comma",
+	/* comment */
+	"Comment",
+	/* End Of Line */
+	"EndOfLine",
+};
+
+#define ARITH_TOKEN_LEN 6
+/* basic arithmetic operator */
+typedef enum ArithmeticOperators { 
+	Add,				/* 0: '+' */
+	Subtract,			/* 1: '-' */
+	Multiply,			/* 2: '*' */
+	Divide,				/* 3: '/' */
+	Modulo,				/* 4: '%' */
+	Power,				/* 5: '^' */
+} AriOperator;
+static flowcode_string arithTokenStrTable[ARITH_TOKEN_LEN] = {
+	"Add",
+	"Subtract",
+	"Multiply",
+	"Divide",
+	"Modulo",
+	"Power",
+};
+#define RELATE_TOKEN_LEN 6
+/* comparsion operator */
+typedef enum RelationalOperators { 
+	Equal,				/* 0: '==' */
+	NotEqual,			/* 1: '!=' */
+	LessThan,			/* 2: '<' */
+	GreaterThan,		/* 3: '>' */
+	LessOrEqual,		/* 4: '<=' */
+	GreaterOrEqual,		/* 5: '>=' */
+} RelOperator;
+static flowcode_string relationTokenStrTable[RELATE_TOKEN_LEN] = {
+	"Equal",
+	"NotEqual",
+	"LessThan",
+	"GreaterThan",
+	"LessOrEqual",
+	"GreaterOrEqual",
+};
+
+#define KEYWORD_TOKEN_LEN 24
+typedef enum Keywords {
 	/* keyword */
+	/* logical operator */
+	LogicalAnd,			/* 0: 'and' */
+	LogicalOr,			/* 1: 'or' */
+	LogicalNot,			/* 2: 'not' */
 	/* control keyword */
 	If,					/* 30: if keyword */
 	Elif,				/* 31: elif keyword */
@@ -113,111 +188,40 @@ enum TOKENS {
 	/* other keyword */
 	Begin,				/* 48: begin keyword */
 	Declaration,		/* 49: declaration keyword */
-	/* comment */
-	Comment,			/* 50: '**' */
-	/* End Of Line */
-	EndOfLine,			/* 51: '\n */
-};
-
-/* TO_DO: Define the list of keywords */
-static flowcode_string tokenStrTable[NUM_TOKENS] = {
-	/* basic token */
-	"Error",
-	"RunTimeError",
-	"EndOfToken",
-
-	/* literal */
-	"IntLiteral",
-	"DoubleLiteral",
-	"StringLiteral",
-	"BooleanLiteral",
-
-	/* identifier */
-	"VariableIdentifier",
-	"ConstantIdentifier",
-	"MethodIdentifier",
-
-	/* operators */
-	/* assign operator */
-	"Assignment",
-	/* compare operator */
-	"Equal",
-	"NotEqual",
-	"LessThan",
-	"GreaterThan",
-	"LessOrEqual",
-	"GreaterOrEqual",
-
-	/* delimeter */
-	"LeftParen",
-	"RightParen",
-	"LeftBrace",
-	"RightBrace",
-	"Colon",
-	"SemiColon",
-	"Comma",
-
-	/* keyword */
-	/* logical operator */
-	"LogicalAnd",
-	"LogicalOr",
-	"LogicalNot",
+	Constant,			/* constant keyword */
+} Keyword;
+static flowcode_string keywordTokenStrTable[KEYWORD_TOKEN_LEN] = {
+	"LogicalAnd",     // 0: 'and'
+	"LogicalOr",      // 1: 'or'
+	"LogicalNot",     // 2: 'not'
 	/* control keyword */
-	"If",
-	"Elif",
-	"Else",
-	"Then",
-	"EndIf",
+	"If",            // 30: if keyword
+	"Elif",          // 31: elif keyword
+	"Else",          // 32: else keyword
+	"Then",          // 33: then keyword
+	"EndIf",         // 34: endif keyword
 	/* iteration keyword */
-	"Repeat",
-	"Check",
-	"Break",
-	"Continue",
+	"Repeat",        // 35: repeat keyword
+	"Check",         // 36: check keyword
+	"Break",         // 37: break keyword
+	"Continue",      // 38: continue keyword
 	/* I/O keyword */
-	"Input",
-	"Output",
+	"Input",         // 39: Input keyword
+	"Output",        // 40: Output keyword
 	/* function keyword */
-	"Return",
-	"End",
-	/* data type keyword*/
-	"Int",
-	"Double",
-	"String",
-	"Boolean",
-	"Void",
+	"Return",        // 41: return keyword
+	"End",           // 42: end keyword (used in function, declaration, begin)
+	/* data type keyword */
+	"Int",           // 43: int keyword
+	"Double",        // 44: double keyword
+	"String",        // 45: string keyword
+	"Boolean",       // 46: boolean keyword
+	"Void",          // 47: void keyword
 	/* other keyword */
-	"Begin",
-	"Declaration",
-	/* comment */
-	"Comment",
-	/* End Of Line */
-	"EndOfLine",
+	"Begin",         // 48: begin keyword
+	"Declaration",   // 49: declaration keyword
+	"Constant"       // 50: constant keyword
 };
-
-/* basic arithmetic operator */
-typedef enum ArithmeticOperators { 
-	Add,				/* 0: '+' */
-	Subtract,			/* 1: '-' */
-	Multiply,			/* 2: '*' */
-	Divide,				/* 3: '/' */
-	Modulo,				/* 4: '%' */
-	Power,				/* 5: '^' */
-} AriOperator;
-/* comparsion operator */
-typedef enum RelationalOperators { 
-	Equal,				/* 0: '==' */
-	NotEqual,			/* 1: '!=' */
-	LessThan,			/* 2: '<' */
-	GreaterThan,		/* 3: '>' */
-	LessOrEqual,		/* 4: '<=' */
-	GreaterOrEqual,		/* 5: '>=' */
-} RelOperator;
-/* logical operator */
-typedef enum LogicalOperators {
-	LogicalAnd,			/* 0: 'and' */
-	LogicalOr,			/* 1: 'or' */
-	LogicalNot,			/* 2: 'not' */
-} LogOperator;
 
 typedef enum SourceEndOfFile { 
 	SEOF_0, 
@@ -229,9 +233,10 @@ typedef union TokenAttribute {
 	flowcode_int codeType;				/* integer attributes accessor */
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
 	RelOperator relationalOperator;		/* relational operator attribute code */
-	LogOperator logicalOperator;		/* logical operator attribute code */
+	Keyword keyword;
 	EofOperator seofType;				/* source-end-of-file attribute code */
 	flowcode_int intValue;				/* integer literal attribute (value) */
+	flowcode_double doubleValue;		/* double literal attribute (value) */
 	flowcode_int keywordIndex;			/* keyword index in the keyword table */
 	flowcode_int contentString;			/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) */
 	flowcode_float floatValue;				/* floating-point literal attribute (value) */
@@ -259,7 +264,10 @@ typedef struct Token {
 
 /* Scanner */
 typedef struct scannerData {
-	flowcode_int scanHistogram[NUM_TOKENS];	/* Statistics of chars */
+	flowcode_int scanBasicHistogram[BASE_TOKEN_LEN];	/* Statistics of chars */
+	flowcode_int scanArithHistogram[ARITH_TOKEN_LEN];
+	flowcode_int scanRelateHistogram[RELATE_TOKEN_LEN];
+	flowcode_int scanKeywordHistogram[KEYWORD_TOKEN_LEN];
 } ScannerData, * pScanData;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,28 +417,51 @@ Language keywords
 */
 
 /* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 11
+#define KWT_SIZE 23
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string keywordTable[KWT_SIZE] = {
-	"data",		/* KW00 */
-	"code",		/* KW01 */
-	"int",		/* KW02 */
-	"real",		/* KW03 */
-	"string",	/* KW04 */
-	"if",		/* KW05 */
-	"then",		/* KW06 */
-	"else",		/* KW07 */
-	"while",	/* KW08 */
-	"do",		/* KW09 */
-	"return"	/* KW10 */
+	/* keyword */
+	/* logical operator */
+	"and",
+	"or",
+	"not",
+	/* control keyword */
+	"if",
+	"elif",
+	"else",
+	"then",
+	"endif",
+	/* iteration keyword */
+	"repeat",
+	"check",
+	"break",
+	"continue",
+	/* I/O keyword */
+	"Input",
+	"Output",
+	/* function keyword */
+	"return",
+	"end",
+	/* data type keyword*/
+	"int",
+	"double",
+	"string",
+	"boolean",
+	"void",
+	/* other keyword */
+	"begin",
+	"declaration",
 };
-
-/* NEW SECTION: About indentation */
-
-/*
- * Scanner attributes to be used (ex: including: intendation data
- */
+#define REL_SIZE 6
+static flowcode_string relationTable[REL_SIZE] = {
+	"==",
+	"!=",
+	"<",
+	">",
+	"<=",
+	">=",
+};
 
 #define INDENT TAB_CHR  /* Tabulation */
 
