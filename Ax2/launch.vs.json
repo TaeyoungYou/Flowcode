@@ -9,7 +9,7 @@
       "name": "FlowCode_Compiler.exe",
       "args": [
         "2",
-        "test.fc",
+        "INPUT6_Big.fc",
         "a",
         "250",
         "10"

@@ -209,6 +209,10 @@ Token tokenizer(flowcode_void) {
                 currentToken.code = Power;
                 scData.scanHistogram[currentToken.code]++;
                 return currentToken;
+            case DOT:
+                currentToken.code = Dot;
+                scData.scanHistogram[currentToken.code]++;
+                return currentToken;
 
             /* Cases for END OF FILE */
             case EOS:
@@ -430,7 +434,43 @@ Token funcString(flowcode_string lexeme) {
     flowcode_int i = 0, len = (flowcode_int) strlen(lexeme);
     currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
     for (i = 1; i < len - 1; i++) {
-        if (lexeme[i] == EndOfLine)
+        if (lexeme[i] == END_OF_LINE)
+            line++;
+        if (!readerAddChar(stringLiteralTable, lexeme[i])) {
+            currentToken.code = RunTimeError;
+            scData.scanHistogram[currentToken.code]++;
+            strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
+            errorNumber = RTE_CODE;
+            return currentToken;
+        }
+    }
+    if (!readerAddChar(stringLiteralTable, EOS)) {
+        currentToken.code = RunTimeError;
+        scData.scanHistogram[currentToken.code]++;
+        strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
+        errorNumber = RTE_CODE;
+        return currentToken;
+    }
+    currentToken.code = StringLiteral;
+    scData.scanHistogram[currentToken.code]++;
+    return currentToken;
+}
+
+Token funcDoubleString(flowcode_string lexeme) {
+    Token currentToken = {0};
+    //varsDoubleQuote = { 0 };
+    flowcode_int i = 0, len = (flowcode_int) strlen(lexeme);
+    currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
+    for (i = 1; i < len - 1; i++) {
+        if(lexeme[i] == CAL_VAR) {
+            /** TODO::
+             * ""의 리터럴은 이미 읽음
+             * 여기서 $키워드가 붙고 어떤 식별자가 있는지 출력해주면 됨
+             * TT와 저장할 배열은 만들어 둠
+             * $변수 출력은 printToken에 StringDoubleQuoteLiteral에서 하면 됨.
+             */
+        }
+        if (lexeme[i] == END_OF_LINE)
             line++;
         if (!readerAddChar(stringLiteralTable, lexeme[i])) {
             currentToken.code = RunTimeError;
@@ -498,7 +538,7 @@ Token funcRelational(flowcode_string lexeme) {
     Token currentToken = {0};
     flowcode_int relationIndex = -1, j = 0;
 
-    for (j = 0; j < REL_SIZE; ++j) if (!strcmp(lexeme, &relationTable[j][0])) relationIndex = j;
+    for (j = 0; j < REL_SIZE; ++j) if (!strcmp(lexeme, &relationTable[j][0])) relationIndex = j + REL_START_INDEX;
     if (relationIndex != -1) {
         currentToken.code = relationIndex;
         scData.scanHistogram[currentToken.code]++;
@@ -580,6 +620,11 @@ flowcode_void printToken(Token t) {
             printf("StringLiteral\t\t%d\t ", (flowcode_int) t.attribute.codeType);
             printf("%s\n", readerGetContent(stringLiteralTable, (flowcode_int) t.attribute.codeType));
             break;
+        case StringDoubleQuoteLiteral:
+            printf("StringLiteral\t\t%d\t ", (flowcode_int) t.attribute.codeType);
+            printf("%s\n", readerGetContent(stringLiteralTable, (flowcode_int) t.attribute.codeType));
+            printf("Variables: ...");
+            break;
         case LeftParen:
             printf("LeftParen\n");
             break;
@@ -600,6 +645,9 @@ flowcode_void printToken(Token t) {
             break;
         case Comma:
             printf("Comma\n");
+            break;
+        case Dot:
+            printf("Dot\n");
             break;
         case Comment:
             printf("Comment\n%s\n", t.attribute.comment_content);
@@ -629,8 +677,11 @@ flowcode_void printToken(Token t) {
             break;
 
         // 3. **관계 연산자 (Relational Operators)**
+        case Assignment:
+            printf("Assignment(=) operator\n");
+            break;
         case Equal:
-            printf("Equal(=) relational operator\n");
+            printf("Equal(==) relational operator\n");
             break;
         case NotEqual:
             printf("Not Equal(!=) relational operator\n");
