@@ -1,0 +1,14 @@
+** FlowCode Example 2:
+  Volume of a sphere **
+begin:
+	declaration:
+	double PI, VOL
+	end;
+	
+bool main(double r) {
+	PI = 3.14;
+	Vol = 4.0 / 3.0 * PI * (r * r * r);
+	Output: Vol;
+	return true;
+	end;
+end;

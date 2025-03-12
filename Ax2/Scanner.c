@@ -94,7 +94,7 @@ static BufferPointer sourceBuffer; /* Pointer to input source buffer */
 flowcode_int startScanner(BufferPointer psc_buf) {
     /* TO_DO: Start histogram */
     for (flowcode_int i = 0; i < BASE_TOKEN_LEN; i++)
-        scData.scanBasicHistogram[i] = 0;
+        scData.scanHistogram[i] = 0;
     /* Basic scanner initialization */
     /* in case the buffer has been read previously  */
     readerRecover(psc_buf);
@@ -159,66 +159,66 @@ Token tokenizer(flowcode_void) {
             // 특수문자 처리 - 특수문자: 한 글자로도 의미가 파악이 가능한 character
             case END_OF_LINE:
                 currentToken.code = EndOfLine;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case METHOD_START:
                 currentToken.code = Colon;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case METHOD_END:
                 currentToken.code = SemiColon;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case PAREN_OP:
                 currentToken.code = LeftParen;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case PAREN_CL:
                 currentToken.code = RightParen;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case BRACE_OP:
                 currentToken.code = LeftBrace;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case BRACE_CL:
                 currentToken.code = RightBrace;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case COMMA:
                 currentToken.code = Comma;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case ADD:
                 currentToken.code = Add;
-                scData.scanArithHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case SUBTRACT:
                 currentToken.code = Subtract;
-                scData.scanArithHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case DIVIDE:
                 currentToken.code = Divide;
-                scData.scanArithHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case MODULUS:
                 currentToken.code = Modulo;
-                scData.scanArithHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
             case POWER:
                 currentToken.code = Power;
-                scData.scanArithHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 return currentToken;
 
             /* Cases for END OF FILE */
             case EOS:
                 currentToken.code = EndOfToken;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 currentToken.attribute.seofType = SEOF_0;
                 return currentToken;
-            case EOF:
+            case EOF_T:
                 currentToken.code = EndOfToken;
-                scData.scanBasicHistogram[currentToken.code]++;
+                scData.scanHistogram[currentToken.code]++;
                 currentToken.attribute.seofType = SEOF_255;
                 return currentToken;
 
@@ -244,17 +244,20 @@ Token tokenizer(flowcode_void) {
                 if (stateType[state] == FSWR) // 한번 되돌려야하는 상황
                     readerRetract(sourceBuffer);
                 lexEnd = readerGetPosRead(sourceBuffer); // 현재까지 읽은 read 포지션
-                lexLength = lexEnd - lexStart - 1; // read의 초기를 -1로 했기 때문에 추가로 -1
-                lexemeBuffer = readerCreate((flowcode_int) lexLength + 2, 0, MODE_FIXED);
+                lexLength = lexEnd - lexStart; // read의 초기를 -1로 했기 때문에 추가로 -1
+                lexemeBuffer = readerCreate((flowcode_int) lexLength + 4, 0, MODE_FIXED);
             // 현재 읽은 unKnown-Token을 Buffer로 생성
                 if (!lexemeBuffer) {
                     fprintf(stderr, "Scanner error: Can not create buffer\n");
                     exit(1);
                 }
                 readerRestore(sourceBuffer);
-                for (i = 0; i < lexLength; i++)
-                    readerAddChar(lexemeBuffer, readerGetChar(sourceBuffer)); // unknown-token를 write를 작성을 함
+                for (i = 0; i <= lexLength; i++) {
+                    char ch = readerGetChar(sourceBuffer);
+                    readerAddChar(lexemeBuffer, ch); // unknown-token를 write를 작성을 함
+                }
                 readerAddChar(lexemeBuffer, READER_TERMINATOR); // 마지막에 널 포인터
+                if (DEBUG) printf("check contents : %s\n", lexemeBuffer->content);
                 lexeme = readerGetContent(lexemeBuffer, 0); // unknown-token
             // TO_DO: Defensive programming
                 if (!lexeme)
@@ -349,24 +352,25 @@ flowcode_int nextClass(flowcode_int c) {
  */
 /* TO_DO: Adjust the function for IL */
 
-Token funcMulitply(flowcode_string lexeme) {
+Token funcMultiply(flowcode_string lexeme) {
     Token currentToken = {0};
     currentToken.code = Multiply;
-    scData.scanArithHistogram[currentToken.code]++;
+    scData.scanHistogram[currentToken.code]++;
     return currentToken;
 }
 
 Token funcComment(flowcode_string lexeme) {
     Token currentToken = {0};
     flowcode_int i = 0, len = (flowcode_int) strlen(lexeme);
-    currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
+    currentToken.attribute.comment_content = lexeme;
     // ** ... ** 이므로, 2번째 문자부터 검사
     for (i = 2; i < len - 2; i++) {
-        if (lexeme[i] == END_OF_LINE)
+        if (lexeme[i] == END_OF_LINE) {
             line++;
+        }
     }
     currentToken.code = Comment;
-    scData.scanBasicHistogram[currentToken.code]++;
+    scData.scanHistogram[currentToken.code]++;
     return currentToken;
 }
 
@@ -393,7 +397,7 @@ Token funcIntegerLiteral(flowcode_string lexeme) {
         tlong = atol(lexeme);
         if (tlong >= 0 && tlong <= SHRT_MAX) {
             currentToken.code = IntLiteral;
-            scData.scanBasicHistogram[currentToken.code]++;
+            scData.scanHistogram[currentToken.code]++;
             currentToken.attribute.intValue = (flowcode_int) tlong;
         } else {
             currentToken = (*finalStateTable[ESNR])(lexeme);
@@ -412,7 +416,7 @@ Token funcDoubleLiteral(flowcode_string lexeme) {
         tdouble = atof(lexeme);
         if (tdouble >= 0 && tdouble <= DBL_MAX) {
             currentToken.code = DoubleLiteral;
-            scData.scanBasicHistogram[currentToken.code]++;
+            scData.scanHistogram[currentToken.code]++;
             currentToken.attribute.doubleValue = tdouble;
         } else {
             currentToken = (*finalStateTable[ESNR])(lexeme);
@@ -430,7 +434,7 @@ Token funcString(flowcode_string lexeme) {
             line++;
         if (!readerAddChar(stringLiteralTable, lexeme[i])) {
             currentToken.code = RunTimeError;
-            scData.scanBasicHistogram[currentToken.code]++;
+            scData.scanHistogram[currentToken.code]++;
             strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
             errorNumber = RTE_CODE;
             return currentToken;
@@ -438,13 +442,13 @@ Token funcString(flowcode_string lexeme) {
     }
     if (!readerAddChar(stringLiteralTable, EOS)) {
         currentToken.code = RunTimeError;
-        scData.scanBasicHistogram[currentToken.code]++;
+        scData.scanHistogram[currentToken.code]++;
         strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
         errorNumber = RTE_CODE;
         return currentToken;
     }
     currentToken.code = StringLiteral;
-    scData.scanBasicHistogram[currentToken.code]++;
+    scData.scanHistogram[currentToken.code]++;
     return currentToken;
 }
 
@@ -467,7 +471,7 @@ Token funcIdentifier(flowcode_string lexeme) {
     size_t length = strlen(lexeme);
 
     currentToken.code = Identifier;
-    scData.scanBasicHistogram[currentToken.code]++;
+    scData.scanHistogram[currentToken.code]++;
     strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
     currentToken.attribute.idLexeme[VID_LEN] = EOS;
 
@@ -479,14 +483,13 @@ Token funcKeyword(flowcode_string lexeme) {
     Token currentToken = {0};
     flowcode_int keywordIndex = -1, j = 0;
 
-    for (j = 0; j < KWT_SIZE; ++j) if (!strcmp(lexeme, &keywordTable[j][0])) keywordIndex = j;
+    for (j = 0; j < KWT_SIZE; ++j) if (!strcmp(lexeme, &keywordTable[j][0])) keywordIndex = j + KEYWORD_START_INDEX;
     if (keywordIndex != -1) {
-        currentToken.code = (Keyword) keywordIndex;
-        scData.scanKeywordHistogram[currentToken.code]++;
+        currentToken.code = keywordIndex;
+        scData.scanHistogram[currentToken.code]++;
         currentToken.attribute.codeType = keywordIndex;
     } else {
-        currentToken.code = Identifier;
-        scData.scanBasicHistogram[currentToken.code]++;
+        currentToken = funcIdentifier(lexeme);
     }
     return currentToken;
 }
@@ -497,12 +500,12 @@ Token funcRelational(flowcode_string lexeme) {
 
     for (j = 0; j < REL_SIZE; ++j) if (!strcmp(lexeme, &relationTable[j][0])) relationIndex = j;
     if (relationIndex != -1) {
-        currentToken.code = (RelOperator) relationIndex;
-        scData.scanRelateHistogram[currentToken.code]++;
+        currentToken.code = relationIndex;
+        scData.scanHistogram[currentToken.code]++;
         currentToken.attribute.codeType = relationIndex;
     } else {
         currentToken.code = Error;
-        scData.scanBasicHistogram[currentToken.code]++;
+        scData.scanHistogram[currentToken.code]++;
     }
     return currentToken;
 }
@@ -533,7 +536,7 @@ Token funcErr(flowcode_string lexeme) {
         if (lexeme[i] == END_OF_LINE)
             line++;
     currentToken.code = Error;
-    scData.scanBasicHistogram[currentToken.code]++;
+    scData.scanHistogram[currentToken.code]++;
     return currentToken;
 }
 
@@ -546,8 +549,9 @@ Token funcErr(flowcode_string lexeme) {
 
 flowcode_void printToken(Token t) {
     extern flowcode_string keywordTable[]; /* link to keyword table in */
-    // basic token table
+
     switch (t.code) {
+        // 1. **오류 및 기본 토큰 출력**
         case RunTimeError:
             printf("RunTimeError\t\t%s", t.attribute.errLexeme);
         /* Call here run-time error handling component */
@@ -564,7 +568,7 @@ flowcode_void printToken(Token t) {
             printf("EndOfToken\t\t%d\t\n", t.attribute.seofType);
             break;
         case Identifier:
-            printf("MethodIdentifier\t\t%s\n", t.attribute.idLexeme);
+            printf("Identifier\t\t%s\n", t.attribute.idLexeme);
             break;
         case IntLiteral:
             printf("IntLiteral\t\t%d\n", t.attribute.intValue);
@@ -581,11 +585,12 @@ flowcode_void printToken(Token t) {
             break;
         case RightParen:
             printf("RightParen\n");
+            break;
         case LeftBrace:
-            printf("LeftParen\n");
+            printf("LeftBrace\n");
             break;
         case RightBrace:
-            printf("RightParen\n");
+            printf("RightBrace\n");
             break;
         case Colon:
             printf("Colon\n");
@@ -597,10 +602,13 @@ flowcode_void printToken(Token t) {
             printf("Comma\n");
             break;
         case Comment:
-            printf("Comment\n");
+            printf("Comment\n%s\n", t.attribute.comment_content);
             break;
-    }
-    switch (t.code) {
+        case EndOfLine:
+            printf("End of Line(\\n)\n");
+            break;
+
+        // 2. **산술 연산자 (Arithmetic Operators)**
         case Add:
             printf("Add(+) arithmetic operator\n");
             break;
@@ -619,8 +627,8 @@ flowcode_void printToken(Token t) {
         case Power:
             printf("Power(^) arithmetic operator\n");
             break;
-    }
-    switch (t.code) {
+
+        // 3. **관계 연산자 (Relational Operators)**
         case Equal:
             printf("Equal(=) relational operator\n");
             break;
@@ -637,81 +645,84 @@ flowcode_void printToken(Token t) {
             printf("Less Or Equal(<=) relational operator\n");
             break;
         case GreaterOrEqual:
-            printf("Greater Or Equal(>= realtional operator\n");
+            printf("Greater Or Equal(>=) relational operator\n");
             break;
-    }
-    switch (t.code) {
+
+        // 4. **키워드 (Keywords)**
         case LogicalAnd:
             printf("Logical And(and) keyword\n");
             break;
         case LogicalOr:
             printf("Logical Or(or) keyword\n");
-        break;
+            break;
         case LogicalNot:
             printf("Logical Not(not) keyword\n");
-        break;
+            break;
         case If:
             printf("if keyword\n");
-        break;
+            break;
         case Elif:
             printf("elif keyword\n");
-        break;
+            break;
         case Then:
             printf("then keyword\n");
-        break;
+            break;
         case EndIf:
             printf("endif keyword\n");
-        break;
+            break;
         case Repeat:
             printf("repeat keyword\n");
-        break;
+            break;
         case Check:
             printf("check keyword\n");
-        break;
+            break;
         case Break:
             printf("break keyword\n");
-        break;
+            break;
         case Continue:
             printf("continue keyword\n");
-        break;
+            break;
         case Input:
             printf("Input I/O function keyword\n");
-        break;
+            break;
         case Output:
-            printf("Output I/O fucntion keyword\n");
-        break;
+            printf("Output I/O function keyword\n");
+            break;
         case Return:
             printf("return keyword\n");
-        break;
+            break;
         case End:
             printf("end keyword\n");
-        break;
+            break;
         case Int:
             printf("(int) integer type keyword\n");
-        break;
+            break;
         case Double:
             printf("(double) double type keyword\n");
-        break;
+            break;
         case String:
             printf("(string) string type keyword\n");
-        break;
+            break;
         case Boolean:
             printf("(bool) boolean type keyword\n");
-        break;
+            break;
         case Void:
             printf("(void) void type keyword\n");
-        break;
+            break;
         case Begin:
             printf("(begin) start flowcode source code keyword\n");
-        break;
+            break;
         case Declaration:
             printf("(declaration) declaration keyword\n");
-        break;
+            break;
+
+        // 5. **기본값 (토큰을 찾을 수 없음)**
         default:
-            printf("Cannot find..!");
-        break;
+            printf("Cannot find..!\n");
+            break;
     }
 }
+
 
 /*
  ************************************************************
@@ -728,8 +739,8 @@ flowcode_void printScannerData(ScannerData scData) {
     printf("----------------------------------\n");
     int cont = 0;
     for (cont = 0; cont < BASE_TOKEN_LEN; cont++) {
-        if (scData.scanBasicHistogram[cont] > 0)
-            printf("%s%s%s%d%s", "Token[", basicTokenStrTable[cont], "]=", scData.scanBasicHistogram[cont], "\n");
+        if (scData.scanHistogram[cont] > 0)
+            printf("%s%s%s%d%s", "Token[", tokenStrTable[cont], "]=", scData.scanHistogram[cont], "\n");
     }
     printf("----------------------------------\n");
 }

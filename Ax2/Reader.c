@@ -208,9 +208,6 @@ BufferPointer readerAddChar(BufferPointer readerPointer, flowcode_char ch) {
 	readerPointer->histogram[ch]++; /* Update histogram count for the inserted character */
 	readerPointer->flags.isEmpty = FLOWCODE_FALSE; /* Mark the buffer as not empty */
 
-	/* Scanner에서 mark기준으로 포지션을 초기화를 해서 추가 */
-	readerPointer->positions.mark++;
-
 	return readerPointer;
 }
 
