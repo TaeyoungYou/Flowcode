@@ -61,6 +61,7 @@
 #include "Scanner.h"
 #endif
 
+#define FINAL_STATE_TABLE_SIZE (sizeof(finalStateTable) / sizeof(finalStateTable[0]))
 /*
 ----------------------------------------------------------------
 TO_DO: Global vars definitions
@@ -114,7 +115,7 @@ flowcode_int startScanner(BufferPointer psc_buf) {
  *		in the Transition Diagram).
  ***********************************************************
  */
-// Source Code에서 Token을 찾아내는 함수
+// Function to identify tokens from the source code
 Token tokenizer(flowcode_void) {
     /* TO_DO: Follow the standard and adjust datatypes */
 
@@ -151,12 +152,12 @@ Token tokenizer(flowcode_void) {
 
         /* TO_DO: All patterns that do not require accepting functions */
         switch (c) {
-            // 공백 문자 제거
+            // Remove space or tab
             case SPACE:
             case TAB:
                 break;
 
-            // 특수문자 처리 - 특수문자: 한 글자로도 의미가 파악이 가능한 character
+            // Special character processing - Special characters: Single-character symbols that convey meaning
             case END_OF_LINE:
                 currentToken.code = EndOfLine;
                 scData.scanHistogram[currentToken.code]++;
@@ -236,21 +237,21 @@ Token tokenizer(flowcode_void) {
 
             default: // general case
                 state = nextState(state, c);
-                lexStart = readerGetPosRead(sourceBuffer); // -1을 삭제! 이미 이 코드에는 처음이 -1임
+                lexStart = readerGetPosRead(sourceBuffer); // Removed -1! The initial value is already set to -1 in this code.
                 readerSetMark(sourceBuffer, lexStart);
                 int pos = 0;
                 while (stateType[state] == NOFS) {
-                    // Final State까지 반복
+                    // Repeat until reaching a Final State
                     c = readerGetChar(sourceBuffer);
                     state = nextState(state, c);
                     pos++;
                 }
-                if (stateType[state] == FSWR) // 한번 되돌려야하는 상황
+                if (stateType[state] == FSWR) // If the state requires retracting
                     readerRetract(sourceBuffer);
-                lexEnd = readerGetPosRead(sourceBuffer); // 현재까지 읽은 read 포지션
-                lexLength = lexEnd - lexStart; // read의 초기를 -1로 했기 때문에 추가로 -1
+                lexEnd = readerGetPosRead(sourceBuffer); // Get the current read position
+                lexLength = lexEnd - lexStart; // Since the initial read position was set to -1, no additional subtraction is needed
                 lexemeBuffer = readerCreate((flowcode_int) lexLength + 4, 0, MODE_FIXED);
-            // 현재 읽은 unKnown-Token을 Buffer로 생성
+                // Create a buffer for the currently read unknown token
                 if (!lexemeBuffer) {
                     fprintf(stderr, "Scanner error: Can not create buffer\n");
                     exit(1);
@@ -258,16 +259,16 @@ Token tokenizer(flowcode_void) {
                 readerRestore(sourceBuffer);
                 for (i = 0; i <= lexLength; i++) {
                     char ch = readerGetChar(sourceBuffer);
-                    readerAddChar(lexemeBuffer, ch); // unknown-token를 write를 작성을 함
+                    readerAddChar(lexemeBuffer, ch);  // Write unknown token into the buffer
                 }
-                readerAddChar(lexemeBuffer, READER_TERMINATOR); // 마지막에 널 포인터
+                readerAddChar(lexemeBuffer, READER_TERMINATOR); // Add a null terminator at the end
                 if (DEBUG) printf("check contents : %s\n", lexemeBuffer->content);
                 lexeme = readerGetContent(lexemeBuffer, 0); // unknown-token
             // TO_DO: Defensive programming
                 if (!lexeme)
                     return currentToken;
-                currentToken = (*finalStateTable[state])(lexeme); // 갈 함수 정하고 Token반환
-                readerRestore(lexemeBuffer); // Marker로 재배치한다고?? - 함수 확인 필요!
+                currentToken = (*finalStateTable[state])(lexeme); // Determine the function to call and return the token
+                readerRestore(lexemeBuffer); // Reposition using the marker?? - Function verification needed!
                 return currentToken;
         } // switch
     } //while
@@ -307,10 +308,10 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
     next = transitionTable[state][col];
     if (DEBUG)
         printf("Input symbol: %c Row: %d Column: %d Next: %d \n", c, state, col, next);
-    assert(next != FS); // 허용되지않는 state라면 assert!
+    assert(next != FS); // Assert if the state is not allowed!
     if (DEBUG)
         if (next == FS) {
-            // assert가 울지 않는 한 들어가지 않음
+            // This code should never be reached unless an assertion fails
             printf("Scanner Error: Illegal state:\n");
             printf("Input symbol: %c Row: %d Column: %d\n", c, state, col);
             exit(1);
@@ -367,7 +368,7 @@ Token funcComment(flowcode_string lexeme) {
     Token currentToken = {0};
     flowcode_int i = 0, len = (flowcode_int) strlen(lexeme);
     currentToken.attribute.comment_content = lexeme;
-    // ** ... ** 이므로, 2번째 문자부터 검사
+    // ** Since it starts with '...' (double asterisks), check from the second character **
     for (i = 2; i < len - 2; i++) {
         if (lexeme[i] == END_OF_LINE) {
             line++;
@@ -411,9 +412,8 @@ Token funcIntegerLiteral(flowcode_string lexeme) {
 }
 
 Token funcDoubleLiteral(flowcode_string lexeme) {
-    Token currentToken = {0};
+    Token currentToken = { 0 };
     flowcode_double tdouble;
-
     if (lexeme[0] != EOS && strlen(lexeme) > NUM_LEN) {
         currentToken = (*finalStateTable[ESNR])(lexeme);
     } else {
@@ -422,7 +422,8 @@ Token funcDoubleLiteral(flowcode_string lexeme) {
             currentToken.code = DoubleLiteral;
             scData.scanHistogram[currentToken.code]++;
             currentToken.attribute.doubleValue = tdouble;
-        } else {
+        }
+        else {
             currentToken = (*finalStateTable[ESNR])(lexeme);
         }
     }
@@ -457,27 +458,63 @@ Token funcString(flowcode_string lexeme) {
 }
 
 Token funcDoubleString(flowcode_string lexeme) {
-    Token currentToken = {0};
-    //varsDoubleQuote = { 0 };
-    flowcode_int i = 0, len = (flowcode_int) strlen(lexeme);
+    Token currentToken = { 0 };
+    flowcode_int i = 1, len = (flowcode_int)strlen(lexeme);
+    flowcode_int varIndex = 0;
+    char varBuffer[VID_LEN] = { 0 };
+    flowcode_int varBufferIndex = 0;
+    flowcode_bool isVariable = false;
+    /* Store the current write position in the string literal table */
     currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
+
     for (i = 1; i < len - 1; i++) {
-        if(lexeme[i] == CAL_VAR) {
-            /** TODO::
-             * ""의 리터럴은 이미 읽음
-             * 여기서 $키워드가 붙고 어떤 식별자가 있는지 출력해주면 됨
-             * TT와 저장할 배열은 만들어 둠
-             * $변수 출력은 printToken에 StringDoubleQuoteLiteral에서 하면 됨.
-             */
+        if (lexeme[i] == CAL_VAR) {
+            isVariable = true;
+            varBufferIndex = 0;
+            continue;
         }
-        if (lexeme[i] == END_OF_LINE)
-            line++;
-        if (!readerAddChar(stringLiteralTable, lexeme[i])) {
-            currentToken.code = RunTimeError;
-            scData.scanHistogram[currentToken.code]++;
-            strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
-            errorNumber = RTE_CODE;
-            return currentToken;
+
+        if (isVariable) {
+            // Check variable name rules: [a-zA-Z_][a-zA-Z0-9_]* 
+            if (isalnum(lexeme[i]) || lexeme[i] == '_') {
+                varBuffer[varBufferIndex++] = lexeme[i];
+                if (varBufferIndex >= VID_LEN - 1) {
+                    break; // Stop if the variable name is too long 
+                }
+                continue;
+            }
+            // End of variable identifier
+            varBuffer[varBufferIndex] = '\0';
+            if (varBufferIndex > 0) {
+                // Convert the variable name into an Identifier token
+                Token varToken = funcIdentifier(varBuffer);
+                printf("Detected Variable: $%s (Token Code: %d)\n", varBuffer, varToken.code);
+                scData.scanHistogram[varToken.code]++;
+                if (varIndex < MAX_VAL - 1) {
+                    printf("Storing variable $ % s at varsDoubleQuote[% d]\n", varBuffer, varIndex);
+
+                    // Dynamically allocate memory for storing the VID
+                    varsDoubleQuote[varIndex] = (char*)malloc((strlen(varBuffer) + 1) * sizeof(char));
+                    if (varsDoubleQuote[varIndex] == NULL) {
+                        printf("Memory allocation failed for varsDoubleQuote[%d]\n", varIndex);
+                    }
+                    else {
+                        strcpy(varsDoubleQuote[varIndex], varBuffer);
+                    }
+                    varIndex++;
+                }
+                else {
+                    printf("varsDoubleQuote index exceeded! varIndex = %d, MAX_VAL = %d\n", varIndex, MAX_VAL);
+                }
+            }
+            isVariable = false;
+        } 
+    if (!readerAddChar(stringLiteralTable, lexeme[i])) {
+        currentToken.code = RunTimeError;
+        scData.scanHistogram[currentToken.code]++;
+        strcpy(currentToken.attribute.errLexeme, "Run Time Error:");
+        errorNumber = RTE_CODE;
+        return currentToken;
         }
     }
     if (!readerAddChar(stringLiteralTable, EOS)) {
@@ -487,7 +524,7 @@ Token funcDoubleString(flowcode_string lexeme) {
         errorNumber = RTE_CODE;
         return currentToken;
     }
-    currentToken.code = StringLiteral;
+    currentToken.code = StringDoubleQuoteLiteral;
     scData.scanHistogram[currentToken.code]++;
     return currentToken;
 }
@@ -505,7 +542,7 @@ Token funcDoubleString(flowcode_string lexeme) {
  ***********************************************************
  */
 /* TO_DO: Adjust the function for ID */
-// Keyword가 아니면 Identifier - 아직까진 Variable, Constant, Method 중 어느 Identifier인지 모름
+// If not a keyword, treat it as an Identifier - It is not yet determined whether it is a Variable, Constant, or Method.
 Token funcIdentifier(flowcode_string lexeme) {
     Token currentToken = {0};
     size_t length = strlen(lexeme);
@@ -591,7 +628,7 @@ flowcode_void printToken(Token t) {
     extern flowcode_string keywordTable[]; /* link to keyword table in */
 
     switch (t.code) {
-        // 1. **오류 및 기본 토큰 출력**
+        // 1. **Error and Basic Token Output**
         case RunTimeError:
             printf("RunTimeError\t\t%s", t.attribute.errLexeme);
         /* Call here run-time error handling component */
@@ -623,8 +660,18 @@ flowcode_void printToken(Token t) {
         case StringDoubleQuoteLiteral:
             printf("StringLiteral\t\t%d\t ", (flowcode_int) t.attribute.codeType);
             printf("%s\n", readerGetContent(stringLiteralTable, (flowcode_int) t.attribute.codeType));
-            printf("Variables: ...");
-            break;
+            printf("Variables: "); // Additional feature: Print variables that appear with $ symbol 
+           
+            /* Iterate through the varsDoubleQuote array to find and print non - null, non - empty variables */
+            for (flowcode_int i = 0; i < MAX_VAL; i++) {
+                if (varsDoubleQuote[i] == NULL) {
+                    continue; // Skip if the variable is NULL
+                }
+                if (varsDoubleQuote[i][0] != '\0') {
+                    printf("$%s ", varsDoubleQuote[i]);
+                }
+            }
+            printf("\n");
         case LeftParen:
             printf("LeftParen\n");
             break;
@@ -656,7 +703,7 @@ flowcode_void printToken(Token t) {
             printf("End of Line(\\n)\n");
             break;
 
-        // 2. **산술 연산자 (Arithmetic Operators)**
+        // 2. ** Arithmetic Operators **
         case Add:
             printf("Add(+) arithmetic operator\n");
             break;
@@ -676,7 +723,7 @@ flowcode_void printToken(Token t) {
             printf("Power(^) arithmetic operator\n");
             break;
 
-        // 3. **관계 연산자 (Relational Operators)**
+        // 3. ** Relational Operators **
         case Assignment:
             printf("Assignment(=) operator\n");
             break;
@@ -699,7 +746,7 @@ flowcode_void printToken(Token t) {
             printf("Greater Or Equal(>=) relational operator\n");
             break;
 
-        // 4. **키워드 (Keywords)**
+        // 4. ** Keywords **
         case LogicalAnd:
             printf("Logical And(and) keyword\n");
             break;
@@ -714,6 +761,9 @@ flowcode_void printToken(Token t) {
             break;
         case Elif:
             printf("elif keyword\n");
+            break;
+        case Else:
+            printf("else keyword\n");
             break;
         case Then:
             printf("then keyword\n");
@@ -767,7 +817,7 @@ flowcode_void printToken(Token t) {
             printf("(declaration) declaration keyword\n");
             break;
 
-        // 5. **기본값 (토큰을 찾을 수 없음)**
+        // 5. ** Default (Cannot find token...)**
         default:
             printf("Cannot find..!\n");
             break;
@@ -789,6 +839,8 @@ flowcode_void printScannerData(ScannerData scData) {
     printf("Statistics:\n");
     printf("----------------------------------\n");
     int cont = 0;
+
+    /* Iterate through the token histogram and print non-zero values */
     for (cont = 0; cont < BASE_TOKEN_LEN; cont++) {
         if (scData.scanHistogram[cont] > 0)
             printf("%s%s%s%d%s", "Token[", tokenStrTable[cont], "]=", scData.scanHistogram[cont], "\n");

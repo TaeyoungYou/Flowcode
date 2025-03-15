@@ -63,6 +63,9 @@ NOTE: Some types may not be directly used by your language,
 ------------------------------------------------------------
 */
 
+typedef int bool;
+#define true 1;
+#define false 0;
 
 /* TO_DO: Define your typedefs */
 typedef char			flowcode_char;
@@ -71,7 +74,7 @@ typedef int				flowcode_int;
 typedef float			flowcode_float;
 typedef void			flowcode_void;
 
-typedef char			flowcode_bool; /* boolean? ? char??? int ? bool ????*/
+typedef bool			flowcode_bool;
 typedef unsigned char	flowcode_byte;
 
 typedef long			flowcode_long;
