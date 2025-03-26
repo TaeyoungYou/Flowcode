@@ -49,7 +49,7 @@
 /* Constants */
 #define VID_LEN 20  /* variable identifier length */
 #define ERR_LEN 40  /* error message length */
-#define NUM_LEN 5   /* maximum number of digits for IL */
+#define NUM_LEN 17   /* maximum number of digits for IL */
 
 #define RTE_CODE 1  /* Value for run-time error */
 
@@ -57,95 +57,95 @@
 #define BASE_TOKEN_LEN 54
 
 enum TOKENS {
-	/* ========== 기본 토큰 ========== */
-	Error,              /*  0: Error token (에러 발생 시 사용) */
-	RunTimeError,       /*  1: 런타임 에러 발생 시 사용 */
-	EndOfToken,         /*  2: End of token (파일 끝) */
+	/* ========== Basic Tokens ========== */
+	Error,              /*  0: Error token (used when an error occurs) */
+	RunTimeError,       /*  1: Used when a runtime error occurs */
+	EndOfToken,         /*  2: End of token (end of tile) */
 
-	/* ========== 리터럴 (Literal) ========== */
-	IntLiteral,         /*  3: Integer literal (정수 리터럴) */
-	DoubleLiteral,      /*  4: Double literal (실수 리터럴) */
-	StringLiteral,      /*  5: String literal (문자열 리터럴) */
+	/* ========== Literal ========== */
+	IntLiteral,         /*  3: Integer literal */
+	DoubleLiteral,      /*  4: Double literal */
+	StringLiteral,      /*  5: String literal */
 
-	/* ========== 식별자 (Identifier) ========== */
-	Identifier,         /*  6: 일반적인 식별자 (변수, 함수 이름 등) */
+	/* ========== Identifier ========== */
+	Identifier,         /*  6: Identifier (Variable, function name, constant, etc.) */
 
 
-	/* ========== 구분자 (Delimiters) ========== */
-	LeftParen,          /*  8: '(' (왼쪽 괄호) */
-	RightParen,         /*  9: ')' (오른쪽 괄호) */
-	LeftBrace,          /* 10: '{' (왼쪽 중괄호) */
-	RightBrace,         /* 11: '}' (오른쪽 중괄호) */
-	Colon,              /* 12: ':' (콜론) */
-	SemiColon,          /* 13: ';' (세미콜론) */
-	Comma,              /* 14: ',' (쉼표) */
+	/* ========== Delimiters ========== */
+	LeftParen,          /*  8: '(' (left bracket) */
+	RightParen,         /*  9: ')' (right bracket) */
+	LeftBrace,          /* 10: '{' (left curly brace) */
+	RightBrace,         /* 11: '}' (right curly brace) */
+	Colon,              /* 12: ':' (colon) */
+	SemiColon,          /* 13: ';' (semicolon) */
+	Comma,              /* 14: ',' (comma) */
 	Dot,
 
-	/* ========== 주석 (Comment) ========== */
-	Comment,            /* 15: '** ... **' (주석) */
+	/* ========== Comment ========== */
+	Comment,            /* 15: '** ... **' */
 
-	/* ========== 줄 끝 (End of Line) ========== */
-	EndOfLine,          /* 16: '\n' (줄 바꿈) */
+	/* ========== End of Line ========== */
+	EndOfLine,          /* 16: '\n' (newline) */
 
-	/* ========== 산술 연산자 (Arithmetic Operators) ========== */
-	Add,                /* 17: '+' (덧셈 연산자) */
-	Subtract,           /* 18: '-' (뺄셈 연산자) */
-	Multiply,           /* 19: '*' (곱셈 연산자) */
-	Divide,             /* 20: '/' (나눗셈 연산자) */
-	Modulo,             /* 21: '%' (나머지 연산자) */
-	Power,              /* 22: '^' (거듭제곱 연산자) */
+	/* ========== Arithmetic Operators ========== */
+	Add,                /* 17: '+' (addition operator) */
+	Subtract,           /* 18: '-' (subtraction operator) */
+	Multiply,           /* 19: '*' (multiplication operator) */
+	Divide,             /* 20: '/' (division operator) */
+	Modulo,             /* 21: '%' (modulo operator) */
+	Power,              /* 22: '^' (Exponentiation operator) */
 
-	/* ========== 비교 연산자 (Comparison Operators) ========== */
-	/* ========== 연산자 (Operators) ========== */
+	/* ========== Comparison Operators ========== */
+	/* ========== Operators ========== */
 	/* 할당 연산자 (Assignment Operator) */
-	Assignment,         /*  7: '=' (할당 연산자) */
-	Equal,              /* 23: '==' (같음) */
-	NotEqual,           /* 24: '!=' (다름) */
-	LessThan,           /* 25: '<' (작음) */
-	GreaterThan,        /* 26: '>' (큼) */
-	LessOrEqual,        /* 27: '<=' (작거나 같음) */
-	GreaterOrEqual,     /* 28: '>=' (크거나 같음) */
+	Assignment,         /*  7: '=' (assignment operator) */
+	Equal,              /* 23: '==' (equality) */
+	NotEqual,           /* 24: '!=' (inequality) */
+	LessThan,           /* 25: '<' (less than) */
+	GreaterThan,        /* 26: '>' (greater than) */
+	LessOrEqual,        /* 27: '<=' (less than or equal) */
+	GreaterOrEqual,     /* 28: '>=' (greater than or equal) */
 
-	/* ========== 키워드 (Keywords) ========== */
-	/* 논리 연산자 (Logical Operators) */
-	LogicalAnd,         /* 29: 'and' (논리 AND) */
-	LogicalOr,          /* 30: 'or' (논리 OR) */
-	LogicalNot,         /* 31: 'not' (논리 NOT) */
+	/* ========== Keywords ========== */
+	/* Logical Operators */
+	LogicalAnd,         /* 29: 'and' (logical AND) */
+	LogicalOr,          /* 30: 'or' (logical OR) */
+	LogicalNot,         /* 31: 'not' (logical NOT) */
 
-	/* 제어문 키워드 (Control Keywords) */
-	If,                 /* 32: 'if' (조건문) */
-	Elif,               /* 33: 'elif' (조건문 - else if) */
-	Else,               /* 34: 'else' (조건문 - 기본) */
-	Then,               /* 35: 'then' (조건문 - 실행) */
-	EndIf,              /* 36: 'endif' (조건문 종료) */
+	/* Control Keywords */
+	If,                 /* 32: 'if' (conditional statement) */
+	Elif,               /* 33: 'elif' (else if condition) */
+	Else,               /* 34: 'else' (defualt condition) */
+	Then,               /* 35: 'then' (execution statement) */
+	EndIf,              /* 36: 'endif' (end of conditional statement) */
 
-	/* 반복문 키워드 (Iteration Keywords) */
-	Repeat,             /* 37: 'repeat' (반복문) */
-	Check,              /* 38: 'check' (반복 검사) */
-	Break,              /* 39: 'break' (반복 종료) */
-	Continue,           /* 40: 'continue' (다음 반복 실행) */
+	/* Iteration Keywords */
+	Repeat,             /* 37: 'repeat' (loop statement) */
+	Check,              /* 38: 'check' (loop check condition) */
+	Break,              /* 39: 'break' (exit loop) */
+	Continue,           /* 40: 'continue' (proceed to next iteration) */
 
-	/* 입출력 키워드 (I/O Keywords) */
-	Input,              /* 41: 'Input' (입력) */
-	Output,             /* 42: 'Output' (출력) */
+	/* I/O Keywords */
+	Input,              /* 41: 'Input' (input function) */
+	Output,             /* 42: 'Output' (output function) */
 
-	/* 함수 키워드 (Function Keywords) */
-	Return,             /* 43: 'return' (함수 반환) */
-	End,                /* 44: 'end' (함수 종료, 선언 종료 등) */
+	/* Function Keywords */
+	Return,             /* 43: 'return' (function return) */
+	End,                /* 44: 'end' (end of function or declaration) */
 
-	/* 데이터 타입 키워드 (Data Type Keywords) */
-	Int,                /* 45: 'int' (정수형) */
-	Double,             /* 46: 'double' (실수형) */
-	String,             /* 47: 'string' (문자열) */
-	Boolean,            /* 48: 'bool' (불리언 타입) */
-	Void,               /* 49: 'void' (반환값 없음) */
+	/* Data Type Keywords */
+	Int,                /* 45: 'int' (integer type) */
+	Double,             /* 46: 'double' (floating-point type) */
+	String,             /* 47: 'string' (string literal) */
+	Boolean,            /* 48: 'bool' (boolean type) */
+	Void,               /* 49: 'void' (no return value) */
 
-	/* 기타 키워드 (Other Keywords) */
-	Begin,              /* 50: 'begin' (코드 블록 시작) */
-	Declaration,        /* 51: 'declaration' (변수 선언) */
-	Constant,           /* 52: 'constant' (상수 선언) */
+	/* Other Keywords */
+	Begin,              /* 50: 'begin' (start of a code block) */
+	Declaration,        /* 51: 'declaration' (variable declaration) */
+	Constant,           /* 52: 'constant' (constant declaration) */
 
-	StringDoubleQuoteLiteral,
+	StringDoubleQuoteLiteral, /* String literal enclosed in double quotes */
 };
 
 
@@ -273,11 +273,11 @@ typedef struct scannerData {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* lexeme classes */
-// 무시할 공백 정의
+// Define whitespace characters to be ignored
 #define SPACE			' '		// ' '
 #define TAB				'\t'	// \t
-// 특수 문자 정의
-#define METHOD_START	':'		// : /* (optional)근데 우리 method에 ()도 들어가는데 그걸로는 판단 못하나여? */
+// Special Chars to be ignored
+#define METHOD_START	':'		// : 
 #define METHOD_END		';'		// ;
 #define END_OF_LINE		'\n'	// \n
 #define ADD				'+'		// +
@@ -314,91 +314,62 @@ typedef struct scannerData {
 #define FS		52		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		31
+#define NUM_STATES		31	
 #define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */
-// 테이블 작성 필요!
-//static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
-//	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.)| MUL(*) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | OTHER | */
-//	/* S0  */ {    1,        1,     1,    ESNR,		  ESNR,      ESNR,   ESNR,     ESNR,   ESNR,     10,         12,        ESNR,   ESNR }, /* NOFS(Initial State) */
-//	/* S1  */ {    1,        3,     3,       2,        2,         2,      2,       2,       2,      2,          2,           2,     2  }, /* NOFS */
-//	/* S2  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(KEY) */
-//	/* S3  */ {    3,        3,     3,       4,        4,         4,      4,       4,       4,      4,          4,           4,     4  }, /* NOFS */
-//	/* S4  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(ID) */
-//	/* S5  */ {    6,        5,     6,       7,        6,         6,      6,       6,       6,      6,          6,           6,     6  }, /* NOFS */
-//	/* S6  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(INTEGER) */
-//	/* S7  */ { ESNR,        8,  ESNR,    ESNR,     ESNR,      ESNR,   ESNR,     ESNR,   ESNR,   ESNR,       ESNR,        ESNR,   ESNR }, /* NOFS */
-//	/* S8  */ {    9,        8,     9,       9,        9,         9,      9,       9,       9,      9,          9,           9,     9  }, /* NOFS */
-//	/* S9  */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(DOUBLE) */
-//	/* S10 */ {   10,       10,    10,      10,       10,        10,     10,      10,      10,     11,         10,          10,    10  }, /* NOFS */
-//	/* S11 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(STRING LITERAL) */
-//	/* S12 */ {   12,       12,    12,      12,       12,        12,     12,      12,      12,     12,         13,          12,    12  }, /* NOFS */
-//	/* S13 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(STRING CONCAN) */
-//	/* S14 */ {   15,       15,    15,      15,       16,        15,     15,      15,      15,     15,         15,          15,    15  }, /* NOFS */
-//	/* S15 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(MULTIPLY) */
-//	/* S16 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(COMMENT) */
-//	/* S17 */ {   19,       19,    19,      19,       19,        18,     19,      19,      19,     19,         19,          19,    19  }, /* NOFS */
-//	/* S18 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(GE) */
-//	/* S19 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(GREATER) */
-//	/* S20 */ {   22,       22,    22,      22,       22,        21,     22,      22,      22,     22,         22,          22,    22  }, /* NOFS */
-//	/* S21 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(LE) */
-//	/* S22 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(LESS) */
-//	/* S23 */ {   25,       25,    25,      25,       25,        24,     25,      25,      25,     25,         25,          25,    25  }, /* NOFS */
-//	/* S24 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(EQUAL) */
-//	/* S25 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(ASSIGNMENT) */
-//	/* S26 */ { ESNR,     ESNR,  ESNR,    ESNR,     ESNR,        27,   ESNR,     ESNR,   ESNR,   ESNR,       ESNR,        ESNR,   ESNR }, /* NOFS */
-//	/* S27 */ {   FS,       FS,    FS,      FS,       FS,        FS,     FS,      FS,      FS,     FS,         FS,          FS,     FS }, /* FSWR(NOT) */
-//};
-
-
-/** FLOWCODE의 Transition Table 기준
- *  토큰을 판단하는 기준은 오직 [ index / FS / ESNR ] 만 사용
- *  NSWR은 STATE에서 이미 NOFS / FSNR / FSWR 로 기준을 잡고 사용하기 때문에 필요 없음!
+/*
+ * FLOWCODE Transition Table Criteria
+ * The token determination is based solely on [ index / FS / ESNR ].
+ * NSWR is not needed since states are already classified as NOFS, FSNR, or FSWR.
  *
- *  예)
- *		intn= -> intn까지 keyword로 읽다가 =가 나옴으로써 FS로 이동하면서 keyword로 확정!
- *		3..   -> 3에서 정수로 확인, .에서 실수로 확인, .이 다시 나옴으로써 이건 ESNR로 확정!
- *		3.14= -> 문법적으로 맞지 않음. 리터럴 오른쪽에는 =가 나오지 않음. 하지만, =으로써 3.14가 실수인걸로 확정! =는 assig으로 확정! 문법적인 건 parser에서 할일!
- *		*<    -> 문법적으로 맞지 않음. 하지만, <가 나옴으로써 *는 곱셈으로 확정! <도 less로 확정! 문법적인 건 parser에서 할일!
- *		*>=*< -> 같은 말도 안되는 문법. 이것도 ESNR이 아님. 각각 토큰으로 나눌수 있음! 8,>,=,*,< 으로 가능하기 때문에 FS로 감.
- *		"h'   -> 이건 FS로 가도 토큰 생성이 불가! ESNR로 확정!
+ * Examples:
+ *      intn=  -> Reads "intn" as a keyword until '=' appears, then transitions to FS and confirms it as a keyword.
+ *      3..    -> Reads '3' as an integer, identifies '.' as a decimal point, but a second '.' confirms it as ESNR.
+ *      3.14=  -> Syntactically incorrect (a literal should not be followed by '='), but '=' confirms '3.14' as a float
+ *                and '=' as an assignment operator. Syntax validation is the parser’s responsibility.
+ *      *<     -> Syntactically incorrect, but '<' confirms '*' as multiplication and '<' as the less-than operator.
+ *                Syntax validation is the parser’s responsibility.
+ *      *>=*<  -> Also an invalid syntax, but not ESNR because it can be split into tokens: *, >, =, *, <.
+ *                Hence, it transitions to FS.
+ *      "h'    -> Even if it transitions to FS, it cannot form a valid token, so it is confirmed as ESNR.
  *
- *		즉, 문법적으론 말도 안되도 토큰으로 나눌 수만 있다면 FS로 감! 근데 FSWR했는데도 불구하고 토큰이 불가할때 ESNR로 확정!
+ *      In summary, as long as a sequence can be split into valid tokens, it transitions to FS,
+ *      but if FSWR fails to form a valid token, it is confirmed as ESNR.
  */
 static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
 	/* State  | L(A-Z) | N(0-9) | U(_) | DOT(.) | MUL(*) | ASSIGN(=) | NOT(!) | LT(<) | GT(>) | SQUOTE(') | DQUOTE(") | STRC($) | OTHER | */
 	/* S0  */ {    6,       10,     8,    ESNR,	      1,	     16,    ESNR,     19,     22,         25,         28,     ESNR,    ESNR }, /* NOFS(Initial State) */
-	/* S1  */ {   15,       15,    15,    ESNR,		  2,	     15,      15,     15,     15,         15,         15,     ESNR,      15 }, /* NOFS(첫번째 * 감지) */
-	/* S2  */ {    3,        3,     3,       3,	      4,	      3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(두번째 * 감지 - 주석 시작) */
-	/* S3  */ {    3,        3,     3,       3,	      4,		  3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(주석 내용) */
-	/* S4  */ {    3,        3,     3,       3,	      5,		  3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(감지 - 주석 종료 가능성) */
-	/* S5  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(감지 - 주석 종료) */
-	/* S6  */ {    6,        8,     8,       7,	      7,		  7,       7,      7,      7,          7,          7,        7,       7 }, /* NOFS(키워드/식별자 중 - 키워드로 감지) */
-	/* S7  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(감지 - 키워드 종료) */
-	/* S8  */ {    8,        8,     8,       9,	      9,		  9,       9,      9,      9,          9,          9,        9,       9 }, /* NOFS(식별자 감지) */
-	/* S9  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 식별자 종료) */
-	/* S10 */ {   11,       10,    11,      12,	     11,		 11,      11,     11,     11,         11,         11,       11,      11 }, /* NOFS(숫자(정수/실수) 감지 */
-	/* S11 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 정수 종료) */
-	/* S12 */ { ESNR,       13,  ESNR,    ESNR,	   ESNR,	   ESNR,    ESNR,   ESNR,   ESNR,       ESNR,       ESNR,     ESNR,    ESNR }, /* NOFS(실수 감지 - DOT) */
-	/* S13 */ {   14,       13,    14,      14,	     14,	     14,      14,     14,     14,         14,         14,       14,      14 }, /* NOFS(감지 - 실수 부분) */
-	/* S14 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 실수 종료) */
-	/* S15 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 곱셈 종료) */
-	/* S16 */ {   17,       17,    17,      17,	     17,		 18,      17,     -1,     -1,         17,         17,       17,      17 }, /* NOFS(첫번째 = 감지 - = 비교연산자) */
-	/* S17 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - = 연산자 종료) */
-	/* S18 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(두번째 = 감지 - == 연산자 종료) */
-	/* S19 */ {   20,       20,    20,      20,	     20,		 21,      20,     20,     20,         20,         20,       20,      20 }, /* NOFS(첫번째 < 감지) */
-	/* S20 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - < 연산자 종료) */
-	/* S21 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(두번째 = 감지 - <= 연산자 종료) */
-	/* S22 */ {   23,       23,    23,      23,	     23,		 24,      23,     23,     23,         23,         23,       23,      23 }, /* NOFS(첫번째 > 감지) */
-	/* S23 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - > 연산자 종료) */
-	/* S24 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(두번째 = 감지 - >= 연산자 종료) */
-	/* S25 */ {   26,       26,    26,      26,	     26,		 26,      26,     26,     26,         27,         26,       26,      26 }, /* NOFS(첫번째 ' 감지) */
-	/* S26 */ {   26,       26,    26,      26,	     26,		 26,      26,     26,     26,         27,         26,       26,      26 }, /* NOFS(Single Quotation 내용) */
-	/* S27 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(두번째 ' 감지 - 종료) */
-	/* S28 */ {   29,       29,    29,      29,	     29,		 29,      29,     29,     29,         29,         30,       29,      29 }, /* NOFS(첫번째 " 감지) */
-	/* S29 */ {   29,       29,    29,      29,	     29,		 29,      29,     29,     29,         29,         30,       29,      29 }, /* NOFS(Single Quotation 내용) */
-	/* S30 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(두번째 ' 감지 - 종료) */
+	/* S1  */ {   15,       15,    15,    ESNR,		  2,	     15,      15,     15,     15,         15,         15,     ESNR,      15 }, /* NOFS(First '*' detected) */
+	/* S2  */ {    3,        3,     3,       3,	      4,	      3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(Second '*' detected - Start of comment) */
+	/* S3  */ {    3,        3,     3,       3,	      4,		  3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(Comment content) */
+	/* S4  */ {    3,        3,     3,       3,	      5,		  3,       3,      3,      3,          3,          3,        3,       3 }, /* NOFS(Potential end of comment detected) */
+	/* S5  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(End of comment detected) */
+	/* S6  */ {    6,        8,     8,       7,	      7,		  7,       7,      7,      7,          7,          7,        7,       7 }, /* NOFS(Keyword/Identifier detected - Treating as Keyword) */
+	/* S7  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(End of Keyword detected) */
+	/* S8  */ {    8,        8,     8,       9,	      9,		  9,       9,      9,      9,          9,          9,        9,       9 }, /* NOFS(Identifier detected) */
+	/* S9  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of Identifier detected) */
+	/* S10 */ {   11,       10,    11,      12,	     11,		 11,      11,     11,     11,         11,         11,       11,      11 }, /* NOFS(Number (Integer/Float) detected) */
+	/* S11 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of Integer detected) */
+	/* S12 */ { ESNR,       13,  ESNR,    ESNR,	   ESNR,	   ESNR,    ESNR,   ESNR,   ESNR,       ESNR,       ESNR,     ESNR,    ESNR }, /* NOFS(Decimal point detected - Possible float) */
+	/* S13 */ {   14,       13,    14,      14,	     14,	     14,      14,     14,     14,         14,         14,       14,      14 }, /* NOFS(Fractional part of float detected) */
+	/* S14 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of Float detected) */
+	/* S15 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of Multiplication detected) */
+	/* S16 */ {   17,       17,    17,      17,	     17,		 18,      17,     -1,     -1,         17,         17,       17,      17 }, /* NOFS(First '=' detected - Possible comparison operator) */
+	/* S17 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of '=' operator detected */
+	/* S18 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(Second '=' detected - End of '==' operator) */
+	/* S19 */ {   20,       20,    20,      20,	     20,		 21,      20,     20,     20,         20,         20,       20,      20 }, /* NOFS(First '<' detected) */
+	/* S20 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of '<' operator detected) */
+	/* S21 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(Second '=' detected - End of '<=' operator) */
+	/* S22 */ {   23,       23,    23,      23,	     23,		 24,      23,     23,     23,         23,         23,       23,      23 }, /* NOFS(First '>' detected) */
+	/* S23 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(End of '>' operator detected) */
+	/* S24 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(Second '=' detected - End of '>=' operator) */
+	/* S25 */ {   26,       26,    26,      26,	     26,		 26,      26,     26,     26,         27,         26,       26,      26 }, /* NOFS(First single quote detected) */
+	/* S26 */ {   26,       26,    26,      26,	     26,		 26,      26,     26,     26,         27,         26,       26,      26 }, /* NOFS(Single quote content) */
+	/* S27 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(Second single quote detected - End) */
+	/* S28 */ {   29,       29,    29,      29,	     29,		 29,      29,     29,     29,         29,         30,       29,      29 }, /* NOFS(First double quote detected) */
+	/* S29 */ {   29,       29,    29,      29,	     29,		 29,      29,     29,     29,         29,         30,       29,      29 }, /* NOFS(Double quote content) */
+	/* S30 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(Second double quote detected - End) */
 };
 
 #define QUO_STATE 5
@@ -408,9 +379,9 @@ static flowcode_int transitionTableForDoubleQuote[QUO_STATE][QUO_CLASS] = {
 	/* State  | alphabet | number | U(_) |  $ | other | */
 	/* S0  */ {       1,       1,     1,   2,       1 }, /* NOFS (Initial State) */
 	/* S1  */ {       1,       1,     1,   2,       1 }, /* NOFS (Any string) */
-	/* S2  */ {       3,    ESNR,     3,ESNR,    ESNR }, /* NOFS ($ 문자 감지) */
-	/* S3  */ {       3,       3,     3,ESNR,       4 }, /* NOFS ($ 식별자 내용) */
-	/* S4  */ {      FS,      FS,    FS,  FS,      FS }, /* FSWR ($ 식별자 종료) */
+	/* S2  */ {       3,    ESNR,     3,ESNR,    ESNR }, /* NOFS ($ Detect literal) */
+	/* S3  */ {       3,       3,     3,ESNR,       4 }, /* NOFS ($ Identifier) */
+	/* S4  */ {      FS,      FS,    FS,  FS,      FS }, /* FSWR ($ End of Identifier) */
 };
 
 #define MAX_VAL 50
@@ -559,40 +530,40 @@ Language keywords
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string keywordTable[KWT_SIZE] = {
-	/* 논리 연산자 (Logical Operators) */
+	/* Logical Operators */
 	"and",      // LogicalAnd
 	"or",       // LogicalOr
 	"not",      // LogicalNot
 
-	/* 제어문 키워드 (Control Keywords) */
+	/* Control Keywords */
 	"if",       // If
 	"elif",     // Elif
 	"else",     // Else
 	"then",     // Then
 	"endif",    // EndIf
 
-	/* 반복문 키워드 (Iteration Keywords) */
+	/* Iteration Keywords */
 	"repeat",   // Repeat
 	"check",    // Check
 	"break",    // Break
 	"continue", // Continue
 
-	/* 입출력 키워드 (I/O Keywords) */
+	/* I/O Keywords */
 	"Input",    // Input
 	"Output",   // Output
 
-	/* 함수 키워드 (Function Keywords) */
+	/* Function Keywords */
 	"return",   // Return
 	"end",      // End
 
-	/* 데이터 타입 키워드 (Data Type Keywords) */
+	/* Data Type Keywords */
 	"int",      // Int
 	"double",   // Double
 	"string",   // String
 	"boolean",  // Boolean
 	"void",     // Void
 
-	/* 기타 키워드 (Other Keywords) */
+	/* Other Keywords */
 	"begin",       // Begin
 	"declaration", // Declaration
 	"cons"         // Constant

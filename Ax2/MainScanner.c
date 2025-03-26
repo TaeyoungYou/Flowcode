@@ -224,14 +224,14 @@ flowcode_void printScannerError(flowcode_string fmt, ...) {
  ***********************************************************
  */
 
-// 전반적인 Scanner 출력 관련 함수
+// General functions related to Scanner output
 flowcode_void displayScanner(BufferPointer ptrBuffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", readerGetPosWrte(ptrBuffer));
 	printf("\nPrinting buffer contents:\n\n");
-	readerRecover(ptrBuffer);	// poisition의 완전 초기화
-	readerPrint(ptrBuffer);		// 코드 전체 읽기
+	readerRecover(ptrBuffer);	// Completely reset the position
+	readerPrint(ptrBuffer);		// Read and print the entire code
 }
 
 /*
@@ -244,7 +244,7 @@ flowcode_void displayScanner(BufferPointer ptrBuffer) {
  ***********************************************************
  */
 
-// 현재 열고 있는 파일의 사이즈를 반환하는 함수
+// Function to return the size of the currently opened file
 flowcode_long getScannerFilesize(flowcode_string fname) {
 	FILE* fileInput;
 	flowcode_long fileLength;

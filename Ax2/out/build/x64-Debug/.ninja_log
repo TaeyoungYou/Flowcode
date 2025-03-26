@@ -6,3 +6,10 @@
 42	228	7635400557953558	CMakeFiles/FlowCode_Compiler.dir/MainScanner.c.obj	42ac80c8cdfcf8d5
 5	23	7635398973366145	clean	8c45b54705a541e8
 248	535	7635400559990920	FlowCode_Compiler.exe	f53b306d2a81196d
+15	35	7646551991926525	clean	8c45b54705a541e8
+18	163	7646552027345400	CMakeFiles/FlowCode_Compiler.dir/Compilers.c.obj	2c44ef4081c0b2d3
+26	170	7646552027426459	CMakeFiles/FlowCode_Compiler.dir/Reader.c.obj	b61e0b8e6ae6cba2
+33	177	7646552027479700	CMakeFiles/FlowCode_Compiler.dir/MainReader.c.obj	a7f0571a81337839
+50	215	7646552027655245	CMakeFiles/FlowCode_Compiler.dir/MainScanner.c.obj	42ac80c8cdfcf8d5
+41	217	7646552027539051	CMakeFiles/FlowCode_Compiler.dir/Scanner.c.obj	2eea29c578467e71
+217	505	7646552029325181	FlowCode_Compiler.exe	f53b306d2a81196d
