@@ -520,7 +520,7 @@ flowcode_bool readerRestore(BufferPointer const readerPointer) {
 	if (readerGetPosMark(readerPointer) < 0 || readerGetPosMark(readerPointer) > readerGetPosWrte(readerPointer))
 		return FLOWCODE_FALSE;
 	/* TO_DO: Restore positions (read to mark) */
-	readerPointer->positions.read = readerGetPosMark(readerPointer);
+	readerPointer->positions.read = readerGetPosMark(readerPointer) - 1;
 	return FLOWCODE_TRUE;
 }
 

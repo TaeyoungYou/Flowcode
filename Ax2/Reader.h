@@ -50,6 +50,7 @@
 #include <stdio.h>  /* standard input/output */
 #include <malloc.h> /* for dynamic memory allocation*/
 #include <limits.h> /* implementation-defined data type ranges and limits */
+#include <string.h>
 
 /* CONSTANTS DEFINITION: GENERAL (NOT LANGUAGE DEPENDENT) .................................. */
 

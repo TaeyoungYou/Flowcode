@@ -162,6 +162,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 		exit(EXIT_FAILURE);
 	}
 
+	// --------------------------------------------------------------------------------------------
 	/* Testbed for the scanner and add SEOF to input program buffer*/
 	/* Initialize scanner input buffer */
 	if (startScanner(sourceBuffer)) {
@@ -176,6 +177,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 		currentToken = tokenizer();
 		printToken(currentToken);
 	} while (currentToken.code != EndOfToken);
+	// --------------------------------------------------------------------------------------------
 
 	/* Print String Literal Table if not empty */
 	printf("\nPrinting string table...\n");
@@ -222,13 +224,14 @@ flowcode_void printScannerError(flowcode_string fmt, ...) {
  ***********************************************************
  */
 
+// General functions related to Scanner output
 flowcode_void displayScanner(BufferPointer ptrBuffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", readerGetPosWrte(ptrBuffer));
 	printf("\nPrinting buffer contents:\n\n");
-	readerRecover(ptrBuffer);
-	readerPrint(ptrBuffer);
+	readerRecover(ptrBuffer);	// Completely reset the position
+	readerPrint(ptrBuffer);		// Read and print the entire code
 }
 
 /*
@@ -241,6 +244,7 @@ flowcode_void displayScanner(BufferPointer ptrBuffer) {
  ***********************************************************
  */
 
+// Function to return the size of the currently opened file
 flowcode_long getScannerFilesize(flowcode_string fname) {
 	FILE* fileInput;
 	flowcode_long fileLength;
