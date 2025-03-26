@@ -31,7 +31,7 @@
 #ifndef COMPILERS_H_
 #define COMPILERS_H_
 
-#define DEBUG 1
+#define DEBUG 0
 
 /*
  * ............................................................................

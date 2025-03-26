@@ -1,3 +1,13 @@
+** This is a single comment**
+** This is
+    Double Lines comment**
+
 begin:
-'Hello World'
-"Hello $name World"
+    declaration:
+        int a;
+        int b;
+    void main():
+        Output: 'Hello World..!'
+
+    end;
+end;

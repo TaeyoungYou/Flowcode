@@ -378,7 +378,7 @@ static flowcode_int transitionTable[NUM_STATES][CHAR_CLASSES] = {
 	/* S7  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSNR(감지 - 키워드 종료) */
 	/* S8  */ {    8,        8,     8,       9,	      9,		  9,       9,      9,      9,          9,          9,        9,       9 }, /* NOFS(식별자 감지) */
 	/* S9  */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 식별자 종료) */
-	/* S10 */ {   11,       10,    11,      12,	     11,		 11,      11,     11,     11,         -1,         -1,       -1,      11 }, /* NOFS(숫자(정수/실수) 감지 */
+	/* S10 */ {   11,       10,    11,      12,	     11,		 11,      11,     11,     11,         11,         11,       11,      11 }, /* NOFS(숫자(정수/실수) 감지 */
 	/* S11 */ {   FS,       FS,    FS,      FS,	     FS,		 FS,      FS,     FS,     FS,         FS,         FS,       FS,      FS }, /* FSWR(감지 - 정수 종료) */
 	/* S12 */ { ESNR,       13,  ESNR,    ESNR,	   ESNR,	   ESNR,    ESNR,   ESNR,   ESNR,       ESNR,       ESNR,     ESNR,    ESNR }, /* NOFS(실수 감지 - DOT) */
 	/* S13 */ {   14,       13,    14,      14,	     14,	     14,      14,     14,     14,         14,         14,       14,      14 }, /* NOFS(감지 - 실수 부분) */
