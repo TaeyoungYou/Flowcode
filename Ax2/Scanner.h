@@ -291,7 +291,7 @@ typedef struct scannerData {
 #define BRACE_OP		'{'		// {
 #define BRACE_CL		'}'		// }
 #define EOS				'\0'	// End of source
-#define EOF_T				0xFF	// End of File
+#define EOF_T			0xFF	// End of File
 // TT 정의
 #define UNDERSCORE		'_'		// _
 #define DOT				'.'		// .

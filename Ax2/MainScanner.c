@@ -122,7 +122,7 @@ flowcode_int mainScanner(flowcode_int argc, flowcode_string* argv) {
 	printf("%s%d%s", "[Debug mode: ", DEBUG, "]\n");
 
 	/* Create a source code input buffer - multiplicative mode */
-	sourceBuffer = readerCreate(READER_DEFAULT_SIZE, READER_DEFAULT_INCREMENT, MODE_MULTI);	// 이걸 json형식대로 바꿔야 하나?
+	sourceBuffer = readerCreate(READER_DEFAULT_SIZE, READER_DEFAULT_INCREMENT, MODE_MULTI);
 	if (sourceBuffer == NULL) {
 		printScannerError("%s%s", argv[1], ": Could not create source buffer");
 		exit(EXIT_FAILURE);

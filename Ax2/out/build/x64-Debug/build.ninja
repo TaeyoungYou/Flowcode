@@ -84,6 +84,20 @@ build CMakeFiles\FlowCode_Compiler.dir\MainScanner.c.obj: C_COMPILER__FlowCode_C
   TARGET_COMPILE_PDB = CMakeFiles\FlowCode_Compiler.dir\
   TARGET_PDB = FlowCode_Compiler.pdb
 
+build CMakeFiles\FlowCode_Compiler.dir\Parser.c.obj: C_COMPILER__FlowCode_Compiler_unscanned_Debug C$:\Users\Taeyoung\OneDrive\Documents\GitHub\Flowcode\Ax2\Parser.c || cmake_object_order_depends_target_FlowCode_Compiler
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
+  OBJECT_DIR = CMakeFiles\FlowCode_Compiler.dir
+  OBJECT_FILE_DIR = CMakeFiles\FlowCode_Compiler.dir
+  TARGET_COMPILE_PDB = CMakeFiles\FlowCode_Compiler.dir\
+  TARGET_PDB = FlowCode_Compiler.pdb
+
+build CMakeFiles\FlowCode_Compiler.dir\MainParser.c.obj: C_COMPILER__FlowCode_Compiler_unscanned_Debug C$:\Users\Taeyoung\OneDrive\Documents\GitHub\Flowcode\Ax2\MainParser.c || cmake_object_order_depends_target_FlowCode_Compiler
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
+  OBJECT_DIR = CMakeFiles\FlowCode_Compiler.dir
+  OBJECT_FILE_DIR = CMakeFiles\FlowCode_Compiler.dir
+  TARGET_COMPILE_PDB = CMakeFiles\FlowCode_Compiler.dir\
+  TARGET_PDB = FlowCode_Compiler.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target FlowCode_Compiler
@@ -92,7 +106,7 @@ build CMakeFiles\FlowCode_Compiler.dir\MainScanner.c.obj: C_COMPILER__FlowCode_C
 #############################################
 # Link the executable FlowCode_Compiler.exe
 
-build FlowCode_Compiler.exe: C_EXECUTABLE_LINKER__FlowCode_Compiler_Debug CMakeFiles\FlowCode_Compiler.dir\Compilers.c.obj CMakeFiles\FlowCode_Compiler.dir\Reader.c.obj CMakeFiles\FlowCode_Compiler.dir\MainReader.c.obj CMakeFiles\FlowCode_Compiler.dir\Scanner.c.obj CMakeFiles\FlowCode_Compiler.dir\MainScanner.c.obj
+build FlowCode_Compiler.exe: C_EXECUTABLE_LINKER__FlowCode_Compiler_Debug CMakeFiles\FlowCode_Compiler.dir\Compilers.c.obj CMakeFiles\FlowCode_Compiler.dir\Reader.c.obj CMakeFiles\FlowCode_Compiler.dir\MainReader.c.obj CMakeFiles\FlowCode_Compiler.dir\Scanner.c.obj CMakeFiles\FlowCode_Compiler.dir\MainScanner.c.obj CMakeFiles\FlowCode_Compiler.dir\Parser.c.obj CMakeFiles\FlowCode_Compiler.dir\MainParser.c.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

@@ -1,0 +1,9 @@
+** FlowCode Example 1:
+  The program is "lexically" correct
+  and should not generate any error **
+begin:
+	bool main():
+		Output: 'Hello world!';
+		return true;
+	end;
+end;

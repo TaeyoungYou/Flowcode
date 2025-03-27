@@ -19,9 +19,8 @@ project ("FlowCode_Compiler")
 add_executable (FlowCode_Compiler
 	"Compilers.h"	"Compilers.c"
 	"Reader.h"		"Reader.c"		"MainReader.c"
-	# TO_DO: Add A22 (Scanner) and A32 (Parser)
 	"Scanner.h"		"Scanner.c"		"MainScanner.c"
-	#"Parser.h"		"Parser.c"		"MainParser.c"
+	"Parser.h"		"Parser.c"		"MainParser.c"
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
