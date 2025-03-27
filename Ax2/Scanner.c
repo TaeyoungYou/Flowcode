@@ -333,7 +333,7 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
 /*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 
-flowcode_int nextClass(flowcode_int c) {
+flowcode_int nextClass(flowcode_char c) {
     if (isalpha(c)) return 0;
     if (isdigit(c)) return 1;
     if (c == UNDERSCORE) return 2;

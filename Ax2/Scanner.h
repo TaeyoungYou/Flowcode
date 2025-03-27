@@ -443,8 +443,8 @@ TO_DO: Adjust your functions'definitions
 
 /* Static (local) function  prototypes */
 flowcode_int			startScanner(BufferPointer psc_buf);
-static flowcode_int		nextClass(flowcode_char c);					/* character class function */
-static flowcode_int		nextState(flowcode_int, flowcode_char);		/* state machine function */
+flowcode_int		nextClass(flowcode_char c);					/* character class function */
+flowcode_int		nextState(flowcode_int, flowcode_char);		/* state machine function */
 flowcode_void			printScannerData(ScannerData scData);
 Token					tokenizer(flowcode_void);
 
