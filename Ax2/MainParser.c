@@ -101,7 +101,7 @@ extern flowcode_int startScanner(BufferPointer sc_buf);
 
 static flowcode_void printParserError(flowcode_string fmt, ...);
 static flowcode_void displayParser(BufferPointer ptrBuffer);
-static flowcode_void getParserFileSize(flowcode_string fname);
+static flowcode_long getParserFileSize(flowcode_string fname);
 static flowcode_void callGarbageCollector(flowcode_void);
 
 /*

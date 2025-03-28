@@ -1,0 +1,93 @@
+** 순수 BNF **
+** 코드 전체 BNF **
+<program> -> Begin Colon <declaration_section> <function_definition> End SemiColon
+
+** type **
+<type> -> Int | Double | String | Boolean
+
+** Declaration BNF **
+<declaration_section> -> Declaration Colon EndOfLine <var_declaration> End SemiColon
+<var_declaration> -> <var_declaration_line> <var_declaration> | ε
+<var_declaration_line> -> <type> <identifier_list> EndOfLine
+<identifier_list> -> Identifier <identifier_tail>
+<identifier_tail> -> Comma Identifier <identifier_tail> | ε
+
+
+** function (Main, others) **
+<function_definition> -> <type> Identifier LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon
+
+** parameter **
+<parameter_list> -> <parameter> <parameter_tail> | ε
+<parameter> -> <type> Identifier
+<parameter_tail> -> Comma <parameter_list> | ε
+
+** statement **
+<statement_list> -> <assignment_statement>
+                    | <input_statement>
+                    | <output_statement>
+** <if_statement> <<elif_statement> <else_statement> <repeat_statement> <return_statement> **
+
+** assignment statement **
+<assignment_statement> -> Identifier Assignment <expression> EndOfLine
+<expression> -> <term> <expression_tail>
+<expression_tail> -> Add <term> <expression_tail>
+                    | Subtract <term> <expression_tail>
+                    | Multiply <term> <expression_tail>
+                    | Divide <term> <expression_tail>
+                    | Modulo <term> <expression_tail>
+                    | Power <term> <expression_tail>
+                    | ε
+
+<term> -> Identifier | IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen
+
+** input statement **
+<input_statement> -> Input Colon <identifier_list> SemiColon
+
+** output statement **
+<output_statement> -> Output Colon <output_target> SemiColon
+<output_target> -> Identifier | StringLiteral | StringDoubleQuoteLiteral
+
+
+
+
+** ambiguous refactoring **
+
+
+begin:
+    declaration:
+        int a, i
+        string greet
+    end;
+    bool Main():
+        ** assignment **
+        a = 10
+        greet = 'Hello World'
+
+        ** general I/O **
+        Input: a;
+        Output: greet;
+
+        ** iteration **
+        i = 0
+        check i<10:
+            Output: i;
+        repeat;
+
+        ** condition **
+        if a>5 then:
+            Output: "$a more than 5";   ** will output > 9 more than 5, $is find variable and replace it **
+        endif;
+        elif a>3 then:
+            ** statement **
+        endif;
+        else:
+            ** statement **
+        endif;
+
+        ** math operation **
+        a = i + i
+
+        ** return **
+        return true
+    end;
+end;
