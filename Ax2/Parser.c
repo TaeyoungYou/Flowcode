@@ -57,10 +57,10 @@ flowcode_void startParser() {
 	}
 	/* Proceed parser */
 	lookahead = tokenizer();
-	if (lookahead.code != SEOF_T) {
+	if (lookahead.code != EndOfToken) {
 		program();
 	}
-	matchToken(SEOF_T, NO_ATTR);
+	matchToken(EndOfToken, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Source file parsed");
 }
 

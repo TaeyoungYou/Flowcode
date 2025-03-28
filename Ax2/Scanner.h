@@ -60,7 +60,7 @@ enum TOKENS {
 	/* ========== Basic Tokens ========== */
 	Error,              /*  0: Error token (used when an error occurs) */
 	RunTimeError,       /*  1: Used when a runtime error occurs */
-	EndOfToken,         /*  2: End of token (end of tile) */
+	EndOfToken,         /*  2: End of token (end of file) */
 
 	/* ========== Literal ========== */
 	IntLiteral,         /*  3: Integer literal */

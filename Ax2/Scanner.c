@@ -119,7 +119,7 @@ flowcode_int startScanner(BufferPointer psc_buf) {
 Token tokenizer(flowcode_void) {
     /* TO_DO: Follow the standard and adjust datatypes */
 
-    Token currentToken = {0}; /* token to return after pattern recognition. Set all structure members to 0 */
+    Token currentToken = {EndOfToken,}; /* token to return after pattern recognition. Set all structure members to 0 */
     flowcode_int c; /* input symbol */
     flowcode_int state = 0; /* initial state of the FSM */
     flowcode_int lexStart; /* start offset of a lexeme in the input char buffer (array) */

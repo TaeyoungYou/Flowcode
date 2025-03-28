@@ -52,7 +52,7 @@
 static Token			lookahead;
 extern BufferPointer	stringLiteralTable;
 extern flowcode_int		line;
-extern Token			tokenizer(sofia_void);
+extern Token			tokenizer(flowcode_void);
 extern flowcode_string	keywordTable[KWT_SIZE];
 static flowcode_int		syntaxErrorNumber = 0;
 
@@ -65,20 +65,34 @@ static flowcode_int		syntaxErrorNumber = 0;
 /* Constants */
 enum KEYWORDS {
 	NO_ATTR = -1,
-	KW_data,
-	KW_code,
-	KW_int,
-	KW_real,
-	KW_string,
+	KW_and,
+	KW_or,
+	KW_not,
 	KW_if,
-	KW_then,
+	KW_elif,
 	KW_else,
-	KW_while,
-	KW_do
+	KW_then,
+	KW_endif,
+	KW_repeat,
+	KW_check,
+	KW_break,
+	KW_continue,
+	KW_Input,
+	KW_Output,
+	KW_return,
+	KW_end,
+	KW_int,
+	KW_double,
+	KW_string,
+	KW_boolean,
+	KW_void,
+	KW_begin,
+	KW_declaration,
+	KW_cons,
 };
 
 /* TO_DO: Define the number of BNF rules */
-#define NUM_BNF_RULES 12
+#define NUM_BNF_RULES 24
 
 /* Parser */
 typedef struct parserData {
@@ -100,36 +114,61 @@ flowcode_void printBNFData(ParserData psData);
 
 /* List of BNF statements */
 enum BNF_RULES {
-	BNF_error,										/*  0: Error token */
-	BNF_codeSession,								/*  1 */
-	BNF_comment,									/*  2 */
-	BNF_dataSession,								/*  3 */
-	BNF_optVarListDeclarations,						/*  4 */
-	BNF_optionalStatements,							/*  5 */
-	BNF_outputStatement,							/*  6 */
-	BNF_outputVariableList,							/*  7 */
-	BNF_program,									/*  8 */
-	BNF_statement,									/*  9 */
-	BNF_statements,									/* 10 */
-	BNF_statementsPrime								/* 11 */
+	BNF_program,
+	BNF_type,
+	BNF_declaration_section,
+	BNF_var_declaration,
+	BNF_var_declaration_line,
+	BNF_identifier_list,
+	BNF_identifier_tail,
+	BNF_function_definition,
+	BNF_parameter_list,
+	BNF_parameter_tail,
+	BNF_parameter,
+	BNF_statement_list,
+	BNF_statement,
+	BNF_assignment_statement,
+	BNF_expression,
+	BNF_add_expre_tail,
+	BNF_mul_expre,
+	BNF_mul_expre_tail,
+	BNF_pow_expre,
+	BNF_factor,
+	BNF_input_statement,
+	BNF_output_statement,
+	BNF_output_target,
+	BNF_return_statement,
 };
 
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string BNFStrTable[NUM_BNF_RULES] = {
-	"BNF_error",
-	"BNF_codeSession",
-	"BNF_comment",
-	"BNF_dataSession",
-	"BNF_optVarListDeclarations",
-	"BNF_optionalStatements",
-	"BNF_outputStatement",
-	"BNF_outputVariableList",
 	"BNF_program",
+	"BNF_type",
+	"BNF_declaration_section",
+	"BNF_var_declaration",
+	"BNF_var_declaration_line",
+	"BNF_identifier_list",
+	"BNF_identifier_tail",
+	"BNF_function_definition",
+	"BNF_parameter_list",
+	"BNF_parameter",
+	"BNF_parameter_tail",
+	"BNF_statement_list",
 	"BNF_statement",
-	"BNF_statements",
-	"BNF_statementsPrime"
+	"BNF_assignment_statement",
+	"BNF_expression",
+	"BNF_add_expre_tail",
+	"BNF_mul_expre",
+	"BNF_mul_expre_tail",
+	"BNF_pow_expre",
+	"BNF_factor",
+	"BNF_input_statement",
+	"BNF_output_statement",
+	"BNF_output_target",
+	"BNF_return_statement",
 };
+
 
 /* TO_DO: Place ALL non-terminal function declarations */
 flowcode_void codeSession();
