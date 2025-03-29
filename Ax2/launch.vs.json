@@ -8,8 +8,8 @@
       "projectTarget": "FlowCode_Compiler.exe",
       "name": "FlowCode_Compiler.exe",
       "args": [
-        "2",
-        "INPUT5_General.fc",
+        "3",
+        "../../../test/Volume.fc",
         "a",
         "250",
         "10"
@@ -17,3 +17,4 @@
     }
   ]
 }
+

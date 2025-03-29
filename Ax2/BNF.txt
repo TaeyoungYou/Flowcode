@@ -1,0 +1,114 @@
+** 코드 전체 BNF **
+<program> -> Begin Colon EndOfLine <declaration_section> <function_definition> End SemiColon | ε
+
+** type **
+<type> -> Int | Double | String | Boolean
+
+** Declaration BNF **
+<declaration_section> -> Declaration Colon EndOfLine <var_declaration> End SemiColon
+<var_declaration> -> <var_declaration_line> <var_declaration> | ε
+<var_declaration_line> -> <type> <identifier_list> EndOfLine
+<identifier_list> -> Identifier <identifier_tail>
+<identifier_tail> -> Comma Identifier <identifier_tail> | ε
+
+
+** function (Main, others) **
+<function_definition> -> <type> Identifier LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon EndOfLine
+
+** parameter **
+<parameter_list> -> <parameter> <parameter_tail> | ε
+<parameter> -> <type> Identifier
+<parameter_tail> -> Comma <parameter> <parameter_tail> | ε
+
+** statement **
+<statement_list> -> <statement> <statement_list> | ε
+<statement> -> <assignment_statement>
+              | <input_statement>
+              | <output_statement>
+              | <return_statement>
+
+** <if_statement> <<elif_statement> <else_statement> <repeat_statement> <comment> **
+
+** assignment statement **
+<assignment_statement> -> Identifier Assignment <expression> EndOfLine
+
+** expression statement **
+<expression> -> <mul_expre> <add_expre_tail>
+<add_expre_tail> -> Add <mul_expre> <add_expre_tail>
+                    | Subtract <mul_expre> <add_expre_tail>
+                    | ε
+
+<mul_expre> -> <pow_expre> <mul_expre_tail>
+<mul_expre_tail> -> Multiply <pow_expre> <mul_expre_tail>
+                    | Divide <pow_expre> <mul_expre_tail>
+                    | Modulo <pow_expre> <mul_expre_tail>
+                    | ε
+
+<pow_expre> -> <factor> Power <pow_expre> | <factor>
+
+<factor> -> Identifier | IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen
+
+** input statement **
+<input_statement> -> Input Colon <identifier_list> SemiColon EndOfLine
+
+** output statement **
+<output_statement> -> Output Colon <output_target> SemiColon EndOfLine
+<output_target> -> Identifier | StringLiteral | StringDoubleQuoteLiteral
+
+** return statement **
+<return_statement> -> Return <expression> EndOfLine
+
+
+
+** TEST SET **
+1+3+4
+10*2-4
+4-10/2
+4*10/2
+(1+2)+3
+1+(2+3)
+(1+2)*3
+3*(1+2)
+3^3
+3^3+3
+3^(3+3)
+10%2+(2*1+3-3)^(4+1)*3+4/3
+
+begin:
+    declaration:
+        int a, i
+        string greet
+    end;
+    bool Main():
+        ** assignment **
+        a = 10
+        greet = 'Hello World'
+
+        ** general I/O **
+        Input: a;
+        Output: greet;
+
+        ** iteration **
+        i = 0
+        check i<10:
+            Output: i;
+        repeat;
+
+        ** condition **
+        if a>5 then:
+            Output: "$a more than 5";   ** will output > 9 more than 5, $is find variable and replace it **
+        endif;
+        elif a>3 then:
+            ** statement **
+        endif;
+        else:
+            ** statement **
+        endif;
+
+        ** math operation **
+        a = i + i
+
+        ** return **
+        return true
+    end;
+end;

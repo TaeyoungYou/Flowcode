@@ -1,0 +1,12 @@
+begin:
+	declaration:
+		double PI, r, vol
+	end;
+	boolean Main():
+		PI = 3.14
+		Input: r;
+		vol = 4.0 / 3.0 * PI * (r*r*r)
+		Output: Vol;
+		return 'true'
+	end;
+end;

@@ -60,7 +60,7 @@ enum TOKENS {
 	/* ========== Basic Tokens ========== */
 	Error,              /*  0: Error token (used when an error occurs) */
 	RunTimeError,       /*  1: Used when a runtime error occurs */
-	EndOfToken,         /*  2: End of token (end of tile) */
+	EndOfToken,         /*  2: End of token (end of file) */
 
 	/* ========== Literal ========== */
 	IntLiteral,         /*  3: Integer literal */
@@ -291,7 +291,7 @@ typedef struct scannerData {
 #define BRACE_OP		'{'		// {
 #define BRACE_CL		'}'		// }
 #define EOS				'\0'	// End of source
-#define EOF_T				0xFF	// End of File
+#define EOF_T			0xFF	// End of File
 // TT 정의
 #define UNDERSCORE		'_'		// _
 #define DOT				'.'		// .
@@ -443,8 +443,8 @@ TO_DO: Adjust your functions'definitions
 
 /* Static (local) function  prototypes */
 flowcode_int			startScanner(BufferPointer psc_buf);
-static flowcode_int		nextClass(flowcode_char c);					/* character class function */
-static flowcode_int		nextState(flowcode_int, flowcode_char);		/* state machine function */
+flowcode_int		nextClass(flowcode_char c);					/* character class function */
+flowcode_int		nextState(flowcode_int, flowcode_char);		/* state machine function */
 flowcode_void			printScannerData(ScannerData scData);
 Token					tokenizer(flowcode_void);
 

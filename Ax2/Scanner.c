@@ -119,7 +119,7 @@ flowcode_int startScanner(BufferPointer psc_buf) {
 Token tokenizer(flowcode_void) {
     /* TO_DO: Follow the standard and adjust datatypes */
 
-    Token currentToken = {0}; /* token to return after pattern recognition. Set all structure members to 0 */
+    Token currentToken = {EndOfToken,}; /* token to return after pattern recognition. Set all structure members to 0 */
     flowcode_int c; /* input symbol */
     flowcode_int state = 0; /* initial state of the FSM */
     flowcode_int lexStart; /* start offset of a lexeme in the input char buffer (array) */
@@ -333,7 +333,7 @@ flowcode_int nextState(flowcode_int state, flowcode_char c) {
 /*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 
-flowcode_int nextClass(flowcode_int c) {
+flowcode_int nextClass(flowcode_char c) {
     if (isalpha(c)) return 0;
     if (isdigit(c)) return 1;
     if (c == UNDERSCORE) return 2;
