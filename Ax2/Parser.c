@@ -214,7 +214,7 @@ flowcode_void printError()
 /*
  ************************************************************
  * Program statement
- * BNF: <program> -> Begin Colon <declaration_section> EndOfLine <function_definition> End SemiColon | ε
+ * BNF: <program> -> Begin Colon EndOfLine <declaration_section> <function_definition> End SemiColon | ε
  * FIRST(<program>)= { Begin }.
  ***********************************************************
  */
@@ -227,8 +227,8 @@ flowcode_void program()
     {
         matchToken(Begin);
         matchToken(Colon);
-        declarationSection();
         matchToken(EndOfLine);
+        declarationSection();
         functionDefinition();
         matchToken(End);
         matchToken(SemiColon);

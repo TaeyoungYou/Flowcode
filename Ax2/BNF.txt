@@ -1,5 +1,5 @@
 ** 코드 전체 BNF **
-<program> -> Begin Colon <declaration_section> EndOfLine <function_definition> End SemiColon | ε
+<program> -> Begin Colon EndOfLine <declaration_section> <function_definition> End SemiColon | ε
 
 ** type **
 <type> -> Int | Double | String | Boolean

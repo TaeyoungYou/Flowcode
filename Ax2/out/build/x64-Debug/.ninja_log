@@ -1,15 +1,10 @@
 # ninja log v6
-10	169	7648178807007606	CMakeFiles/FlowCode_Compiler.dir/Compilers.c.obj	2c44ef4081c0b2d3
-34	211	7648178807251870	CMakeFiles/FlowCode_Compiler.dir/Scanner.c.obj	2eea29c578467e71
-18	175	7648178807099709	CMakeFiles/FlowCode_Compiler.dir/Reader.c.obj	b61e0b8e6ae6cba2
-26	193	7648178807171881	CMakeFiles/FlowCode_Compiler.dir/MainReader.c.obj	a7f0571a81337839
-41	204	7648178807323442	CMakeFiles/FlowCode_Compiler.dir/MainScanner.c.obj	42ac80c8cdfcf8d5
-212	2007	7648178809029618	FlowCode_Compiler.exe	f53b306d2a81196d
-116	931	7649132630617142	CMakeFiles/FlowCode_Compiler.dir/MainScanner.c.obj	42ac80c8cdfcf8d5
-97	938	7649132630432995	CMakeFiles/FlowCode_Compiler.dir/MainReader.c.obj	a7f0571a81337839
-73	940	7649132630237054	CMakeFiles/FlowCode_Compiler.dir/Compilers.c.obj	2c44ef4081c0b2d3
-87	942	7649132630344556	CMakeFiles/FlowCode_Compiler.dir/Reader.c.obj	b61e0b8e6ae6cba2
-138	943	7649132630877337	CMakeFiles/FlowCode_Compiler.dir/MainParser.c.obj	b3629f3d4f2cb36a
-126	945	7649132630748408	CMakeFiles/FlowCode_Compiler.dir/Parser.c.obj	e0549a1e3fef2b41
-106	949	7649132630565335	CMakeFiles/FlowCode_Compiler.dir/Scanner.c.obj	2eea29c578467e71
-950	1473	7649132639004000	FlowCode_Compiler.exe	81127a674f817c69
+27	247	7649150138511104	CMakeFiles/FlowCode_Compiler.dir/Reader.c.obj	b61e0b8e6ae6cba2
+18	228	7649150138421006	CMakeFiles/FlowCode_Compiler.dir/Compilers.c.obj	2c44ef4081c0b2d3
+47	270	7649150138709614	CMakeFiles/FlowCode_Compiler.dir/Scanner.c.obj	2eea29c578467e71
+65	272	7649150138899731	CMakeFiles/FlowCode_Compiler.dir/Parser.c.obj	e0549a1e3fef2b41
+35	236	7649150138599805	CMakeFiles/FlowCode_Compiler.dir/MainReader.c.obj	a7f0571a81337839
+55	261	7649150138788284	CMakeFiles/FlowCode_Compiler.dir/MainScanner.c.obj	42ac80c8cdfcf8d5
+78	310	7649150139025869	CMakeFiles/FlowCode_Compiler.dir/MainParser.c.obj	b3629f3d4f2cb36a
+311	599	7649150141345986	FlowCode_Compiler.exe	81127a674f817c69
+9	39	7649150108951937	clean	8c45b54705a541e8
