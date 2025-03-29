@@ -421,7 +421,7 @@ flowcode_void functionDefinition()
         matchToken(Colon);
         matchToken(EndOfLine);
         statementList();
-        matchToken(EndOfLine);
+        matchToken(End);
         matchToken(SemiColon);
         matchToken(EndOfLine);
         printf("%s%s\n", STR_LANGNAME, ": Function Definition parsed");
@@ -513,7 +513,7 @@ flowcode_void parameterTail()
 /*
  ************************************************************
  * Statement List
- * BNF: <statement_list> -> <statement> <statement_list> | ε
+ * BNF: <statement_list> -> <statement> <statement_list>
  * FIRST(<statement_list>) = { Identifier, Input, Output, Return, ε }.
  * FOLLOW(<statement_list>) = { End }.
  ***********************************************************
@@ -541,8 +541,8 @@ flowcode_void statementList()
 /*
  ************************************************************
  * Statements
- * BNF: <statement> -> <assignment_statement> | <input_statement> | <output_statement> | <return_statement>
- * FIRST(<statements>) = { Identifier, Input, Output, Return }
+ * BNF: <statement> -> <assignment_statement> | <input_statement> | <output_statement> | <return_statement> | ε
+ * FIRST(<statements>) = { Identifier, Input, Output, Return, End }
  ***********************************************************
  */
 flowcode_void statement()
@@ -562,6 +562,8 @@ flowcode_void statement()
     case Return:
         returnStatement();
         break;
+    case End:
+        return;
     default:
         printError();
         return;
@@ -611,7 +613,6 @@ flowcode_void expression()
     case StringLiteral:
     case LeftParen:
         mulExpre();
-        addExpreTail();
         addExpreTail();
         printf("%s%s\n", STR_LANGNAME, ": Expression parsed");
         break;
