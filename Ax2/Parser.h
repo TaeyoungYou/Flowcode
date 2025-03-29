@@ -23,7 +23,7 @@
 * Compiler: MS Visual Studio 2022
 * Course: CST 8152 � Compilers, Lab Section: [011, 012]
 * Assignment: A32.
-* Date: May 01 2023
+* Date: May 01, 2023,
 * Professor: Paulo Sousa
 * Purpose: This file is the main header for Parser (.h)
 ************************************************************
@@ -56,40 +56,9 @@ extern Token			tokenizer(flowcode_void);
 extern flowcode_string	keywordTable[KWT_SIZE];
 static flowcode_int		syntaxErrorNumber = 0;
 
-#define LANG_WRTE		"print&"
-#define LANG_READ		"input&"
-#define LANG_MAIN		"main&"
-
-/* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
-
-/* Constants */
-enum KEYWORDS {
-	NO_ATTR = -1,
-	KW_and,
-	KW_or,
-	KW_not,
-	KW_if,
-	KW_elif,
-	KW_else,
-	KW_then,
-	KW_endif,
-	KW_repeat,
-	KW_check,
-	KW_break,
-	KW_continue,
-	KW_Input,
-	KW_Output,
-	KW_return,
-	KW_end,
-	KW_int,
-	KW_double,
-	KW_string,
-	KW_boolean,
-	KW_void,
-	KW_begin,
-	KW_declaration,
-	KW_cons,
-};
+#define LANG_WRTE		"Output"
+#define LANG_READ		"Input"
+#define LANG_MAIN		"Main"
 
 /* TO_DO: Define the number of BNF rules */
 #define NUM_BNF_RULES 24
@@ -107,7 +76,7 @@ ParserData psData;
 
 /* Function definitions */
 flowcode_void startParser();
-flowcode_void matchToken(flowcode_int, flowcode_int);
+flowcode_void matchToken(flowcode_int);
 flowcode_void syncErrorHandler(flowcode_int);
 flowcode_void printError();
 flowcode_void printBNFData(ParserData psData);
@@ -171,16 +140,63 @@ static flowcode_string BNFStrTable[NUM_BNF_RULES] = {
 
 
 /* TO_DO: Place ALL non-terminal function declarations */
-flowcode_void codeSession();
-flowcode_void comment();
-flowcode_void dataSession();
-flowcode_void optVarListDeclarations();
-flowcode_void optionalStatements();
-flowcode_void outputStatement();
-flowcode_void outputVariableList();
 flowcode_void program();
+flowcode_void type();
+flowcode_void declarationSection();
+flowcode_void varDeclaration();
+flowcode_void varDeclarationLine();
+flowcode_void identifierList();
+flowcode_void identifierTail();
+flowcode_void functionDefinition();
+flowcode_void parameterList();
+flowcode_void parameter();
+flowcode_void parameterTail();
+flowcode_void statementList();
 flowcode_void statement();
-flowcode_void statements();
-flowcode_void statementsPrime();
+flowcode_void assignmentStatement();
+flowcode_void expression();
+flowcode_void addExpreTail();
+flowcode_void mulExpre();
+flowcode_void mulExpreTail();
+flowcode_void powExpre();
+flowcode_void factor();
+flowcode_void inputStatement();
+flowcode_void outputStatement();
+flowcode_void outputTarget();
+flowcode_void returnStatement();
+
+
+//flowcode_void comment();
+
+
+/* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
+/* Constants - unnecessary - already implemented in Scanner.h */
+// enum KEYWORDS {
+// 	NO_ATTR = -1,
+// 	KW_and,
+// 	KW_or,
+// 	KW_not,
+// 	KW_if,
+// 	KW_elif,
+// 	KW_else,
+// 	KW_then,
+// 	KW_endif,
+// 	KW_repeat,
+// 	KW_check,
+// 	KW_break,
+// 	KW_continue,
+// 	KW_Input,
+// 	KW_Output,
+// 	KW_return,
+// 	KW_end,
+// 	KW_int,
+// 	KW_double,
+// 	KW_string,
+// 	KW_boolean,
+// 	KW_void,
+// 	KW_begin,
+// 	KW_declaration,
+// 	KW_cons,
+// };
 
 #endif

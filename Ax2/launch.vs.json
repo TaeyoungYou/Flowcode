@@ -8,8 +8,8 @@
       "projectTarget": "FlowCode_Compiler.exe",
       "name": "FlowCode_Compiler.exe",
       "args": [
-        "2",
-        "INPUT1_Hello.fc",
+        "3",
+        "../../../test/Hello_World.fc",
         "a",
         "250",
         "10"

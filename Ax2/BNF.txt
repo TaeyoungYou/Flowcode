@@ -1,6 +1,5 @@
-** 순수 BNF **
 ** 코드 전체 BNF **
-<program> -> Begin Colon <declaration_section> <function_definition> End SemiColon
+<program> -> Begin Colon <declaration_section> EndOfLine <function_definition> End SemiColon | ε
 
 ** type **
 <type> -> Int | Double | String | Boolean
@@ -14,7 +13,7 @@
 
 
 ** function (Main, others) **
-<function_definition> -> <type> Identifier LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon
+<function_definition> -> <type> Identifier LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon EndOfLine
 
 ** parameter **
 <parameter_list> -> <parameter> <parameter_tail> | ε
@@ -27,7 +26,7 @@
               | <input_statement>
               | <output_statement>
               | <return_statement>
-** <if_statement> <<elif_statement> <else_statement> <repeat_statement> **
+** <if_statement> <<elif_statement> <else_statement> <repeat_statement> <comment> **
 
 ** assignment statement **
 <assignment_statement> -> Identifier Assignment <expression> EndOfLine
@@ -49,10 +48,10 @@
 <factor> -> Identifier | IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen
 
 ** input statement **
-<input_statement> -> Input Colon <identifier_list> SemiColon
+<input_statement> -> Input Colon <identifier_list> SemiColon EndOfLine
 
 ** output statement **
-<output_statement> -> Output Colon <output_target> SemiColon
+<output_statement> -> Output Colon <output_target> SemiColon EndOfLine
 <output_target> -> Identifier | StringLiteral | StringDoubleQuoteLiteral
 
 ** return statement **
@@ -60,7 +59,7 @@
 
 
 
-** ambiguous refactoring **
+** TEST SET **
 1+3+4
 10*2-4
 4-10/2
