@@ -211,6 +211,14 @@ flowcode_void printError()
     }
 }
 
+flowcode_void removeNewLine()
+{
+    while (lookahead.code == EndOfLine)
+    {
+        lookahead = tokenizer();
+    }
+}
+
 /*
  ************************************************************
  * Program statement
@@ -220,6 +228,7 @@ flowcode_void printError()
  */
 flowcode_void program()
 {
+    removeNewLine();
     /* Update program statistics */
     psData.parsHistogram[BNF_program]++;
     /* Program code */
@@ -228,8 +237,11 @@ flowcode_void program()
         matchToken(Begin);
         matchToken(Colon);
         matchToken(EndOfLine);
+        removeNewLine();
         declarationSection();
+        removeNewLine();
         functionDefinition();
+        removeNewLine();
         matchToken(End);
         matchToken(SemiColon);
     }
@@ -880,11 +892,11 @@ flowcode_void returnStatement()
         expression();
         matchToken(EndOfLine);
         printf("%s%s\n", STR_LANGNAME, ": Return Statement parsed");
-    }else
+    }
+    else
     {
         printError();
     }
-
 }
 
 /*

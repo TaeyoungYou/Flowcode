@@ -165,6 +165,8 @@ flowcode_void outputStatement();
 flowcode_void outputTarget();
 flowcode_void returnStatement();
 
+flowcode_void removeNewLine();
+
 
 //flowcode_void comment();
 

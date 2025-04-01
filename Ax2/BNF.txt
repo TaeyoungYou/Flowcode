@@ -5,7 +5,7 @@
 <type> -> Int | Double | String | Boolean
 
 ** Declaration BNF **
-<declaration_section> -> Declaration Colon EndOfLine <var_declaration> End SemiColon
+<declaration_section> -> Declaration Colon EndOfLine <var_declaration> End SemiColon EndOfLine
 <var_declaration> -> <var_declaration_line> <var_declaration> | ε
 <var_declaration_line> -> <type> <identifier_list> EndOfLine
 <identifier_list> -> Identifier <identifier_tail>
@@ -26,8 +26,9 @@
               | <input_statement>
               | <output_statement>
               | <return_statement>
+              | <repeat_statement>
 
-** <if_statement> <<elif_statement> <else_statement> <repeat_statement> <comment> **
+** <if_statement> <<elif_statement> <else_statement> <comment> **
 
 ** assignment statement **
 <assignment_statement> -> Identifier Assignment <expression> EndOfLine
@@ -58,6 +59,44 @@
 ** return statement **
 <return_statement> -> Return <expression> EndOfLine
 
+** repeat statement **
+<repeat_statement> -> Check <condition> Colon EndOfLine <repeat_statement_list> Repeat SemiColon EndOfLine
+<repeat_statement_list> -> <repeat_statement_line> <repeat_statement_list> | ε
+<repeat_statement_line> -> <assignment_statement>
+                          | <input_statement>
+                          | <output_statement>
+                          | <return_statement>
+                          | <repeat_statement>
+                          | Break EndOfLine
+                          | Continue EndOfLine
+
+
+<condition> -> <bool_term> <bool_expr_tail>
+<bool_expr_tail> -> LogicalAnd <bool_term> <bool_expr_tail>
+                    | LogicalOr <bool_term> <bool_expr_tail>
+                    | ε
+
+<bool_term> -> LogicalNot <basic_bool>
+               | <basic_bool>
+
+<basic_bool> -> True
+                | False
+                | <operand> <compare_op> <operand>
+                | LeftParen <bool_expr> RightParen
+
+<operand> -> Identifier
+            | IntLiteral
+            | DoubleLiteral
+            | StringLiteral
+            | True
+            | False
+
+<compare_op> -> Equal
+                | NotEqual
+                | LessThan
+                | GreaterThan
+                | LessOrEqual
+                | GreaterOrEqual
 
 
 ** TEST SET **
@@ -90,6 +129,27 @@ begin:
 
         ** iteration **
         i = 0
+
+        check true:
+
+        repeat;
+
+        check i < 10:
+
+        repeat;
+
+        check 10 > i:
+
+        repeat;
+
+        check i < 10 or true:
+
+        repeat;
+
+        check (true or i < 10) and true:
+
+        repeat;
+
         check i<10:
             Output: i;
         repeat;
