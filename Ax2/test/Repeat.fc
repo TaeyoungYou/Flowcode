@@ -1,0 +1,17 @@
+begin:
+    declaration:
+        int i
+    end;
+    boolean Main():
+        i=0
+        check i<10:
+            Output: i;
+            i=i+1
+            Output: 'Repeat statement';
+            continue
+            break
+        repeat;
+        Output: 'Done';
+        return 'true'
+    end;
+end;

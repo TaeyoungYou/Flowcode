@@ -180,7 +180,8 @@ flowcode_int mainParser(flowcode_int argc, flowcode_string* argv) {
 	printf("\nParsing the source file...\n\n");
 	startParser();
 
-	printf("\nNumber of Parser errors: %d\n", numParserErrors);
+	printf(RED "\nNumber of Parser errors: %d\n" RESET, numParserErrors);
+
 
 	/* Prints the statistics */
 	printBNFData(psData);

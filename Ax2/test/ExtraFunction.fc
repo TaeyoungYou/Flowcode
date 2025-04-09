@@ -1,0 +1,16 @@
+begin:
+    declaration:
+        string greet
+        boolean result
+    end;
+    boolean Main():
+        greet = 'Hello Tae and Juhyeon!'
+        result = Greeting: greet;
+        Output: 'Main Function Done!';
+        return 'true'
+    end;
+    boolean Greeting(string str):
+        Output: str;
+        return 'true'
+    end;
+end;

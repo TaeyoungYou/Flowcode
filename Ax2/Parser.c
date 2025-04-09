@@ -38,6 +38,7 @@
 #ifndef PARSER_H_
 #include "Parser.h"
 #endif
+#include <math.h>
 
 /* Parser data */
 extern ParserData psData; /* BNF statistics */
@@ -125,8 +126,11 @@ flowcode_void printError()
 {
     //	extern numParserErrors;			/* link to number of errors (defined in Parser.h) */
     Token t = lookahead;
-    printf("%s%s%3d\n", STR_LANGNAME, ": Syntax error:  Line:", line);
-    printf("*****  Token code:%3d Attribute: ", t.code);
+    printf(RED "%s%s%3d\n" RESET, STR_LANGNAME, ": Syntax error:  Line:", line);
+    printf(RED "*****  Token code:%3d Attribute: " RESET, t.code);
+
+
+    numParserErrors++; // Updated parser error
     switch (t.code)
     {
     case Error:
@@ -207,7 +211,6 @@ flowcode_void printError()
         break;
     default:
         printf("%s%s%d\n", STR_LANGNAME, ": Scanner error: invalid token code: ", t.code);
-        numParserErrors++; // Updated parser error
     }
 }
 
@@ -222,7 +225,7 @@ flowcode_void removeNewLine()
 /*
  ************************************************************
  * Program statement
- * BNF: <program> -> Begin Colon EndOfLine <declaration_section> <function_definition> End SemiColon | ε
+ * BNF: <program> -> Begin Colon EndOfLine <declaration_section> <main_function> <custom_function_section> End SemiColon | ε
  * FIRST(<program>)= { Begin }.
  ***********************************************************
  */
@@ -240,14 +243,17 @@ flowcode_void program()
         removeNewLine();
         declarationSection();
         removeNewLine();
-        functionDefinition();
+        mainFunction();
+        removeNewLine();
+        customFunctionSection();
         removeNewLine();
         matchToken(End);
         matchToken(SemiColon);
+        removeNewLine();
     }
     else if (lookahead.code == EndOfToken)
     {
-        /* End Of Token and Done */
+        /* End Of Token and Done - Empty */
     }
     else
     {
@@ -388,7 +394,7 @@ flowcode_void identifierList()
  * Identifier Tail
  * BNF: <identifier_tail> -> Comma Identifier <identifier_tail> | ε
  * FIRST(<identifier_tail>) = { Comma, ε }.
- * FOLLOW(<identifier_tail>) = { EndOfLine }.
+ * FOLLOW(<identifier_tail>) = { EndOfLine, SemiColon }.
  ***********************************************************
  */
 flowcode_void identifierTail()
@@ -403,6 +409,64 @@ flowcode_void identifierTail()
         printf("%s%s\n", STR_LANGNAME, ": Identifier Tail parsed");
         break;
     case EndOfLine:
+    case SemiColon:
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Main Function
+ * BNF: <main_function> -> Boolean Main LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon EndOfLine
+ * FIRST(<main_function>)= { Boolean }.
+ ***********************************************************
+ */
+flowcode_void mainFunction()
+{
+    psData.parsHistogram[BNF_main_function]++;
+    switch (lookahead.code)
+    {
+    case Boolean:
+        matchToken(Boolean);
+        matchToken(Identifier); /* ::TODO - change Identifier to main keyword(add in scanner)  */
+        matchToken(LeftParen);
+        parameterList();
+        matchToken(RightParen);
+        matchToken(Colon);
+        matchToken(EndOfLine);
+        statementList();
+        matchToken(End);
+        matchToken(SemiColon);
+        matchToken(EndOfLine);
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Custom Function Section
+ * BNF: <custom_function_section> -> <function_definition> <custom_function_section> | ε
+ * FIRST(<custom_function_section>)= { Int, Double, String, Boolean, ε }.
+ * FOLLOW(<custom_function_section>) = { End }.
+ ***********************************************************
+ */
+flowcode_void customFunctionSection()
+{
+    psData.parsHistogram[BNF_custom_function_section]++;
+    switch (lookahead.code)
+    {
+    case Int:
+    case Double:
+    case String:
+    case Boolean:
+        functionDefinition();
+        customFunctionSection();
+        break;
+    case End:
         break;
     default:
         printError();
@@ -418,6 +482,7 @@ flowcode_void identifierTail()
  */
 flowcode_void functionDefinition()
 {
+    removeNewLine();
     psData.parsHistogram[BNF_function_definition]++;
     switch (lookahead.code)
     {
@@ -510,7 +575,7 @@ flowcode_void parameterTail()
     switch (lookahead.code)
     {
     case Comma:
-        type();
+        matchToken(Comma);
         parameter();
         parameterTail();
         printf("%s%s\n", STR_LANGNAME, ": Parameter Tail parsed");
@@ -532,6 +597,7 @@ flowcode_void parameterTail()
  */
 flowcode_void statementList()
 {
+    removeNewLine();
     psData.parsHistogram[BNF_statement_list]++;
     switch (lookahead.code)
     {
@@ -539,6 +605,7 @@ flowcode_void statementList()
     case Input:
     case Output:
     case Return:
+    case Check:
         statement();
         statementList();
         printf("%s%s\n", STR_LANGNAME, ": Statement List parsed");
@@ -553,8 +620,8 @@ flowcode_void statementList()
 /*
  ************************************************************
  * Statements
- * BNF: <statement> -> <assignment_statement> | <input_statement> | <output_statement> | <return_statement> | ε
- * FIRST(<statements>) = { Identifier, Input, Output, Return, End }
+ * BNF: <statement> -> <input_statement> | <output_statement> | <return_statement> | <repeat_statement> | <identifier_leading_statement>
+ * FIRST(<statements>) = { Identifier, Input, Output, Return, Check }
  ***********************************************************
  */
 flowcode_void statement()
@@ -563,7 +630,7 @@ flowcode_void statement()
     switch (lookahead.code)
     {
     case Identifier:
-        assignmentStatement();
+        identifierLeadingStatement();
         break;
     case Input:
         inputStatement();
@@ -574,8 +641,9 @@ flowcode_void statement()
     case Return:
         returnStatement();
         break;
-    case End:
-        return;
+    case Check:
+        repeatStatement();
+        break;
     default:
         printError();
         return;
@@ -585,26 +653,54 @@ flowcode_void statement()
 
 /*
  ************************************************************
- * Assignment Statement
- * BNF: <assignment_statement> -> Identifier Assignment <expression> EndOfLine
- * FIRST(<assignment_statement>) = { Identifier }.
+ * Identifier Leading Statement
+ * BNF: <identifier_leading_statement> -> Identifier <identifier_statement_tail>
+ * FIRST(<identifier_leading_statement>) = { Identifier }.
  ***********************************************************
  */
-flowcode_void assignmentStatement()
+flowcode_void identifierLeadingStatement()
 {
-    psData.parsHistogram[BNF_assignment_statement]++;
+    psData.parsHistogram[BNF_identifier_leading_statement]++;
     if (lookahead.code == Identifier)
     {
         matchToken(Identifier);
-        matchToken(Assignment);
-        expression();
-        matchToken(EndOfLine);
-        printf("%s%s\n", STR_LANGNAME, ": Assignment Statement parsed");
+        identifierStatementTail();
+        printf("%s%s\n", STR_LANGNAME, ": Identifier Leading Statement parsed");
     }
     else
     {
         printError();
     }
+}
+
+/*
+ ************************************************************
+ * Identifier Statement Tail
+ * BNF: <identifier_statement_tail> -> Assignment <expression> EndOfLine | Colon <argument_list> SemiColon EndOfLine
+ * FIRST(<identifier_statement_tail>) = { Assignment, Colon }.
+ ***********************************************************
+ */
+flowcode_void identifierStatementTail()
+{
+    psData.parsHistogram[BNF_identifier_statement_tail]++;
+    switch (lookahead.code)
+    {
+    case Assignment:
+        matchToken(Assignment);
+        expression();
+        matchToken(EndOfLine);
+        break;
+    case Colon:
+        matchToken(Colon);
+        argumentList();
+        matchToken(SemiColon);
+        matchToken(EndOfLine);
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Identifier Statement Tail parsed");
 }
 
 /*
@@ -638,7 +734,7 @@ flowcode_void expression()
  * Add, Subtract Expression Tail
  * BNF: <add_expre_tail> -> Add <mul_expre> <add_expre_tail> | Subtract <mul_expre> <add_expre_tail> | ε
  * FIRST(<add_expre_tail>) = { Add, Subtract, ε }.
- * FOLLOW(<add_expre_tail>) = { EndOfLine, RightParen }.
+ * FOLLOW(<add_expre_tail>) = { EndOfLine, RightParen, Comma, SemiColon }.
  ***********************************************************
  */
 flowcode_void addExpreTail()
@@ -658,6 +754,8 @@ flowcode_void addExpreTail()
         break;
     case EndOfLine:
     case RightParen:
+    case Comma:
+    case SemiColon:
         break;
     default:
         printError();
@@ -697,7 +795,7 @@ flowcode_void mulExpre()
  * Mul Expression Tail
  * BNF: <mul_expre_tail> -> Multiply <pow_expre> <mul_expre_tail> | Divide <pow_expre> <mul_expre_tail> | Modulo <pow_expre> <mul_expre_tail> | ε
  * FIRST(<mul_expre_tail>) = { Multiply, Divide, Modulo, ε }.
- * FOLLOW(<mul_expre_tail>) = { Add, Subtract, EndOfLine, RightParen }.
+ * FOLLOW(<mul_expre_tail>) = { Add, Subtract, EndOfLine, RightParen, Comma, SemiColon }.
  ***********************************************************
  */
 flowcode_void mulExpreTail()
@@ -724,6 +822,8 @@ flowcode_void mulExpreTail()
     case Subtract:
     case EndOfLine:
     case RightParen:
+    case Comma:
+    case SemiColon:
         break;
     default:
         printError();
@@ -765,7 +865,7 @@ flowcode_void powExpre()
 /*
  ************************************************************
  * Factor
- * BNF: <factor> -> Identifier | IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen
+ * BNF: <factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier
  * FIRST(<factor>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
  ***********************************************************
  */
@@ -867,6 +967,7 @@ flowcode_void outputTarget()
         matchToken(StringLiteral);
         break;
     case StringDoubleQuoteLiteral:
+        /* ::TODO - implement to find variable in Double Quotation, and replace */
         matchToken(StringDoubleQuoteLiteral);
         break;
     default:
@@ -897,6 +998,489 @@ flowcode_void returnStatement()
     {
         printError();
     }
+}
+
+/*
+ ************************************************************
+ * Repeat Statement
+ * BNF: <repeat_statement> -> Check <condition> Colon EndOfLine <repeat_statement_list> Repeat SemiColon EndOfLine
+ * FIRST(<repeat_statement>) = { Check }.
+ ***********************************************************
+ */
+flowcode_void repeatStatement()
+{
+    psData.parsHistogram[BNF_repeat_statement]++;
+    if (lookahead.code == Check)
+    {
+        matchToken(Check);
+        condition();
+        matchToken(Colon);
+        matchToken(EndOfLine);
+        repeatStatementList();
+        matchToken(Repeat);
+        matchToken(SemiColon);
+        matchToken(EndOfLine);
+        printf("%s%s\n", STR_LANGNAME, ": Repeat Statement parsed");
+    }
+    else
+    {
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Repeat Statement List
+ * BNF: <repeat_statement_list> -> <repeat_statement_line> <repeat_statement_list> | ε
+ * FIRST(<repeat_statement_list>) = { Identifier, Input, Output, Return, Check, Break, Continue, ε }.
+ * FOLLOW(<repeat_statement_list>) = { Repeat }.
+ ***********************************************************
+ */
+flowcode_void repeatStatementList()
+{
+    psData.parsHistogram[BNF_repeat_statement_list]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+    case Input:
+    case Output:
+    case Return:
+    case Check:
+    case Break:
+    case Continue:
+        repeatStatementLine();
+        repeatStatementList();
+        printf("%s%s\n", STR_LANGNAME, ": Repeat Statement List parsed");
+        break;
+    case Repeat:
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Repeat Statement Line
+ * BNF: <repeat_statement_line> ->  <input_statement> | <output_statement> | <return_statement> | <repeat_statement> | <identifier_leading_statement> | Break EndOfLine | Continue EndOfLine
+ * FIRST(<repeat_statement_line>) = { Identifier, Input, Output, Return, Check, Break, Continue }.
+ ***********************************************************
+ */
+flowcode_void repeatStatementLine()
+{
+    psData.parsHistogram[BNF_repeat_statement_line]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+        identifierLeadingStatement();
+        break;
+    case Input:
+        inputStatement();
+        break;
+    case Output:
+        outputStatement();
+        break;
+    case Return:
+        returnStatement();
+        break;
+    case Check:
+        repeatStatement();
+        break;
+    case Break:
+        matchToken(Break);
+        matchToken(EndOfLine);
+        break;
+    case Continue:
+        matchToken(Continue);
+        matchToken(EndOfLine);
+        break;
+    default:
+        printError();
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Repeat Statement Line parsed");
+}
+
+/*
+ ************************************************************
+ * Condition
+ * BNF: <condition> -> <bool_term> <bool_expr_tail>
+ * FIRST(<condition>) = { LogicalNot, True, False, Identifier, IntLiteral, DoubleLiteral, StringLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void condition()
+{
+    psData.parsHistogram[BNF_condition]++;
+    switch (lookahead.code)
+    {
+    case LogicalNot:
+    //case True: ::TODO - please rid of comment if makes true token
+    //case False: ::TODO - please rid of comment if makes false token
+    case Identifier:
+    case IntLiteral:
+    case DoubleLiteral:
+    case StringLiteral:
+    case LeftParen:
+        boolTerm();
+        boolExprTail();
+        printf("%s%s\n", STR_LANGNAME, ": Condition parsed");
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Boolean Expression Tail
+ * BNF: <bool_expr_tail> -> LogicalAnd <bool_term> <bool_expr_tail> | LogicalOr <bool_term> <bool_expr_tail> | ε
+ * FIRST(<bool_expr_tail>) = { LogicalAnd, LogicalOr, ε }.
+ * FOLLOW(<bool_expr_tail>) = { Colon, RightParen }.
+ ***********************************************************
+ */
+flowcode_void boolExprTail()
+{
+    psData.parsHistogram[BNF_bool_exp_tail]++;
+    switch (lookahead.code)
+    {
+    case LogicalAnd:
+        matchToken(LogicalAnd);
+        boolTerm();
+        boolExprTail();
+        break;
+    case LogicalOr:
+        matchToken(LogicalOr);
+        boolTerm();
+        boolExprTail();
+        break;
+    case Colon:
+    case RightParen:
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Boolean Expression Tail parsed");
+}
+
+/*
+ ************************************************************
+ * Boolean Term
+ * BNF: <bool_term> -> LogicalNot <basic_bool> | <basic_bool>
+ * FIRST(<bool_term>) = { LogicalNot, True, False, Identifier, IntLiteral, DoubleLiteral, StringLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void boolTerm()
+{
+    psData.parsHistogram[BNF_bool_term]++;
+    switch (lookahead.code)
+    {
+    case LogicalNot:
+        matchToken(LogicalNot);
+        basicBool();
+        break;
+    //case True: ::TODO - please rid of comment if makes true token
+    //case False: ::TODO - please rid of comment if makes false token
+    case Identifier:
+    case IntLiteral:
+    case DoubleLiteral:
+    case StringLiteral:
+    case LeftParen:
+        basicBool();
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Boolean Term parsed");
+}
+
+/*
+ ************************************************************
+ * Basic Boolean
+ * BNF: <basic_bool> -> <basic_bool> -> True | False | <operand> <compare_op> <operand> | LeftParen <bool_term> <bool_expr_tail> RightParen
+ * FIRST(<basic_bool>) = { True, False, Identifier, IntLiteral, DoubleLiteral, StringLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void basicBool()
+{
+    psData.parsHistogram[BNF_basic_bool]++;
+    switch (lookahead.code)
+    {
+    //case True: ::TODO - please rid of comment if makes true token
+        // matchToken(True);
+        // break;
+    //case False: ::TODO - please rid of comment if makes false token
+        // matchToken(False);
+        // break;
+    case Identifier:
+    case IntLiteral:
+    case DoubleLiteral:
+    case StringLiteral:
+        operand();
+        compareOp();
+        operand();
+        break;
+    case LeftParen:
+        matchToken(LeftParen);
+        boolTerm();
+        boolExprTail();
+        matchToken(RightParen);
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Basic Boolean parsed");
+}
+
+/*
+ ************************************************************
+ * Operand
+ * BNF: <operand> -> Identifier | IntLiteral | DoubleLiteral | StringLiteral | True | False
+ * FIRST(<operand>) = { Identifier, IntLiteral, DoubleLiteral, StringLiteral, True, False }.
+ ***********************************************************
+ */
+flowcode_void operand()
+{
+    psData.parsHistogram[BNF_operand]++;
+    switch (lookahead.code)
+    {
+    //case True: ::TODO - please rid of comment if makes true token
+    // matchToken(True);
+    // break;
+    //case False: ::TODO - please rid of comment if makes false token
+    // matchToken(False);
+    // break;
+    case Identifier:
+        matchToken(Identifier);
+        break;
+    case IntLiteral:
+        matchToken(IntLiteral);
+        break;
+    case DoubleLiteral:
+        matchToken(DoubleLiteral);
+        break;
+    case StringLiteral:
+        matchToken(StringLiteral);
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Operand parsed");
+}
+
+/*
+ ************************************************************
+ * Compare operation
+ * BNF: <compare_op> -> Equal | NotEqual | LessThan | GreaterThan | LessOrEqual | GreaterOrEqual
+ * FIRST(<compare_op>) = { Equal, NotEqual, LessThan, GreaterThan, LessOrEqual, GreaterOrEqual }.
+ ***********************************************************
+ */
+flowcode_void compareOp()
+{
+    psData.parsHistogram[BNF_compare_op]++;
+    switch (lookahead.code)
+    {
+    case Equal:
+        matchToken(Equal);
+        break;
+    case NotEqual:
+        matchToken(NotEqual);
+        break;
+    case LessThan:
+        matchToken(LessThan);
+        break;
+    case GreaterThan:
+        matchToken(GreaterThan);
+        break;
+    case LessOrEqual:
+        matchToken(LessOrEqual);
+        break;
+    case GreaterOrEqual:
+        matchToken(GreaterOrEqual);
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Operand parsed");
+}
+
+/*
+ ************************************************************
+ * Argument List
+ * BNF: <argument_list> -> <non_call_expression> <argument_tail> | ε
+ * FIRST(<argument_list>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen, ε }.
+ * FOLLOW(<argument_list>) = { SemiColon }.
+ ***********************************************************
+ */
+flowcode_void argumentList()
+{
+    psData.parsHistogram[BNF_argument_list]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+    case IntLiteral:
+    case DoubleLiteral:
+    case StringLiteral:
+    case LeftParen:
+        nonCallExpression();
+        argumentTail();
+        break;
+    case SemiColon:
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Argument List parsed");
+}
+
+/*
+ ************************************************************
+ * Argument Tail
+ * BNF: <argument_tail> -> Comma <non_call_expression> <argument_tail> | ε
+ * FIRST(<argument_tail>) = { Comma, ε }.
+ * FOLLOW(<argument_tail>) = { SemiColon }.
+ ***********************************************************
+ */
+flowcode_void argumentTail()
+{
+    psData.parsHistogram[BNF_argument_tail]++;
+    switch (lookahead.code)
+    {
+    case Comma:
+        matchToken(Comma);
+        nonCallExpression();
+        argumentTail();
+        break;
+    case SemiColon:
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Argument Tail parsed");
+}
+
+/*
+ ************************************************************
+ * Non Call Expression
+ * BNF: <non_call_expression> -> <non_call_mul> <add_expre_tail>
+ * FIRST(<non_call_expression>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void nonCallExpression()
+{
+    psData.parsHistogram[BNF_non_call_expression]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+    case IntLiteral:
+    case StringLiteral:
+    case DoubleLiteral:
+    case LeftParen:
+        nonCallMul();
+        addExpreTail();
+        printf("%s%s\n", STR_LANGNAME, ": Non Call Expression parsed");
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Non Call Multiply
+ * BNF: <non_call_mul> -> <non_call_pow> <mul_expre_tail>
+ * FIRST(<non_call_mul>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void nonCallMul()
+{
+    psData.parsHistogram[BNF_non_call_mul]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+    case IntLiteral:
+    case StringLiteral:
+    case DoubleLiteral:
+    case LeftParen:
+        nonCallPow();
+        mulExpreTail();
+        printf("%s%s\n", STR_LANGNAME, ": Non Call Multiply parsed");
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Non Call Power
+ * BNF: <non_call_pow> -> <non_call_factor> Power <non_call_pow> | <non_call_factor>
+ * FIRST(<non_call_pow>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void nonCallPow()
+{
+    psData.parsHistogram[BNF_non_call_pow]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+    case IntLiteral:
+    case StringLiteral:
+    case DoubleLiteral:
+    case LeftParen:
+        nonCallFactor();
+        if (lookahead.code == Power)
+        {
+            matchToken(Power);
+            nonCallPow();
+        }
+
+        printf("%s%s\n", STR_LANGNAME, ": Non Call Power parsed");
+        break;
+    default:
+        printError();
+    }
+}
+
+/*
+ ************************************************************
+ * Non Call Factor
+ * BNF: <non_call_factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <non_call_expression> RightParen | Identifier
+ * FIRST(<non_call_factor>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
+ ***********************************************************
+ */
+flowcode_void nonCallFactor()
+{
+    psData.parsHistogram[BNF_non_call_factor]++;
+    switch (lookahead.code)
+    {
+    case Identifier:
+        matchToken(Identifier);
+        break;
+    case IntLiteral:
+        matchToken(IntLiteral);
+        break;
+    case StringLiteral:
+        matchToken(StringLiteral);
+        break;
+    case DoubleLiteral:
+        matchToken(DoubleLiteral);
+        break;
+    case LeftParen:
+        matchToken(LeftParen);
+        nonCallExpression();
+        matchToken(RightParen);
+        break;
+    default:
+        printError();
+        return;
+    }
+    printf("%s%s\n", STR_LANGNAME, ": Non Call Power parsed");
 }
 
 /*

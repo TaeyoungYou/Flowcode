@@ -1,0 +1,33 @@
+begin:
+    declaration:
+        int a, b, c, d, e, intResult
+        double x, y, z, w, doubleResult
+        string msg
+    end;
+
+    boolean Main():
+        a = 2
+        b = 3
+        c = 4
+        d = 5
+        e = 6
+
+        x = 1.5
+        y = 2.5
+        z = 3.0
+        w = 4.5
+
+        intResult = ((a + b * (c - d + e % b)) ^ (a + b - c)) % ((d * e) - (b + a))
+        doubleResult = ((((x + y) * z) / (w - y + (x * 2.0))) + (x ^ 2)) * (z - 1.0)
+
+        msg = 'INT RESULT:'
+        Output: msg;
+        Output: intResult;
+
+        msg = 'DOUBLE RESULT:'
+        Output: msg;
+        Output: doubleResult;
+
+        return 'true'
+    end;
+end;

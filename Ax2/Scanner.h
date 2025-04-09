@@ -144,6 +144,10 @@ enum TOKENS {
 	Begin,              /* 50: 'begin' (start of a code block) */
 	Declaration,        /* 51: 'declaration' (variable declaration) */
 	Constant,           /* 52: 'constant' (constant declaration) */
+	/* True ::TODO - true keyword */
+	/* False ::TODO - false keyword */
+	/* Void ::TODO - void keyword */
+	/* Main ::TODO - Main function keyword */
 
 	StringDoubleQuoteLiteral, /* String literal enclosed in double quotes */
 };
@@ -277,7 +281,7 @@ typedef struct scannerData {
 #define SPACE			' '		// ' '
 #define TAB				'\t'	// \t
 // Special Chars to be ignored
-#define METHOD_START	':'		// : 
+#define METHOD_START	':'		// :
 #define METHOD_END		';'		// ;
 #define END_OF_LINE		'\n'	// \n
 #define ADD				'+'		// +
@@ -314,7 +318,7 @@ typedef struct scannerData {
 #define FS		52		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		31	
+#define NUM_STATES		31
 #define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */

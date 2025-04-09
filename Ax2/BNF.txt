@@ -1,5 +1,5 @@
 ** 코드 전체 BNF **
-<program> -> Begin Colon EndOfLine <declaration_section> <function_definition> End SemiColon | ε
+<program> -> Begin Colon EndOfLine <declaration_section> <main_function> <custom_function_section> End SemiColon | ε
 
 ** type **
 <type> -> Int | Double | String | Boolean
@@ -13,6 +13,8 @@
 
 
 ** function (Main, others) **
+<main_function> -> Boolean Main LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon EndOfLine
+<custom_function_section> -> <function_definition> <custom_function_section> | ε
 <function_definition> -> <type> Identifier LeftParen <parameter_list> RightParen Colon EndOfLine <statement_list> End SemiColon EndOfLine
 
 ** parameter **
@@ -22,16 +24,18 @@
 
 ** statement **
 <statement_list> -> <statement> <statement_list> | ε
-<statement> -> <assignment_statement>
+<statement> -> <identifier_leading_statement>
               | <input_statement>
               | <output_statement>
               | <return_statement>
               | <repeat_statement>
 
-** <if_statement> <<elif_statement> <else_statement> <comment> **
+** entry of assignment statement and function call statement **
+<identifier_leading_statement> -> Identifier <identifier_statement_tail>
+<identifier_statement_tail> -> Assignment <expression> EndOfLine
+                              | Colon <argument_list> SemiColon EndOfLine
 
-** assignment statement **
-<assignment_statement> -> Identifier Assignment <expression> EndOfLine
+** <if_statement> <<elif_statement> <else_statement> <comment> **
 
 ** expression statement **
 <expression> -> <mul_expre> <add_expre_tail>
@@ -47,7 +51,7 @@
 
 <pow_expre> -> <factor> Power <pow_expre> | <factor>
 
-<factor> -> Identifier | IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen
+<factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier | Identifier Colon <argument_list>
 
 ** input statement **
 <input_statement> -> Input Colon <identifier_list> SemiColon EndOfLine
@@ -62,7 +66,7 @@
 ** repeat statement **
 <repeat_statement> -> Check <condition> Colon EndOfLine <repeat_statement_list> Repeat SemiColon EndOfLine
 <repeat_statement_list> -> <repeat_statement_line> <repeat_statement_list> | ε
-<repeat_statement_line> -> <assignment_statement>
+<repeat_statement_line> -> <identifier_leading_statement>
                           | <input_statement>
                           | <output_statement>
                           | <return_statement>
@@ -82,7 +86,7 @@
 <basic_bool> -> True
                 | False
                 | <operand> <compare_op> <operand>
-                | LeftParen <bool_expr> RightParen
+                | LeftParen <bool_term> <bool_expr_tail> RightParen
 
 <operand> -> Identifier
             | IntLiteral
@@ -98,77 +102,12 @@
                 | LessOrEqual
                 | GreaterOrEqual
 
+** function call statement **
+<argument_list> -> <non_call_expression> <argument_tail> | ε
+<argument_tail> -> Comma <non_call_expression> <argument_tail> | ε
 
-** TEST SET **
-1+3+4
-10*2-4
-4-10/2
-4*10/2
-(1+2)+3
-1+(2+3)
-(1+2)*3
-3*(1+2)
-3^3
-3^3+3
-3^(3+3)
-10%2+(2*1+3-3)^(4+1)*3+4/3
+<non_call_expression> -> <non_call_mul> <add_expre_tail>
+<non_call_mul> -> <non_call_pow> <mul_expre_tail>
+<non_call_pow> -> <non_call_factor> Power <non_call_pow> | <non_call_factor>
+<non_call_factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <non_call_expression> RightParen | Identifier
 
-begin:
-    declaration:
-        int a, i
-        string greet
-    end;
-    bool Main():
-        ** assignment **
-        a = 10
-        greet = 'Hello World'
-
-        ** general I/O **
-        Input: a;
-        Output: greet;
-
-        ** iteration **
-        i = 0
-
-        check true:
-
-        repeat;
-
-        check i < 10:
-
-        repeat;
-
-        check 10 > i:
-
-        repeat;
-
-        check i < 10 or true:
-
-        repeat;
-
-        check (true or i < 10) and true:
-
-        repeat;
-
-        check i<10:
-            Output: i;
-        repeat;
-
-        ** condition **
-        if a>5 then:
-            Output: "$a more than 5";   ** will output > 9 more than 5, $is find variable and replace it **
-        endif;
-        elif a>3 then:
-            ** statement **
-        endif;
-        else:
-            ** statement **
-        endif;
-
-        ** math operation **
-        a = i + i
-
-        ** return **
-        return true
-    end;
-end;
