@@ -53,12 +53,12 @@
 
 
 /* Global vars */
-static Token			lookahead;
-extern BufferPointer	stringLiteralTable;
-extern flowcode_int		line;
-extern Token			tokenizer(flowcode_void);
-extern flowcode_string	keywordTable[KWT_SIZE];
-static flowcode_int		syntaxErrorNumber = 0;
+static Token lookahead;
+extern BufferPointer stringLiteralTable;
+extern flowcode_int line;
+extern Token tokenizer(flowcode_void);
+extern flowcode_string keywordTable[KWT_SIZE];
+static flowcode_int syntaxErrorNumber = 0;
 
 #define LANG_WRTE		"Output"
 #define LANG_READ		"Input"
@@ -68,9 +68,10 @@ static flowcode_int		syntaxErrorNumber = 0;
 #define NUM_BNF_RULES 43
 
 /* Parser */
-typedef struct parserData {
-	flowcode_int parsHistogram[NUM_BNF_RULES];	/* Number of BNF Statements */
-} ParserData, * pParsData;
+typedef struct parserData
+{
+    flowcode_int parsHistogram[NUM_BNF_RULES]; /* Number of BNF Statements */
+} ParserData, *pParsData;
 
 /* Number of errors */
 flowcode_int numParserErrors;
@@ -86,97 +87,98 @@ flowcode_void printError();
 flowcode_void printBNFData(ParserData psData);
 
 /* List of BNF statements */
-enum BNF_RULES {
-	BNF_program,
-	BNF_type,
-	BNF_declaration_section,
-	BNF_var_declaration,
-	BNF_var_declaration_line,
-	BNF_identifier_list,
-	BNF_identifier_tail,
-	BNF_main_function,
-	BNF_custom_function_section,
-	BNF_function_definition,
-	BNF_parameter_list,
-	BNF_parameter_tail,
-	BNF_parameter,
-	BNF_statement_list,
-	BNF_statement,
-	BNF_identifier_leading_statement,
-	BNF_identifier_statement_tail,
-	BNF_expression,
-	BNF_add_expre_tail,
-	BNF_mul_expre,
-	BNF_mul_expre_tail,
-	BNF_pow_expre,
-	BNF_factor,
-	BNF_input_statement,
-	BNF_output_statement,
-	BNF_output_target,
-	BNF_return_statement,
-	BNF_repeat_statement,
-	BNF_repeat_statement_list,
-	BNF_repeat_statement_line,
-	BNF_condition,
-	BNF_bool_exp_tail,
-	BNF_bool_term,
-	BNF_basic_bool,
-	BNF_operand,
-	BNF_compare_op,
-	BNF_argument_list,
-	BNF_argument_tail,
-	BNF_argument,
-	BNF_non_call_expression,
-	BNF_non_call_mul,
-	BNF_non_call_pow,
-	BNF_non_call_factor,
+enum BNF_RULES
+{
+    BNF_program,
+    BNF_type,
+    BNF_declaration_section,
+    BNF_var_declaration,
+    BNF_var_declaration_line,
+    BNF_identifier_list,
+    BNF_identifier_tail,
+    BNF_main_function,
+    BNF_custom_function_section,
+    BNF_function_definition,
+    BNF_parameter_list,
+    BNF_parameter_tail,
+    BNF_parameter,
+    BNF_statement_list,
+    BNF_statement,
+    BNF_identifier_leading_statement,
+    BNF_identifier_statement_tail,
+    BNF_expression,
+    BNF_add_expre_tail,
+    BNF_mul_expre,
+    BNF_mul_expre_tail,
+    BNF_pow_expre,
+    BNF_factor,
+    BNF_input_statement,
+    BNF_output_statement,
+    BNF_output_target,
+    BNF_return_statement,
+    BNF_repeat_statement,
+    BNF_repeat_statement_list,
+    BNF_repeat_statement_line,
+    BNF_condition,
+    BNF_bool_exp_tail,
+    BNF_bool_term,
+    BNF_basic_bool,
+    BNF_operand,
+    BNF_compare_op,
+    BNF_argument_list,
+    BNF_argument_tail,
+    BNF_argument,
+    BNF_non_call_expression,
+    BNF_non_call_mul,
+    BNF_non_call_pow,
+    BNF_non_call_factor,
 };
 
 
 /* TO_DO: Define the list of keywords */
 static flowcode_string BNFStrTable[NUM_BNF_RULES] = {
-	"BNF_program",
-	"BNF_type",
-	"BNF_declaration_section",
-	"BNF_var_declaration",
-	"BNF_var_declaration_line",
-	"BNF_identifier_list",
-	"BNF_identifier_tail",
-	"BNF_main_function",
-	"BNF_custom_function_section",
-	"BNF_function_definition",
-	"BNF_parameter_list",
-	"BNF_parameter",
-	"BNF_parameter_tail",
-	"BNF_statement_list",
-	"BNF_statement",
-	"BNF_identifier_leading_statement",
-	"BNF_identifier_statement_tail",
-	"BNF_expression",
-	"BNF_add_expre_tail",
-	"BNF_mul_expre",
-	"BNF_mul_expre_tail",
-	"BNF_pow_expre",
-	"BNF_factor",
-	"BNF_input_statement",
-	"BNF_output_statement",
-	"BNF_output_target",
-	"BNF_return_statement",
-	"BNF_repeat_statement",
-	"BNF_repeat_statement_list",
-	"BNF_repeat_statement_line",
-	"BNF_condition",
-	"BNF_bool_exp_tail",
-	"BNF_bool_term",
-	"BNF_basic_bool",
-	"BNF_operand",
-	"BNF_compare_op",
-	"BNF_argument_list",
-	"BNF_argument_tail",
-	"BNF_non_call_expression",
-	"BNF_non_call_mul",
-	"BNF_non_call_pow",
-	"BNF_non_call_factor",
+    "BNF_program",
+    "BNF_type",
+    "BNF_declaration_section",
+    "BNF_var_declaration",
+    "BNF_var_declaration_line",
+    "BNF_identifier_list",
+    "BNF_identifier_tail",
+    "BNF_main_function",
+    "BNF_custom_function_section",
+    "BNF_function_definition",
+    "BNF_parameter_list",
+    "BNF_parameter",
+    "BNF_parameter_tail",
+    "BNF_statement_list",
+    "BNF_statement",
+    "BNF_identifier_leading_statement",
+    "BNF_identifier_statement_tail",
+    "BNF_expression",
+    "BNF_add_expre_tail",
+    "BNF_mul_expre",
+    "BNF_mul_expre_tail",
+    "BNF_pow_expre",
+    "BNF_factor",
+    "BNF_input_statement",
+    "BNF_output_statement",
+    "BNF_output_target",
+    "BNF_return_statement",
+    "BNF_repeat_statement",
+    "BNF_repeat_statement_list",
+    "BNF_repeat_statement_line",
+    "BNF_condition",
+    "BNF_bool_exp_tail",
+    "BNF_bool_term",
+    "BNF_basic_bool",
+    "BNF_operand",
+    "BNF_compare_op",
+    "BNF_argument_list",
+    "BNF_argument_tail",
+    "BNF_non_call_expression",
+    "BNF_non_call_mul",
+    "BNF_non_call_pow",
+    "BNF_non_call_factor",
 };
 
 
@@ -260,4 +262,12 @@ flowcode_void removeNewLine();
 // 	KW_cons,
 // };
 
+/*
+ * ::TODO - Type에 Void 추가하기
+ * ::TODO - Main Function을 위한 Main keyword 추가하기
+ * ::TODO - boolean의 true, false 추가하기
+ * ::TODO - if statement 추가히가
+ * ::TODO - 비교연산 return과 변수 assignment에 추가하기
+ *
+*/
 #endif

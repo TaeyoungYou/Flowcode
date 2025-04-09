@@ -456,6 +456,7 @@ flowcode_void mainFunction()
  */
 flowcode_void customFunctionSection()
 {
+    removeNewLine();
     psData.parsHistogram[BNF_custom_function_section]++;
     switch (lookahead.code)
     {
@@ -865,7 +866,7 @@ flowcode_void powExpre()
 /*
  ************************************************************
  * Factor
- * BNF: <factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier
+ * BNF: <factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier | Identifier Colon <argument_list>
  * FIRST(<factor>) = { Identifier, IntLiteral, StringLiteral, DoubleLiteral, LeftParen }.
  ***********************************************************
  */
@@ -876,6 +877,12 @@ flowcode_void factor()
     {
     case Identifier:
         matchToken(Identifier);
+        if (lookahead.code == Colon)
+        {
+            matchToken(Colon);
+            argumentList();
+            matchToken(SemiColon);
+        }
         break;
     case IntLiteral:
         matchToken(IntLiteral);
@@ -1038,6 +1045,7 @@ flowcode_void repeatStatement()
  */
 flowcode_void repeatStatementList()
 {
+    removeNewLine();
     psData.parsHistogram[BNF_repeat_statement_list]++;
     switch (lookahead.code)
     {
@@ -1207,11 +1215,11 @@ flowcode_void basicBool()
     switch (lookahead.code)
     {
     //case True: ::TODO - please rid of comment if makes true token
-        // matchToken(True);
-        // break;
+    // matchToken(True);
+    // break;
     //case False: ::TODO - please rid of comment if makes false token
-        // matchToken(False);
-        // break;
+    // matchToken(False);
+    // break;
     case Identifier:
     case IntLiteral:
     case DoubleLiteral:

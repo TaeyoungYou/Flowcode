@@ -51,7 +51,7 @@
 
 <pow_expre> -> <factor> Power <pow_expre> | <factor>
 
-<factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier | Identifier Colon <argument_list>
+<factor> -> IntLiteral | StringLiteral | DoubleLiteral | LeftParen <expression> RightParen | Identifier | Identifier Colon <argument_list> SemiColon
 
 ** input statement **
 <input_statement> -> Input Colon <identifier_list> SemiColon EndOfLine

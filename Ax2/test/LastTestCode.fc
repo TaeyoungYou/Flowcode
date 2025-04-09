@@ -1,0 +1,80 @@
+begin:
+    declaration:
+        int a, b, c, result, loopCount, i, val1, val2, val3
+        double x, y, z, finalValue, temp1, temp2
+        string msg, name, report, output
+        boolean active, success
+    end;
+
+    boolean Main():
+        a = 10
+        b = 5
+        c = 3
+        x = 2.0
+        y = 4.5
+
+        result = CalcA: a + b * 2, c + 1, a - c;
+        result = result + 10 * (a - b)
+
+        finalValue = Adjust: x + y, x * y, result;
+        finalValue = finalValue * 1.1 + result / 2
+
+        msg = 'COMPUTATION RESULT:'
+        Output: msg;
+        Output: result;
+
+        msg = 'FINAL VALUE:'
+        Output: msg;
+        Output: finalValue;
+
+        Input: name;
+        msg = 'USER NAME RECEIVED'
+        Output: msg;
+
+        loopCount = 5
+        i = 0
+
+        check i < loopCount:
+            val1 = a + i
+            val2 = b * i
+            val3 = c + i
+
+            result = CalcA: val1, val2, val3;
+            Output: result;
+
+            temp1 = Adjust: x + i, y + i, result;
+            Output: temp1;
+
+            i = i + 1
+        repeat;
+
+        msg = 'TESTING COMPLETE'
+        Output: msg;
+
+        report = MakeSummary: name, result, finalValue;
+        Output: report;
+
+        success = CheckValid: result, finalValue;
+        Output: success;
+
+        return 'true'
+    end;
+
+    int CalcA(int p, int q, int r):
+        return (p + q * r) / (p - r + 1)
+    end;
+
+    double Adjust(double m, double n, int ref):
+        return ((m * n) / (ref + 1)) + 0.75
+    end;
+
+    string MakeSummary(string user, int score, double value):
+        output = 'User $user has score $score and value $value'
+        return output
+    end;
+
+    boolean CheckValid(int num, double val):
+        success = 'true'
+        return success
+    end;
+end;

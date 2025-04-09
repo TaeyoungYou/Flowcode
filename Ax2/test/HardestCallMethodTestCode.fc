@@ -1,44 +1,39 @@
 begin:
     declaration:
-        int x, y, finalResult
-        double a, b, total
+        int a, b, c, result
+        double x, y, finalValue
         string msg
     end;
 
     boolean Main():
-        x = 2
-        y = 3
-        a = 1.5
-        b = 2.5
+        a = 10
+        b = 5
+        c = 3
+        x = 2.0
+        y = 4.5
 
-        check x < 4:
-            x = x + 1
-            y = y + Power: x, 2
-        repeat;
+        result = CalcA: a + b * 2, c + 1, a - c;
+        result = result + 10 * (a - b)
 
-        finalResult = MixAndCalc: Power: x + y, x * 2, y - 1;
-        total = DoubleNest: a * 2.0 + b, a + b * 2.0, Power: x, 2;
+        finalValue = Adjust: x + y, x * y, result;
+        finalValue = finalValue * 1.1 + result / 2
 
-        msg = 'FINAL RESULT:'
+        msg = 'COMPUTATION RESULT:'
         Output: msg;
-        Output: finalResult;
+        Output: result;
 
-        msg = 'TOTAL:'
+        msg = 'FINAL VALUE:'
         Output: msg;
-        Output: total;
+        Output: finalValue;
 
         return 'true'
     end;
 
-    int Power(int base, int exp):
-        return base ^ exp
+    int CalcA(int p, int q, int r):
+        return (p + q * r) / (p - r + 1)
     end;
 
-    int MixAndCalc(int a, int b, int c):
-        return (a + b * c) % (a - c + b)
-    end;
-
-    double DoubleNest(double x, double y, int pow):
-        return ((x + y) / (x - y + 1.0)) * (pow + 1.0)
+    double Adjust(double m, double n, int ref):
+        return ((m * n) / (ref + 1)) + 0.75
     end;
 end;
