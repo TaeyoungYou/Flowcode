@@ -13,7 +13,7 @@
 # *   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *
 # *   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *
 # *  ####    #######   #####   ##   ##    ####    #####   #####    #######  *
-#									
+#
 */
 
 /*
@@ -43,9 +43,9 @@
  * ............................................................................
  */
 
-/* TO_DO: Adjust your language (cannot be "Sofia") */
+ /* TO_DO: Adjust your language (cannot be "Sofia") */
 
-/* TO_DO: Language name */
+ /* TO_DO: Language name */
 #define STR_LANGNAME	"FlowCode"
 
 /* TO_DO: Logical constants - adapt for your language */
@@ -69,7 +69,7 @@ typedef int bool;
 
 /* TO_DO: Define your typedefs */
 typedef char			flowcode_char;
-typedef char*			flowcode_string;
+typedef char* flowcode_string;
 typedef int				flowcode_int;
 typedef float			flowcode_float;
 typedef void			flowcode_void;
@@ -89,9 +89,9 @@ Programs:
 ------------------------------------------------------------
 */
 enum PROGRAMS {
-	PGM_READER  = '1',
+	PGM_READER = '1',
 	PGM_SCANNER = '2',
-	PGM_PARSER  = '3'
+	PGM_PARSER = '3'
 };
 
 /*

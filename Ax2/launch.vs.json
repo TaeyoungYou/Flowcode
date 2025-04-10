@@ -9,7 +9,7 @@
       "name": "FlowCode_Compiler.exe",
       "args": [
         "3",
-        "../../../test/Volume.fc",
+        "../../test/LastTestCode.fc",
         "a",
         "250",
         "10"
@@ -17,4 +17,3 @@
     }
   ]
 }
-

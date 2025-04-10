@@ -144,6 +144,10 @@ enum TOKENS {
 	Begin,              /* 50: 'begin' (start of a code block) */
 	Declaration,        /* 51: 'declaration' (variable declaration) */
 	Constant,           /* 52: 'constant' (constant declaration) */
+	/* True ::TODO - true keyword */
+	/* False ::TODO - false keyword */
+	/* Void ::TODO - void keyword */
+	/* Main ::TODO - Main function keyword */
 
 	StringDoubleQuoteLiteral, /* String literal enclosed in double quotes */
 };
@@ -277,7 +281,7 @@ typedef struct scannerData {
 #define SPACE			' '		// ' '
 #define TAB				'\t'	// \t
 // Special Chars to be ignored
-#define METHOD_START	':'		// : 
+#define METHOD_START	':'		// :
 #define METHOD_END		';'		// ;
 #define END_OF_LINE		'\n'	// \n
 #define ADD				'+'		// +
@@ -308,13 +312,13 @@ typedef struct scannerData {
  *  LPR_T, RPR_T, LBR_T, RBR_T, EOS_T, SEOF_T and special chars used for tokenis include _, & and ' */
 
 
-/* TO_DO: Error states and illegal state */
+ /* TO_DO: Error states and illegal state */
 #define ESNR	50		/* Error state with no retract */
 #define ESWR	51		/* Error state with retract */
 #define FS		52		/* Illegal state */
 
  /* TO_DO: State transition table definition */
-#define NUM_STATES		31	
+#define NUM_STATES		31
 #define CHAR_CLASSES	17
 
 /* TO_DO: Transition table - type of states defined in separate table */
@@ -475,7 +479,7 @@ Token funcErr(flowcode_string);
  * If you do not want to use the typedef, the equvalent declaration is:
  */
 
-/* TO_DO: Define final state table */
+ /* TO_DO: Define final state table */
 static PTR_ACCFUN finalStateTable[NUM_STATES] = {
 	NULL, /* 00 */
 	NULL, /* 01 */

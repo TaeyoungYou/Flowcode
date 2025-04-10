@@ -224,7 +224,7 @@ flowcode_void printScannerError(flowcode_string fmt, ...) {
  ***********************************************************
  */
 
-// General functions related to Scanner output
+ // General functions related to Scanner output
 flowcode_void displayScanner(BufferPointer ptrBuffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
@@ -244,7 +244,7 @@ flowcode_void displayScanner(BufferPointer ptrBuffer) {
  ***********************************************************
  */
 
-// Function to return the size of the currently opened file
+ // Function to return the size of the currently opened file
 flowcode_long getScannerFilesize(flowcode_string fname) {
 	FILE* fileInput;
 	flowcode_long fileLength;

@@ -42,11 +42,11 @@
 #ifndef READER_H_
 #define READER_H_
 
-/* TIP: Do not change pragmas, unless necessary .......................................*/
-/*#pragma warning(1:4001) *//*to enforce C89 type comments  - to make //comments an warning */
-/*#pragma warning(error:4001)*//* to enforce C89 comments - to make // comments an error */
+ /* TIP: Do not change pragmas, unless necessary .......................................*/
+ /*#pragma warning(1:4001) *//*to enforce C89 type comments  - to make //comments an warning */
+ /*#pragma warning(error:4001)*//* to enforce C89 comments - to make // comments an error */
 
-/* standard header files */
+ /* standard header files */
 #include <stdio.h>  /* standard input/output */
 #include <malloc.h> /* for dynamic memory allocation*/
 #include <limits.h> /* implementation-defined data type ranges and limits */
@@ -119,30 +119,30 @@ typedef struct bufferReader {
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-BufferPointer	readerCreate		(flowcode_int, flowcode_int, flowcode_char);
-BufferPointer	readerAddChar		(BufferPointer const, flowcode_char);
-flowcode_bool	readerClear		    (BufferPointer const);
-flowcode_bool	readerFree		    (BufferPointer const);
-flowcode_bool	readerIsFull		(BufferPointer const);
-flowcode_bool	readerIsEmpty		(BufferPointer const);
-flowcode_bool	readerSetMark		(BufferPointer const, flowcode_int);
-flowcode_int	readerPrint		    (BufferPointer const);
-flowcode_int	readerLoad			(BufferPointer const, FILE* const);
-flowcode_bool	readerRecover		(BufferPointer const);
-flowcode_bool	readerRetract		(BufferPointer const);
-flowcode_bool	readerRestore		(BufferPointer const);
-flowcode_void	readerCalcChecksum	(BufferPointer const);
-flowcode_bool	readerPrintFlags	(BufferPointer const);
-flowcode_void	readerPrintStat     (BufferPointer const);
+BufferPointer	readerCreate(flowcode_int, flowcode_int, flowcode_char);
+BufferPointer	readerAddChar(BufferPointer const, flowcode_char);
+flowcode_bool	readerClear(BufferPointer const);
+flowcode_bool	readerFree(BufferPointer const);
+flowcode_bool	readerIsFull(BufferPointer const);
+flowcode_bool	readerIsEmpty(BufferPointer const);
+flowcode_bool	readerSetMark(BufferPointer const, flowcode_int);
+flowcode_int	readerPrint(BufferPointer const);
+flowcode_int	readerLoad(BufferPointer const, FILE* const);
+flowcode_bool	readerRecover(BufferPointer const);
+flowcode_bool	readerRetract(BufferPointer const);
+flowcode_bool	readerRestore(BufferPointer const);
+flowcode_void	readerCalcChecksum(BufferPointer const);
+flowcode_bool	readerPrintFlags(BufferPointer const);
+flowcode_void	readerPrintStat(BufferPointer const);
 /* Getters */
-flowcode_char	readerGetChar		(BufferPointer const);
-flowcode_string	readerGetContent	(BufferPointer const, flowcode_int);
-flowcode_int	readerGetPosRead	(BufferPointer const);
-flowcode_int	readerGetPosWrte	(BufferPointer const);
-flowcode_int	readerGetPosMark	(BufferPointer const);
-flowcode_int	readerGetSize		(BufferPointer const);
-flowcode_int	readerGetInc		(BufferPointer const);
-flowcode_char	readerGetMode		(BufferPointer const);
-flowcode_int	readerGetNumErrors	(BufferPointer const);
+flowcode_char	readerGetChar(BufferPointer const);
+flowcode_string	readerGetContent(BufferPointer const, flowcode_int);
+flowcode_int	readerGetPosRead(BufferPointer const);
+flowcode_int	readerGetPosWrte(BufferPointer const);
+flowcode_int	readerGetPosMark(BufferPointer const);
+flowcode_int	readerGetSize(BufferPointer const);
+flowcode_int	readerGetInc(BufferPointer const);
+flowcode_char	readerGetMode(BufferPointer const);
+flowcode_int	readerGetNumErrors(BufferPointer const);
 
 #endif

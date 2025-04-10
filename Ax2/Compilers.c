@@ -1,4 +1,4 @@
-/*
+﻿/*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2025
@@ -47,18 +47,18 @@
  * ............................................................................
  */
 
-/*
-***********************************************************
-* Function name: main
-* Purpose: Main function
-* Author: Khan, Sarah
-* History/Versions: Ver F22
-* Called functions: mainReader(), mainScanner(), mainParser()
-* Parameters: Command line arguments - argc, argv
-* Return value: Status
-* Algorithm: -
-*************************************************************
-*/
+ /*
+ ***********************************************************
+ * Function name: main
+ * Purpose: Main function
+ * Author: Khan, Sarah
+ * History/Versions: Ver F22
+ * Called functions: mainReader(), mainScanner(), mainParser()
+ * Parameters: Command line arguments - argc, argv
+ * Return value: Status
+ * Algorithm: -
+ *************************************************************
+ */
 
 flowcode_int main(int argc, char** argv) {
 	flowcode_int i;
@@ -113,8 +113,29 @@ flowcode_int main(int argc, char** argv) {
 
 /* TO_DO: Update your logo with your own language message */
 
+// flowcode_void printLogo() {
+// 	printf("%s%s%s%s%s%s%s%s%s",
+// 		"\t===========================================================================\n",
+// 		"\t*  ####### ####      #####   ##   ##    ####    #####   #####    #######  *\n",
+// 		"\t*   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *\n",
+// 		"\t*   ##      ##      ##   ##  ##   ##  ##       ##   ##   ##  ##   ##      *\n",
+// 		"\t*   ####    ##      ##   ##  ## # ##  ##       ##   ##   ##  ##   ####    *\n",
+// 		"\t*   ##      ##      ##   ##  #######  ##       ##   ##   ##  ##   ##      *\n",
+// 		"\t*   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *\n",
+// 		"\t*  ####    #######   #####   ##   ##    ####    #####   #####    #######  *\n",
+// 		"\t===========================================================================\n"
+// 	);
+// }
+
+#define RESET   "\033[0m"
+#define BRIGHT  "\033[97m"    // 흰색
+#define LIGHT   "\033[37m"    // 밝은 회색
+#define NORMAL  "\033[90m"    // 회색
+#define DARK    "\033[38;5;240m"    // 어두운 회색
+#define DIM     "\033[38;5;236m" // 딤 그레이 (256컬러)
+
 flowcode_void printLogo() {
-	printf("%s%s%s%s%s%s%s%s%s",
+	const char* lines[] = {
 		"\t===========================================================================\n",
 		"\t*  ####### ####      #####   ##   ##    ####    #####   #####    #######  *\n",
 		"\t*   ##   #  ##      ### ###  ##   ##   ##  ##  ### ###   ## ##    ##   #  *\n",
@@ -124,6 +145,12 @@ flowcode_void printLogo() {
 		"\t*   ##      ##  ##  ### ###  ### ###   ##  ##  ### ###   ## ##    ##   #  *\n",
 		"\t*  ####    #######   #####   ##   ##    ####    #####   #####    #######  *\n",
 		"\t===========================================================================\n"
-	);
-}
+	};
 
+	const char* shades[] = { DARK, DIM, NORMAL, RESET, BRIGHT, RESET, NORMAL, DIM, DARK };
+	int lineCount = sizeof(lines) / sizeof(lines[0]);
+
+	for (int i = 0; i < lineCount; ++i) {
+		printf("%s%s%s", shades[i], lines[i], RESET);
+	}
+}

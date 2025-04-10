@@ -58,7 +58,7 @@
 #include "Reader.h"
 #endif
 
-/* Check for ANSI C compliancy */
+ /* Check for ANSI C compliancy */
 #define ANSI_C 0
 #if defined(__STDC__)
 #undef ANSI_C
