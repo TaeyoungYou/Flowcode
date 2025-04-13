@@ -65,7 +65,7 @@ static flowcode_int syntaxErrorNumber = 0;
 #define LANG_MAIN		"Main"
 
 /* TO_DO: Define the number of BNF rules */
-#define NUM_BNF_RULES 46
+#define NUM_BNF_RULES 50
 
 /* Parser */
 typedef struct parserData
@@ -112,6 +112,7 @@ enum BNF_RULES
     BNF_mul_expre_tail,
     BNF_pow_expre,
     BNF_factor,
+    BNF_relational_expre_tail,
     BNF_input_statement,
     BNF_output_statement,
     BNF_output_target,
@@ -135,6 +136,7 @@ enum BNF_RULES
     BNF_non_call_mul,
     BNF_non_call_pow,
     BNF_non_call_factor,
+    BNF_comment
 };
 
 
@@ -163,6 +165,7 @@ static flowcode_string BNFStrTable[NUM_BNF_RULES] = {
     "BNF_mul_expre_tail",
     "BNF_pow_expre",
     "BNF_factor",
+    "BNF_relational_expre_tail",
     "BNF_input_statement",
     "BNF_output_statement",
     "BNF_output_target",
@@ -185,6 +188,7 @@ static flowcode_string BNFStrTable[NUM_BNF_RULES] = {
     "BNF_non_call_mul",
     "BNF_non_call_pow",
     "BNF_non_call_factor",
+    "BNF_comment"
 };
 
 
@@ -212,6 +216,7 @@ flowcode_void mulExpre();
 flowcode_void mulExpreTail();
 flowcode_void powExpre();
 flowcode_void factor();
+flowcode_void relationalExpreTail();
 flowcode_void inputStatement();
 flowcode_void outputStatement();
 flowcode_void outputTarget();
@@ -236,11 +241,8 @@ flowcode_void nonCallExpression();
 flowcode_void nonCallMul();
 flowcode_void nonCallPow();
 flowcode_void nonCallFactor();
-
 flowcode_void removeNewLine();
-
-
-//flowcode_void comment();
+flowcode_void commentStatement(flowcode_void);
 
 
 /* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
@@ -274,9 +276,7 @@ flowcode_void removeNewLine();
 // };
 
 /*
- * ::TODO - Type에 Void 추가하기
- * ::TODO - Main Function을 위한 Main keyword 추가하기
- * ::TODO - boolean의 true, false 추가하기
+ 
  * ::TODO - if statement 추가히가
  * ::TODO - 비교연산 return과 변수 assignment에 추가하기
  *

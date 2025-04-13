@@ -1,0 +1,13 @@
+begin:
+declaration:
+    int a, b
+end;
+
+boolean Main():
+    Output: 'Program started!';
+end;
+
+void printMessage():
+    Output: 'Hello, World!';
+end;
+end;

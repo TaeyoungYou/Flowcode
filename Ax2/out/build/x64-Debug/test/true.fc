@@ -1,0 +1,11 @@
+begin:
+    declaration:
+        boolean flag
+    end;
+    boolean Main():
+        check true:
+            Output: 'Hello from repeat!';
+        repeat;
+        return 'true'
+    end;
+end;

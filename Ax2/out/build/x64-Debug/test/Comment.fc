@@ -1,0 +1,16 @@
+** FlowCode Comment Sample **
+
+begin:
+	declaration:
+		double PI, r, vol
+	end;
+	boolean Main():
+		PI = 3.14
+		Input: r;
+** FlowCode Comment Sample **
+		vol = 4.0 / 3.0 * PI * (r*r*r)
+		Output: Vol;
+		return 'true'
+** FlowCode Comment Sample **
+	end;
+end;

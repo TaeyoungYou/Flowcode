@@ -1,0 +1,19 @@
+begin:
+    declaration:
+        int a
+    end;
+
+    boolean Main():
+        a = 3
+        if a == 1 then:
+            Output: 'a is 1.';
+        elif a == 2 then:
+            Output: 'a is 2.';
+        else:
+            Output: 'a is not 1 and 2.';
+        endif;
+        return 'true'
+
+    end;
+end;
+

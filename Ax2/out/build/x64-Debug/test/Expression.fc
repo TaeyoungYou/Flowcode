@@ -1,0 +1,14 @@
+begin:
+    declaration:
+        int a, b
+        boolean result
+    end;
+
+    boolean Main():
+        a = 10
+        b = 20
+        result = a < b
+        Output: result;
+        return a != b
+    end;
+end;

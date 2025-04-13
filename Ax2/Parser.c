@@ -60,6 +60,16 @@ flowcode_void startParser()
     }
     /* Proceed parser */
     lookahead = tokenizer();
+
+    while (lookahead.code == Comment || lookahead.code == EndOfLine) {
+        if (lookahead.code == Comment) {
+            commentStatement();
+        }
+        else {
+            matchToken(EndOfLine);
+        }
+    }
+
     if (lookahead.code != EndOfToken)
     {
         program();
@@ -177,8 +187,10 @@ flowcode_void printError()
     case Begin:
     case Declaration:
     case Constant:
-        printf("Keyword_T: %s\n", keywordTable[t.attribute.codeType]);
+        printf("Keyword_T: %s\n", keywordTable[t.code - LogicalAnd]);
         break;
+       /* printf("Keyword_T: %s\n", keywordTable[t.attribute.codeType]);
+        break;*/
     case LeftParen:
         printf("LeftParen_T\n");
         break;
@@ -236,7 +248,7 @@ flowcode_void program()
     psData.parsHistogram[BNF_program]++;
     /* Program code */
     if (lookahead.code == Begin)
-    {
+    {   
         matchToken(Begin);
         matchToken(Colon);
         matchToken(EndOfLine);
@@ -266,12 +278,13 @@ flowcode_void program()
 /*
  ************************************************************
  * Type
- * BNF: <type> -> <type> -> Int | Double | String | Boolean
- * FIRST(<type>)= { Int, Double, String, Boolean }.
+ * BNF: <type> -> <type> -> Int | Double | String | Boolean | void
+ * FIRST(<type>)= { Int, Double, String, Boolean, Void }.
  ***********************************************************
  */
 flowcode_void type()
 {
+    psData.parsHistogram[BNF_type]++;
     switch (lookahead.code)
     {
     case Int:
@@ -280,6 +293,10 @@ flowcode_void type()
     case Boolean:
         matchToken(lookahead.code);
         printf("%s%s\n", STR_LANGNAME, ": Type parsed");
+        break;
+    case Void:
+        matchToken(lookahead.code);
+        printf("%s%s\n", STR_LANGNAME, ": Type parsed (void)");
         break;
     default:
         printError();
@@ -430,7 +447,7 @@ flowcode_void mainFunction()
     {
     case Boolean:
         matchToken(Boolean);
-        matchToken(Identifier); /* ::TODO - change Identifier to main keyword(add in scanner)  */
+        matchToken(Main); 
         matchToken(LeftParen);
         parameterList();
         matchToken(RightParen);
@@ -464,6 +481,7 @@ flowcode_void customFunctionSection()
     case Double:
     case String:
     case Boolean:
+    case Void:
         functionDefinition();
         customFunctionSection();
         break;
@@ -491,6 +509,7 @@ flowcode_void functionDefinition()
     case Double:
     case String:
     case Boolean:
+    case Void:
         type();
         matchToken(Identifier);
         matchToken(LeftParen);
@@ -602,11 +621,17 @@ flowcode_void statementList()
     psData.parsHistogram[BNF_statement_list]++;
     switch (lookahead.code)
     {
+    case Comment:
     case Identifier:
     case Input:
     case Output:
     case Return:
     case Check:
+        statement();
+        statementList();
+        printf("%s%s\n", STR_LANGNAME, ": Statement List parsed");
+        break;
+    case If:
         statement();
         statementList();
         printf("%s%s\n", STR_LANGNAME, ": Statement List parsed");
@@ -647,6 +672,9 @@ flowcode_void statement()
         break;
     case If:
         ifStatement();
+        break;
+    case Comment:
+        commentStatement();
         break;
     default:
         printError();
@@ -1128,6 +1156,7 @@ flowcode_void ifStatement() {
     if (lookahead.code == If) {
         matchToken(If);
         condition();
+        printf("After condition, lookahead.code = %d\n", lookahead.code);
         matchToken(Then);
         matchToken(Colon);
         matchToken(EndOfLine);
@@ -1230,8 +1259,8 @@ flowcode_void condition()
     switch (lookahead.code)
     {
     case LogicalNot:
-        //case True: ::TODO - please rid of comment if makes true token
-        //case False: ::TODO - please rid of comment if makes false token
+    case True:
+    case False:
     case Identifier:
     case IntLiteral:
     case DoubleLiteral:
@@ -1295,8 +1324,8 @@ flowcode_void boolTerm()
         matchToken(LogicalNot);
         basicBool();
         break;
-        //case True: ::TODO - please rid of comment if makes true token
-        //case False: ::TODO - please rid of comment if makes false token
+    case True:
+    case False:
     case Identifier:
     case IntLiteral:
     case DoubleLiteral:
@@ -1323,19 +1352,26 @@ flowcode_void basicBool()
     psData.parsHistogram[BNF_basic_bool]++;
     switch (lookahead.code)
     {
-        //case True: ::TODO - please rid of comment if makes true token
-        // matchToken(True);
-        // break;
-        //case False: ::TODO - please rid of comment if makes false token
-        // matchToken(False);
-        // break;
+    case True: 
+        matchToken(True);
+        break;
+    case False:
+         matchToken(False);
+         break;
     case Identifier:
     case IntLiteral:
     case DoubleLiteral:
     case StringLiteral:
         operand();
-        compareOp();
-        operand();
+        if (lookahead.code == Equal || lookahead.code == NotEqual ||
+            lookahead.code == LessThan || lookahead.code == GreaterThan ||
+            lookahead.code == LessOrEqual || lookahead.code == GreaterOrEqual) {
+            compareOp();
+            operand();
+        }
+        break;
+        /*compareOp();
+        operand();*/
         break;
     case LeftParen:
         matchToken(LeftParen);
@@ -1362,12 +1398,12 @@ flowcode_void operand()
     psData.parsHistogram[BNF_operand]++;
     switch (lookahead.code)
     {
-        //case True: ::TODO - please rid of comment if makes true token
-        // matchToken(True);
-        // break;
-        //case False: ::TODO - please rid of comment if makes false token
-        // matchToken(False);
-        // break;
+    case True:
+        matchToken(True);
+        break;
+    case False:
+        matchToken(False);
+        break;
     case Identifier:
         matchToken(Identifier);
         break;
@@ -1607,12 +1643,12 @@ flowcode_void nonCallFactor()
  * FIRST(<comment>)= {CMT_T}.
  ***********************************************************
  */
- // flowcode_void comment()
- // {
- //     psData.parsHistogram[BNF_comment]++;
- //     matchToken(CMT_T, NO_ATTR);
- //     printf("%s%s\n", STR_LANGNAME, ": Comment parsed");
- // }
+
+flowcode_void commentStatement(flowcode_void) {
+   
+    psData.parsHistogram[BNF_comment]++;
+    matchToken(Comment);
+}
 
  /*
   ************************************************************

@@ -54,7 +54,7 @@
 #define RTE_CODE 1  /* Value for run-time error */
 
 /* TO_DO: Define the number of tokens */
-#define BASE_TOKEN_LEN 54
+#define BASE_TOKEN_LEN 58
 
 enum TOKENS {
 	/* ========== Basic Tokens ========== */
@@ -72,14 +72,14 @@ enum TOKENS {
 
 
 	/* ========== Delimiters ========== */
-	LeftParen,          /*  8: '(' (left bracket) */
-	RightParen,         /*  9: ')' (right bracket) */
-	LeftBrace,          /* 10: '{' (left curly brace) */
-	RightBrace,         /* 11: '}' (right curly brace) */
-	Colon,              /* 12: ':' (colon) */
-	SemiColon,          /* 13: ';' (semicolon) */
-	Comma,              /* 14: ',' (comma) */
-	Dot,
+	LeftParen,          /*  7: '(' (left bracket) */
+	RightParen,         /*  8: ')' (right bracket) */
+	LeftBrace,          /*	9: '{' (left curly brace) */
+	RightBrace,         /* 10: '}' (right curly brace) */
+	Colon,              /* 11: ':' (colon) */
+	SemiColon,          /* 12: ';' (semicolon) */
+	Comma,              /* 13: ',' (comma) */
+	Dot,				/* 14 : ',' (period) */
 
 	/* ========== Comment ========== */
 	Comment,            /* 15: '** ... **' */
@@ -98,58 +98,58 @@ enum TOKENS {
 	/* ========== Comparison Operators ========== */
 	/* ========== Operators ========== */
 	/* 할당 연산자 (Assignment Operator) */
-	Assignment,         /*  7: '=' (assignment operator) */
-	Equal,              /* 23: '==' (equality) */
-	NotEqual,           /* 24: '!=' (inequality) */
-	LessThan,           /* 25: '<' (less than) */
-	GreaterThan,        /* 26: '>' (greater than) */
-	LessOrEqual,        /* 27: '<=' (less than or equal) */
-	GreaterOrEqual,     /* 28: '>=' (greater than or equal) */
+	Assignment,         /* 23: '=' (assignment operator) */
+	Equal,              /* 24: '==' (equality) */
+	NotEqual,           /* 25: '!=' (inequality) */
+	LessThan,           /* 26: '<' (less than) */
+	GreaterThan,        /* 27: '>' (greater than) */
+	LessOrEqual,        /* 28: '<=' (less than or equal) */
+	GreaterOrEqual,     /* 29: '>=' (greater than or equal) */
 
 	/* ========== Keywords ========== */
 	/* Logical Operators */
-	LogicalAnd,         /* 29: 'and' (logical AND) */
-	LogicalOr,          /* 30: 'or' (logical OR) */
-	LogicalNot,         /* 31: 'not' (logical NOT) */
+	LogicalAnd,         /* 30: 'and' (logical AND) */
+	LogicalOr,          /* 31: 'or' (logical OR) */
+	LogicalNot,         /* 32: 'not' (logical NOT) */
 
 	/* Control Keywords */
-	If,                 /* 32: 'if' (conditional statement) */
-	Elif,               /* 33: 'elif' (else if condition) */
-	Else,               /* 34: 'else' (defualt condition) */
-	Then,               /* 35: 'then' (execution statement) */
-	EndIf,              /* 36: 'endif' (end of conditional statement) */
+	If,                 /* 33: 'if' (conditional statement) */
+	Elif,               /* 34: 'elif' (else if condition) */
+	Else,               /* 35: 'else' (defualt condition) */
+	Then,               /* 36: 'then' (execution statement) */
+	EndIf,              /* 37: 'endif' (end of conditional statement) */
 
 	/* Iteration Keywords */
-	Repeat,             /* 37: 'repeat' (loop statement) */
-	Check,              /* 38: 'check' (loop check condition) */
-	Break,              /* 39: 'break' (exit loop) */
-	Continue,           /* 40: 'continue' (proceed to next iteration) */
+	Repeat,             /* 38: 'repeat' (loop statement) */
+	Check,              /* 39: 'check' (loop check condition) */
+	Break,              /* 40: 'break' (exit loop) */
+	Continue,           /* 41: 'continue' (proceed to next iteration) */
 
 	/* I/O Keywords */
-	Input,              /* 41: 'Input' (input function) */
-	Output,             /* 42: 'Output' (output function) */
+	Input,              /* 42: 'Input' (input function) */
+	Output,             /* 43: 'Output' (output function) */
 
 	/* Function Keywords */
-	Return,             /* 43: 'return' (function return) */
-	End,                /* 44: 'end' (end of function or declaration) */
+	Return,             /* 44: 'return' (function return) */
+	End,                /* 45: 'end' (end of function or declaration) */
 
 	/* Data Type Keywords */
-	Int,                /* 45: 'int' (integer type) */
-	Double,             /* 46: 'double' (floating-point type) */
-	String,             /* 47: 'string' (string literal) */
-	Boolean,            /* 48: 'bool' (boolean type) */
-	Void,               /* 49: 'void' (no return value) */
+	Int,                /* 46: 'int' (integer type) */
+	Double,             /* 47: 'double' (floating-point type) */
+	String,             /* 48: 'string' (string literal) */
+	Boolean,            /* 49: 'bool' (boolean type) */
+	Void,               /* 50: 'void' (no return value) */
 
 	/* Other Keywords */
-	Begin,              /* 50: 'begin' (start of a code block) */
-	Declaration,        /* 51: 'declaration' (variable declaration) */
-	Constant,           /* 52: 'constant' (constant declaration) */
-	/* True ::TODO - true keyword */
-	/* False ::TODO - false keyword */
-	/* Void ::TODO - void keyword */
-	/* Main ::TODO - Main function keyword */
+	Begin,              /* 51: 'begin' (start of a code block) */
+	Declaration,        /* 52: 'declaration' (variable declaration) */
+	Constant,           /* 53: 'constant' (constant declaration) */
+	Main,				/* 54: Main function keyword */
+	True,				/* 55: 'True' Keyword */
+	False,				/* 56: 'False Keyword */
+	
 
-	StringDoubleQuoteLiteral, /* String literal enclosed in double quotes */
+	StringDoubleQuoteLiteral, /* 57: String literal enclosed in double quotes */
 };
 
 
@@ -227,7 +227,10 @@ static flowcode_string tokenStrTable[BASE_TOKEN_LEN] = {
 	/* other keyword */
 	"Begin",         // 48: begin keyword
 	"Declaration",   // 49: declaration keyword
-	"Constant"       // 50: constant keyword
+	"Constant",       // 50: constant keyword
+	"True",			//51: True
+	"False",		//52: False
+	"Main",			//53: Main function keyword
 
 	"StringDoubleQuoteLiteral",
 };
@@ -529,7 +532,7 @@ Language keywords
 */
 
 /* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 24
+#define KWT_SIZE 25
 #define KEYWORD_START_INDEX 30
 
 /* TO_DO: Define the list of keywords */
@@ -570,7 +573,8 @@ static flowcode_string keywordTable[KWT_SIZE] = {
 	/* Other Keywords */
 	"begin",       // Begin
 	"declaration", // Declaration
-	"cons"         // Constant
+	"cons",        // Constant
+	"Main"		// Main function
 };
 
 #define REL_SIZE 7
